@@ -52,8 +52,16 @@ async function initDatabase() {
         await dbPool.query(sqlContent);
         console.log('✅ Tables créées avec succès\n');
 
-        // 4️⃣ Vérifier la table
-        console.log('5️⃣ Vérification des colonnes...');
+        // 4️⃣ Insérer les données géographiques du Sénégal
+        console.log('5️⃣ Insertion des données géographiques du Sénégal...');
+        const senegalSqlFile = path.join(__dirname, 'SENEGAL_REGIONS_SETUP.sql');
+        const senegalSqlContent = fs.readFileSync(senegalSqlFile, 'utf8');
+        
+        await dbPool.query(senegalSqlContent);
+        console.log('✅ Données géographiques insérées (14 régions, 45 départements, 45+ communes)\n');
+
+        // 6️⃣ Vérifier la table
+        console.log('6️⃣ Vérification des colonnes...');
         const result = await dbPool.query(`
             SELECT column_name, data_type 
             FROM information_schema.columns 
@@ -66,12 +74,17 @@ async function initDatabase() {
             console.log(`   ${i + 1}. ${row.column_name} (${row.data_type})`);
         });
 
-        // 5️⃣ Compter les colonnes
+        // 7️⃣ Compter les colonnes collectes_donnees
         const expectedColumns = 29;  // Nombre attendu de colonnes
         if (result.rows.length >= expectedColumns) {
             console.log(`\n✅ ${result.rows.length} colonnes trouvées (attendu: ${expectedColumns}+)`);
             console.log('✅ BASE DE DONNÉES INITIALISÉE AVEC SUCCÈS!\n');
-            console.log('🚀 Vous pouvez maintenant:');
+            console.log('� Données chargées:');
+            console.log('   • 14 Régions du Sénégal');
+            console.log('   • 45 Départements');
+            console.log('   • 45+ Communes');
+            console.log('   • Table collectes_donnees prête');
+            console.log('�🚀 Vous pouvez maintenant:');
             console.log('   1. Lancer le serveur: npm start');
             console.log('   2. Tester l\'app: ouvrez http://localhost:3001');
             console.log('   3. Remplir le formulaire et sauvegarder\n');

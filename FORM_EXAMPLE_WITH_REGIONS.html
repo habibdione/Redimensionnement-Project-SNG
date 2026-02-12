@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire Collecte de Données - Exemple avec Régions/Départements/Communes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 20px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        select, input[type="text"], textarea, input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #555;
+        }
+        
+        .section-title {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 25px 0 15px;
+            font-weight: 700;
+            color: #667eea;
+            border-left: 4px solid #667eea;
+        }
+        
+        .location-fields {
+            background: #fafbfc;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #efefef;
+        }
+        
+        button {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .success-message, .error-message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+            margin-left: 5px;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        @media (max-width: 600px) {
+            .field-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗺️ Collecte de Données</h1>
+            <p>Formulaire avec Régions, Départements et Communes du Sénégal</p>
+        </div>
+        
+        <div id="messageContainer"></div>
+        
+        <form id="collectForm">
+            <!-- Section Localisation Géographique -->
+            <div class="section-title">📍 Localisation</div>
+            <div class="info-box">
+                ✨ Les régions, départements et communes sont maintenant en base de données!
+            </div>
+            
+            <div class="location-fields">
+                <!-- Région -->
+                <div class="form-group">
+                    <label for="region">
+                        Région <span style="color: red;">*</span>
+                    </label>
+                    <select id="region" name="region" required>
+                        <option value="">-- Sélectionnez une région --</option>
+                    </select>
+                </div>
+                
+                <!-- Département -->
+                <div class="form-group">
+                    <label for="departement">
+                        Département <span style="color: red;">*</span>
+                    </label>
+                    <select id="departement" name="departement" required disabled>
+                        <option value="">-- Sélectionnez d'abord une région --</option>
+                    </select>
+                </div>
+                
+                <!-- Commune -->
+                <div class="form-group">
+                    <label for="commune">
+                        Commune <span style="color: red;">*</span>
+                    </label>
+                    <select id="commune" name="commune" required disabled>
+                        <option value="">-- Sélectionnez d'abord un département --</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Section Partenaire -->
+            <div class="section-title">🤝 Partenaire</div>
+            <div class="form-group">
+                <label for="partenaire">
+                    Nom du Partenaire <span style="color: red;">*</span>
+                </label>
+                <input type="text" id="partenaire" name="partenaire" placeholder="Ex: SONAGED, SENELEC..." required>
+            </div>
+            
+            <!-- Section Activité -->
+            <div class="section-title">📋 Activité</div>
+            <div class="form-group">
+                <label for="type_activite">
+                    Type d'Activité
+                </label>
+                <input type="text" id="type_activite" name="type_activite" placeholder="Ex: Résidentiel, Commercial...">
+            </div>
+            
+            <div class="form-group">
+                <label for="site_concerne">
+                    Site Concerné
+                </label>
+                <input type="text" id="site_concerne" name="site_concerne" placeholder="Ex: Marché central, Hospital...">
+            </div>
+            
+            <!-- Section Photo -->
+            <div class="section-title">📸 Documentation</div>
+            <div class="form-group">
+                <label for="photo">Photo du site</label>
+                <input type="file" id="photo" name="photo" accept="image/*">
+            </div>
+            
+            <!-- Section Observations -->
+            <div class="form-group">
+                <label for="observation">Observations</label>
+                <textarea id="observation" name="observation" rows="4" placeholder="Notes supplémentaires..."></textarea>
+            </div>
+            
+            <button type="submit">💾 Enregistrer</button>
+        </form>
+    </div>
+    
+    <!-- Charger les données géographiques -->
+    <script src="data-senegal.js"></script>
+    
+    <script>
+        /**
+         * 🗺️ Gestion des dropdowns géographiques
+         */
+        
+        // Initialiser les régions
+        function initializeRegions() {
+            const regionSelect = document.getElementById('region');
+            
+            SENEGAL_DATA.regions.forEach(region => {
+                const option = document.createElement('option');
+                option.value = region.id;
+                option.textContent = region.nom;
+                regionSelect.appendChild(option);
+            });
+        }
+        
+        // Charger les départements quand région change
+        document.getElementById('region').addEventListener('change', function(e) {
+            const regionId = e.target.value;
+            const deptSelect = document.getElementById('departement');
+            const communeSelect = document.getElementById('commune');
+            
+            deptSelect.innerHTML = '<option value="">-- Sélectionnez un département --</option>';
+            communeSelect.innerHTML = '<option value="">-- Sélectionnez un département d\'abord --</option>';
+            communeSelect.disabled = true;
+            
+            if (regionId) {
+                const departements = SENEGAL_DATA.getDepartements(regionId);
+                departements.forEach(dept => {
+                    const option = document.createElement('option');
+                    option.value = dept.id;
+                    option.textContent = dept.nom;
+                    deptSelect.appendChild(option);
+                });
+                deptSelect.disabled = false;
+            } else {
+                deptSelect.disabled = true;
+            }
+        });
+        
+        // Charger les communes quand département change
+        document.getElementById('departement').addEventListener('change', function(e) {
+            const regionId = document.getElementById('region').value;
+            const deptId = e.target.value;
+            const communeSelect = document.getElementById('commune');
+            
+            communeSelect.innerHTML = '<option value="">-- Sélectionnez une commune --</option>';
+            
+            if (regionId && deptId) {
+                const communes = SENEGAL_DATA.getCommunes(regionId, deptId);
+                communes.forEach(commune => {
+                    const option = document.createElement('option');
+                    option.value = commune;
+                    option.textContent = commune;
+                    communeSelect.appendChild(option);
+                });
+                communeSelect.disabled = false;
+            } else {
+                communeSelect.disabled = true;
+            }
+        });
+        
+        // Gérer la soumission du formulaire
+        document.getElementById('collectForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const messageContainer = document.getElementById('messageContainer');
+            
+            // Récupérer les valeurs
+            const formData = {
+                region: document.getElementById('region').options[document.getElementById('region').selectedIndex].text,
+                departement: document.getElementById('departement').options[document.getElementById('departement').selectedIndex].text,
+                commune: document.getElementById('commune').options[document.getElementById('commune').selectedIndex].text,
+                partenaire: document.getElementById('partenaire').value,
+                type_activite: document.getElementById('type_activite').value,
+                site_concerne: document.getElementById('site_concerne').value,
+                observation: document.getElementById('observation').value,
+                statut: 'brouillon'
+            };
+            
+            try {
+                // Valider
+                if (!formData.region || formData.region === '-- Sélectionnez une région --') {
+                    throw new Error('Veuillez sélectionner une région');
+                }
+                if (!formData.departement || formData.departement === '-- Sélectionnez un département --') {
+                    throw new Error('Veuillez sélectionner un département');
+                }
+                if (!formData.commune || formData.commune === '-- Sélectionnez une commune --') {
+                    throw new Error('Veuillez sélectionner une commune');
+                }
+                
+                // Envoyer au serveur
+                const response = await fetch('/api/save-collecte', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    messageContainer.innerHTML = `
+                        <div class="success-message">
+                            ✅ Données enregistrées avec succès! (ID: ${result.id})
+                        </div>
+                    `;
+                    document.getElementById('collectForm').reset();
+                    document.getElementById('region').dispatchEvent(new Event('change'));
+                    
+                    setTimeout(() => {
+                        messageContainer.innerHTML = '';
+                    }, 5000);
+                } else {
+                    throw new Error(await response.text());
+                }
+                
+            } catch (error) {
+                messageContainer.innerHTML = `
+                    <div class="error-message">
+                        ❌ Erreur: ${error.message}
+                    </div>
+                `;
+            }
+        });
+        
+        // Initialiser au chargement de la page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeRegions();
+        });
+    </script>
+</body>
+</html>

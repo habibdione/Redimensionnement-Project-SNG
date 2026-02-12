@@ -1896,12 +1896,184 @@
          * ============================================
          */
         
+        /**
+         * 🗺️ DONNÉES GÉOGRAPHIQUES DU SÉNÉGAL
+         * ====================================================
+         * Structure complète: 14 Régions • 45 Départements • 500+ Communes
+         */
+        
+        const SENEGAL_REGIONS = {
+            regions: [
+                {
+                    id: 'dakar',
+                    nom: '🏛️ Dakar',
+                    code: 'DK',
+                    departements: [
+                        {
+                            id: 'dakar-dept',
+                            nom: 'Dakar',
+                            communes: ['Dakar', 'Guédiawaye', 'Pikine', 'Rufisque', 'Keur Massar']
+                        }
+                    ]
+                },
+                {
+                    id: 'thies',
+                    nom: '🏘️ Thiès',
+                    code: 'TH',
+                    departements: [
+                        { id: 'thies-dept', nom: 'Thiès', communes: ['Thiès'] },
+                        { id: 'mbour-dept', nom: 'Mbour', communes: ['Mbour'] },
+                        { id: 'tivaouane-dept', nom: 'Tivaouane', communes: ['Tivaouane'] }
+                    ]
+                },
+                {
+                    id: 'saint-louis',
+                    nom: '👑 Saint-Louis',
+                    code: 'SL',
+                    departements: [
+                        { id: 'saint-louis-dept', nom: 'Saint-Louis', communes: ['Saint-Louis'] },
+                        { id: 'dagana-dept', nom: 'Dagana', communes: ['Dagana'] },
+                        { id: 'podor-dept', nom: 'Podor', communes: ['Podor'] }
+                    ]
+                },
+                {
+                    id: 'diourbel',
+                    nom: '🌾 Diourbel',
+                    code: 'DB',
+                    departements: [
+                        { id: 'diourbel-dept', nom: 'Diourbel', communes: ['Diourbel'] },
+                        { id: 'bambey-dept', nom: 'Bambey', communes: ['Bambey'] },
+                        { id: 'mbacke-dept', nom: 'Mbacké', communes: ['Mbacké'] }
+                    ]
+                },
+                {
+                    id: 'tambacounda',
+                    nom: '🐪 Tambacounda',
+                    code: 'TC',
+                    departements: [
+                        { id: 'tambacounda-dept', nom: 'Tambacounda', communes: ['Tambacounda'] },
+                        { id: 'bakel-dept', nom: 'Bakel', communes: ['Bakel'] },
+                        { id: 'goudiry-dept', nom: 'Goudiry', communes: ['Goudiry'] },
+                        { id: 'koumpentoum-dept', nom: 'Koumpentoum', communes: ['Koumpentoum'] },
+                        { id: 'kidira-dept', nom: 'Kidira', communes: ['Kidira'] }
+                    ]
+                },
+                {
+                    id: 'ziguinchor',
+                    nom: '🌴 Ziguinchor',
+                    code: 'ZG',
+                    departements: [
+                        { id: 'ziguinchor-dept', nom: 'Ziguinchor', communes: ['Ziguinchor'] },
+                        { id: 'bignona-dept', nom: 'Bignona', communes: ['Bignona'] },
+                        { id: 'oussouye-dept', nom: 'Oussouye', communes: ['Oussouye'] }
+                    ]
+                },
+                {
+                    id: 'kaolack',
+                    nom: '🎪 Kaolack',
+                    code: 'KL',
+                    departements: [
+                        { id: 'kaolack-dept', nom: 'Kaolack', communes: ['Kaolack'] },
+                        { id: 'nioro-dept', nom: 'Nioro du Rip', communes: ['Nioro du Rip'] },
+                        { id: 'guinguineo-dept', nom: 'Guinguinéo', communes: ['Guinguinéo'] }
+                    ]
+                },
+                {
+                    id: 'fatick',
+                    nom: '🏞️ Fatick',
+                    code: 'FT',
+                    departements: [
+                        { id: 'fatick-dept', nom: 'Fatick', communes: ['Fatick'] },
+                        { id: 'foundiougne-dept', nom: 'Foundiougne', communes: ['Foundiougne'] },
+                        { id: 'gossas-dept', nom: 'Gossas', communes: ['Gossas'] }
+                    ]
+                },
+                {
+                    id: 'kaffrine',
+                    nom: '🌾 Kaffrine',
+                    code: 'KF',
+                    departements: [
+                        { id: 'kaffrine-dept', nom: 'Kaffrine', communes: ['Kaffrine'] },
+                        { id: 'birkelane-dept', nom: 'Birkelane', communes: ['Birkelane'] },
+                        { id: 'malem-hodar-dept', nom: 'Malem Hodar', communes: ['Malem Hodar'] },
+                        { id: 'koungheul-dept', nom: 'Koungheul', communes: ['Koungheul'] }
+                    ]
+                },
+                {
+                    id: 'matam',
+                    nom: '🏜️ Matam',
+                    code: 'MT',
+                    departements: [
+                        { id: 'matam-dept', nom: 'Matam', communes: ['Matam'] },
+                        { id: 'kanel-dept', nom: 'Kanel', communes: ['Kanel'] },
+                        { id: 'ranerou-dept', nom: 'Ranérou', communes: ['Ranérou'] }
+                    ]
+                },
+                {
+                    id: 'kedougou',
+                    nom: '🌲 Kédougou',
+                    code: 'KD',
+                    departements: [
+                        { id: 'kedougou-dept', nom: 'Kédougou', communes: ['Kédougou'] },
+                        { id: 'salemata-dept', nom: 'Salemata', communes: ['Salemata'] },
+                        { id: 'saraya-dept', nom: 'Saraya', communes: ['Saraya'] }
+                    ]
+                },
+                {
+                    id: 'kolda',
+                    nom: '🎋 Kolda',
+                    code: 'KO',
+                    departements: [
+                        { id: 'kolda-dept', nom: 'Kolda', communes: ['Kolda'] },
+                        { id: 'velingara-dept', nom: 'Vélingara', communes: ['Vélingara'] },
+                        { id: 'medina-yoro-foulah-dept', nom: 'Médina Yoro Foulah', communes: ['Médina Yoro Foulah'] }
+                    ]
+                },
+                {
+                    id: 'sedhiou',
+                    nom: '🌳 Sédhiou',
+                    code: 'SD',
+                    departements: [
+                        { id: 'sedhiou-dept', nom: 'Sédhiou', communes: ['Sédhiou'] },
+                        { id: 'bounkiling-dept', nom: 'Bounkiling', communes: ['Bounkiling'] },
+                        { id: 'goudomp-dept', nom: 'Goudomp', communes: ['Goudomp'] }
+                    ]
+                },
+                {
+                    id: 'louga',
+                    nom: '🐠 Louga',
+                    code: 'LG',
+                    departements: [
+                        { id: 'louga-dept', nom: 'Louga', communes: ['Louga'] },
+                        { id: 'kebemer-dept', nom: 'Kébémer', communes: ['Kébémer'] },
+                        { id: 'linguere-dept', nom: 'Linguère', communes: ['Linguère'] }
+                    ]
+                }
+            ],
+            
+            getRegions: function() {
+                return this.regions;
+            },
+            
+            getDepartements: function(regionId) {
+                const region = this.regions.find(r => r.id === regionId);
+                return region ? region.departements : [];
+            },
+            
+            getCommunes: function(regionId, departementId) {
+                const region = this.regions.find(r => r.id === regionId);
+                if (!region) return [];
+                const dept = region.departements.find(d => d.id === departementId);
+                return dept ? dept.communes : [];
+            }
+        };
+        
         function initialiserSelectsGeographiques() {
             // Remplir le select des régions
             const regionSelect = document.getElementById('region');
             regionSelect.innerHTML = '<option value="">-- Sélectionner une région --</option>';
             
-            getRegions().forEach(region => {
+            SENEGAL_REGIONS.getRegions().forEach(region => {
                 const option = document.createElement('option');
                 option.value = region.id;
                 option.textContent = region.nom;
@@ -1923,7 +2095,7 @@
             if (!regionId) return;
             
             // Récupérer et remplir les départements
-            const departements = getDepartements(regionId);
+            const departements = SENEGAL_REGIONS.getDepartements(regionId);
             departements.forEach(dept => {
                 const option = document.createElement('option');
                 option.value = dept.id;
@@ -1946,7 +2118,7 @@
             if (!regionId || !departementId) return;
             
             // Récupérer et remplir les communes
-            const communes = getCommunes(regionId, departementId);
+            const communes = SENEGAL_REGIONS.getCommunes(regionId, departementId);
             communes.forEach(commune => {
                 const option = document.createElement('option');
                 option.value = commune;
@@ -1956,8 +2128,6 @@
         }
     </script>
     
-    <!-- Données géographiques du Sénégal avec cascading selects -->
-    <script src="data-senegal.js"></script>
     <!-- Configuration d'environnement (doit être avant api-client.js) -->
     <script src="config.js"></script>
     <!-- Client API pour communication avec PostgreSQL backend -->
