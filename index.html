@@ -1639,33 +1639,31 @@
             
             // Préparer les données pour l'envoi
             const dataToSend = {
-                partenaire: donnees.partenaire,
-                region: donnees.region,
-                departement: donnees.departement,
-                commune: donnees.commune,
-                typeActivite: Array.isArray(donnees.typeActivite) ? donnees.typeActivite.join(',') : donnees.typeActivite,
-                adresse: donnees.adresse,
-                superficie: donnees.superficie,
-                besoinPersonnel: donnees.besoinPersonnel,
-                dispositifDeploy: Array.isArray(donnees.dispositifDeploy) ? donnees.dispositifDeploy.join(',') : donnees.dispositifDeploy,
-                nombreRotation: donnees.nombreRotation,
-                infrastructureGestion: donnees.infrastructureGestion,
-                frequenceCollecte: donnees.frequenceCollecte,
-                bacs240: donnees.bacs240,
-                caissePolybene: donnees.caissePolybene,
-                bacs660: donnees.bacs660,
-                accessibilite: donnees.accessibilite,
-                observation: donnees.observation,
-                latitude: donnees.latitude || document.getElementById('lat').textContent,
-                longitude: donnees.longitude || document.getElementById('lon').textContent,
-                precision: donnees.precision || document.getElementById('accuracy').textContent,
-                coordonneeX: donnees.coordonneeX || document.getElementById('utm-easting').textContent,
-                coordonneeY: donnees.coordonneeY || document.getElementById('utm-northing').textContent,
-                photo: donnees.photo,  // Base64 JPEG
+                partenaire: donnees.partenaire || '',
+                region: donnees.region || '',
+                departement: donnees.departement || '',
+                commune: donnees.commune || '',
+                typeActivite: Array.isArray(donnees.typeActivite) ? donnees.typeActivite.join(',') : (donnees.typeActivite || ''),
+                adresse: donnees.adresse || '',
+                superficie: donnees.superficie || '',
+                besoinPersonnel: donnees.besoinPersonnel || '',
+                dispositifDeploy: Array.isArray(donnees.dispositifDeploy) ? donnees.dispositifDeploy.join(',') : (donnees.dispositifDeploy || ''),
+                nombreRotation: donnees.nombreRotation || '',
+                infrastructureGestion: donnees.infrastructureGestion || '',
+                frequenceCollecte: donnees.frequenceCollecte || '',
+                bacs240: donnees.bacs240 || '',
+                caissePolybene: donnees.caissePolybene || '',
+                bacs660: donnees.bacs660 || '',
+                accessibilite: donnees.accessibilite || '',
+                observation: donnees.observation || '',
+                latitude: donnees.latitude || document.getElementById('lat').textContent || '',
+                longitude: donnees.longitude || document.getElementById('lon').textContent || '',
+                precision: donnees.precision || document.getElementById('accuracy').textContent || '',
+                coordonneeX: donnees.coordonneeX || document.getElementById('utm-easting').textContent || '',
+                coordonneeY: donnees.coordonneeY || document.getElementById('utm-northing').textContent || '',
+                photo: donnees.photo || null,
                 dateCollecte: new Date().toISOString()
             };
-            
-            console.log('📨 Données formatées pour envoi:', dataToSend);
             
             // Valider les données critiques
             if (!dataToSend.latitude || !dataToSend.longitude) {
@@ -1673,27 +1671,60 @@
                 return;
             }
             
+            showAlert('success', '⏳ Sauvegarde en cours... Veuillez patienter.');
+            
+            console.log('📨 Données formatées pour envoi (sans photo pour log)');
+            
             // Envoyer au serveur
             fetch('http://localhost:3001/api/collecte', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(dataToSend)
+                body: JSON.stringify(dataToSend),
+                timeout: 5000
             })
             .then(response => {
-                console.log('📡 Réponse serveur:', response);
+                console.log('📡 Réponse serveur status:', response.status);
+                
+                // Vérifier le type de contenu
+                const contentType = response.headers.get('content-type');
+                console.log('📡 Content-Type:', contentType);
+                
                 if (!response.ok) {
+                    // Lire le texte de la réponse d'erreur
                     return response.text().then(text => {
-                        throw new Error(`Erreur ${response.status}: ${text}`);
+                        console.error('❌ Erreur serveur text:', text);
+                        
+                        // Essayer de parser comme JSON en cas d'erreur
+                        try {
+                            const errorJson = JSON.parse(text);
+                            throw new Error(`Serveur: ${errorJson.message || text}`);
+                        } catch (e) {
+                            throw new Error(`Erreur ${response.status}: Le serveur n'a pas pu traiter la requête.`);
+                        }
                     });
                 }
-                return response.json();
+                
+                // Essayer de parser la réponse
+                const contentTypeText = contentType ? contentType.split(';')[0] : '';
+                if (contentTypeText.includes('application/json')) {
+                    return response.json();
+                } else {
+                    return response.text().then(text => {
+                        console.warn('⚠️ Réponse non-JSON:', text);
+                        return { success: true, message: 'Données sauvegardées' };
+                    });
+                }
             })
             .then(result => {
-                console.log('✅ Succès:', result);
+                console.log('✅ Réponse du serveur:', result);
                 showAlert('success', '✅ Données sauvegardées en base de données avec succès!');
-                // Réinitialiser le formulaire
+                
+                // Sauvegarder aussi localement
+                sauvegarderEnLocal(dataToSend);
+                
+                // Réinitialiser le formulaire après 2 secondes
                 setTimeout(() => {
                     document.getElementById('donnees-form').reset();
                     document.getElementById('resume-section').style.display = 'none';
@@ -1708,13 +1739,40 @@
                         coordonneeX: '', coordonneeY: '', photo: null,
                         dateCollecte: new Date().toISOString()
                     };
-                    location.reload();
+                    showAlert('success', '✅ Formulaire réinitialisé. Prêt pour une nouvelle collecte.');
                 }, 2000);
             })
             .catch(error => {
-                console.error('❌ Erreur lors de la sauvegarde:', error);
-                showAlert('error', `❌ Erreur: ${error.message}`);
+                console.error('❌ Erreur complète:', error);
+                showAlert('error', `⚠️ Erreur serveur: ${error.message}`);
+                
+                // Sauvegarder quand même en local en cas d'échec
+                console.log('💾 Sauvegarde locale de secours...');
+                sauvegarderEnLocal(dataToSend);
+                showAlert('info', '💾 Données sauvegardées localement. Elles seront synchronisées quand le serveur sera disponible.');
             });
+        }
+        
+        // Sauvegarder en localStorage en tant que secours
+        function sauvegarderEnLocal(donnees) {
+            try {
+                // Créer une copie sans la photo pour réduire la taille localStorage
+                const donneesReduite = { ...donnees };
+                if (donneesReduite.photo) {
+                    donneesReduite.photo = '(photo supprimée du local storage)';
+                }
+                
+                const collectes = JSON.parse(localStorage.getItem('collectes_donnees') || '[]');
+                collectes.push({
+                    ...donneesReduite,
+                    saveDateLocal: new Date().toISOString(),
+                    photoExists: !!donnees.photo
+                });
+                localStorage.setItem('collectes_donnees', JSON.stringify(collectes));
+                console.log('✅ Données sauvegardées en localStorage');
+            } catch (e) {
+                console.error('❌ Erreur localStorage:', e);
+            }
         }
         
         // Initialisation
