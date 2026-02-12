@@ -741,6 +741,7 @@
                 <input type="hidden" id="coordonneeY" value="">
                 
                 <button onclick="obtenirLocalisationGPS()">📡 Obtenir Position GPS & Ajouter Marqueur</button>
+                <button onclick="diagnostiquerProblemes()" style="background: #ff9800; margin-top: 10px; width: 100%;">🔧 Diagnostiquer Problèmes</button>
                 
                 <div id="map"></div>
                 
@@ -948,17 +949,23 @@
         let watchPositionId = null;
 
         function obtenirLocalisationGPS() {
-            showAlert('info', '📡 Recherche de la position avec haute précision...');
+            // Vérification du protocole
+            if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+                showAlert('error', '⚠️ La géolocalisation nécessite HTTPS. Veuillez utiliser une connexion sécurisée ou localhost.');
+                return;
+            }
             
             if (!navigator.geolocation) {
                 showAlert('error', '❌ La géolocalisation n\'est pas supportée par votre navigateur');
                 return;
             }
             
+            showAlert('info', '📡 Demande de permission pour accéder à la localisation...');
+            
             // Options pour haute précision
             const options = {
                 enableHighAccuracy: true,
-                timeout: 10000,
+                timeout: 15000,  // Augmenté à 15 secondes
                 maximumAge: 0
             };
 
@@ -1018,16 +1025,22 @@
                 },
                 function(error) {
                     let errorMsg = '';
+                    console.error('🔴 Erreur géolocalisation code:', error.code, 'message:', error.message);
+                    
                     switch(error.code) {
                         case error.PERMISSION_DENIED:
-                            errorMsg = 'Accès à la géolocalisation refusé. Vérifiez les permissions!';
+                            errorMsg = 'Accès à la géolocalisation refusé. ';
+                            errorMsg += 'Veuillez vérifier les permissions de votre navigateur. ';
+                            errorMsg += 'Allez dans Paramètres > Permissions de site et autorisez l\'accès à votre localisation.';
                             break;
                         case error.POSITION_UNAVAILABLE:
-                            errorMsg = 'Position indisponible. Assurez-vous d\'avoir une connexion GPS.';
+                            errorMsg = 'Position indisponible. Assurez-vous que le GPS est activé et que vous êtes en extérieur.';
                             break;
                         case error.TIMEOUT:
-                            errorMsg = 'Délai dépassé pour obtenir la position.';
+                            errorMsg = 'Délai dépassé (15s). Essayez dans un endroit avec meilleure réception GPS.';
                             break;
+                        default:
+                            errorMsg = error.message || 'Erreur inconnue';
                     }
                     showAlert('error', '❌ Erreur GPS: ' + errorMsg);
                 },
@@ -1673,19 +1686,19 @@
             
             showAlert('success', '⏳ Sauvegarde en cours... Veuillez patienter.');
             
-            console.log('📨 Données formatées pour envoi (sans photo pour log)');
+            console.log('📨 Données formatées pour envoi (photo size: ' + (dataToSend.photo ? (dataToSend.photo.length/1024).toFixed(0) : 0) + 'KB)');
             
-            // Envoyer au serveur
+            // Envoyer au serveur avec meilleure gestion d'erreur
             fetch('http://localhost:3001/api/collecte', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
-                body: JSON.stringify(dataToSend),
-                timeout: 5000
+                body: JSON.stringify(dataToSend)
             })
             .then(response => {
-                console.log('📡 Réponse serveur status:', response.status);
+                console.log('📡 Réponse serveur status:', response.status, response.statusText);
                 
                 // Vérifier le type de contenu
                 const contentType = response.headers.get('content-type');
@@ -1694,14 +1707,14 @@
                 if (!response.ok) {
                     // Lire le texte de la réponse d'erreur
                     return response.text().then(text => {
-                        console.error('❌ Erreur serveur text:', text);
+                        console.error('❌ Erreur serveur text:', text.substring(0, 500));
                         
                         // Essayer de parser comme JSON en cas d'erreur
                         try {
                             const errorJson = JSON.parse(text);
-                            throw new Error(`Serveur: ${errorJson.message || text}`);
-                        } catch (e) {
-                            throw new Error(`Erreur ${response.status}: Le serveur n'a pas pu traiter la requête.`);
+                            throw new Error(`Serveur erreur ${response.status}: ${errorJson.message || text}`);
+                        } catch (parseError) {
+                            throw new Error(`Erreur ${response.status}: Le serveur est indisponible ou n'a pas répondu correctement.`);
                         }
                     });
                 }
@@ -1712,7 +1725,7 @@
                     return response.json();
                 } else {
                     return response.text().then(text => {
-                        console.warn('⚠️ Réponse non-JSON:', text);
+                        console.warn('⚠️ Réponse non-JSON reçue:', text.substring(0, 200));
                         return { success: true, message: 'Données sauvegardées' };
                     });
                 }
@@ -1744,7 +1757,17 @@
             })
             .catch(error => {
                 console.error('❌ Erreur complète:', error);
-                showAlert('error', `⚠️ Erreur serveur: ${error.message}`);
+                console.error('📍 Stack:', error.stack);
+                
+                // Message plus détaillé basé sur le type d'erreur
+                let errorMsg = error.message;
+                if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                    errorMsg = 'Le serveur n\'est pas accessible. Vérifiez que: 1) Le serveur est lancé (npm start) 2) L\'URL est correcte (http://localhost:3001)';
+                } else if (error.message.includes('JSON')) {
+                    errorMsg = 'Erreur de format de réponse. Le serveur a peut-être retourné du HTML au lieu du JSON.';
+                }
+                
+                showAlert('error', `⚠️ Erreur: ${errorMsg}`);
                 
                 // Sauvegarder quand même en local en cas d'échec
                 console.log('💾 Sauvegarde locale de secours...');
@@ -1773,6 +1796,40 @@
             } catch (e) {
                 console.error('❌ Erreur localStorage:', e);
             }
+        }
+        
+        // Fonction de diagnostic pour vérifier les permissions et connexion
+        function diagnostiquerProblemes() {
+            console.log('🔧 === DIAGNOSTIC ===');
+            
+            // 1. Vérifier la géolocalisation
+            console.log('1️⃣ Géolocalisation:', navigator.geolocation ? '✅ Supportée' : '❌ Non supportée');
+            console.log('   Protocole:', location.protocol);
+            console.log('   Host:', location.hostname);
+            
+            // 2. Vérifier les permissions
+            if (navigator.permissions && navigator.permissions.query) {
+                navigator.permissions.query({ name: 'geolocation' })
+                    .then(permissionStatus => {
+                        console.log('2️⃣ Permission géolocalisation:', permissionStatus.state);
+                        showAlert('info', `📍 Permission géolocalisation: ${permissionStatus.state === 'granted' ? '✅ Autorisée' : permissionStatus.state === 'denied' ? '❌ Refusée - Réinitialisez les permissions' : '⏳ Non demandée encore'}`);
+                    })
+                    .catch(err => console.log('   Erreur vérification permission:', err));
+            }
+            
+            // 3. Vérifier le serveur
+            console.log('3️⃣ Test connexion serveur...');
+            fetch('http://localhost:3001/api/health', { method: 'GET' })
+                .then(r => {
+                    console.log('   ✅ Serveur accessible (status:', r.status + ')');
+                    showAlert('success', '✅ Serveur API accessible sur http://localhost:3001');
+                })
+                .catch(err => {
+                    console.log('   ❌ Serveur non accessible:', err.message);
+                    showAlert('error', '❌ Serveur non accessible. Veuillez lancer: npm start');
+                });
+            
+            console.log('🔧 === FIN DIAGNOSTIC ===');
         }
         
         // Initialisation
