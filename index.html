@@ -21,57 +21,96 @@
         }
         
         body {
-            font-family: 'Times New Roman', serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
             overflow: hidden;
         }
         
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2d5016 0%, #4a7c27 50%, #6db038 100%);
             color: white;
-            padding: 30px;
+            padding: 40px 30px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .header > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header-logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .header-logo-container img {
+            height: 100px;
+            width: auto;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
         
         .header h1 {
-            font-size: 28px;
+            font-size: 32px;
             margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: 0.5px;
         }
         
         .header p {
-            opacity: 0.9;
-            font-size: 14px;
-            margin-bottom: 20px;
+            opacity: 0.95;
+            font-size: 15px;
+            margin-bottom: 12px;
+            font-weight: 500;
         }
         
-        .partners-logos {
+        .header-features {
+            font-size: 12px;
+            opacity: 0.88;
+            margin-top: 15px;
             display: flex;
             justify-content: center;
-            align-items: center;
-            gap: 40px;
             flex-wrap: wrap;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            gap: 15px;
         }
         
-        .partners-logos img {
-            height: 60px;
-            width: auto;
-            background: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        .header-features span {
+            background: rgba(255,255,255,0.15);
+            padding: 6px 12px;
+            border-radius: 20px;
         }
         
         .content {
@@ -94,100 +133,120 @@
         }
         
         .section h2 {
-            color: #667eea;
-            font-size: 18px;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
+            color: #2d5016;
+            font-size: 20px;
+            font-weight: 700;
+            border-bottom: 3px solid #6db038;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
         }
         
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 8px;
         }
         
         label {
             font-weight: 600;
-            color: #333;
+            color: #2d5016;
             font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         input, select, textarea {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
             font-size: 14px;
             font-family: inherit;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
+            background: #fafafa;
         }
         
         select[multiple] {
-            padding: 8px;
-            min-height: 100px;
+            padding: 10px;
+            min-height: 120px;
             background: white;
+            border-color: #d0d0d0;
         }
         
         select[multiple] option {
-            padding: 8px 5px;
-            line-height: 1.5;
+            padding: 10px 5px;
+            line-height: 1.6;
         }
         
         select[multiple] option:checked {
-            background: linear-gradient(#667eea, #667eea);
-            background-color: #667eea !important;
+            background: linear-gradient(#6db038, #6db038);
+            background-color: #6db038 !important;
             color: white;
         }
         
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+            border-color: #6db038;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(109, 176, 56, 0.1);
         }
         
         button {
-            padding: 12px 20px;
-            background: #667eea;
+            padding: 13px 24px;
+            background: linear-gradient(135deg, #6db038 0%, #4a7c27 100%);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(109, 176, 56, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         button:hover {
-            background: #764ba2;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(109, 176, 56, 0.4);
         }
         
         button:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
+        }
+        
+        button.danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        
+        button.danger:hover {
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+        
+        .success {
+            background: linear-gradient(135deg, #6db038 0%, #4a7c27 100%) !important;
         }
         
         #map {
             height: 400px;
-            border-radius: 5px;
+            border-radius: 10px;
             margin-bottom: 15px;
-            border: 1px solid #ddd;
-        }
-        
-        #canvas-container {
-            position: relative;
+            border: 2px solid #e0e0e0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         
         video {
             width: 100%;
             max-height: 300px;
-            border-radius: 5px;
+            border-radius: 8px;
             margin-bottom: 15px;
             background: #000;
             display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
         video.active {
@@ -197,9 +256,9 @@
         canvas {
             width: 100%;
             max-height: 300px;
-            border-radius: 5px;
+            border-radius: 8px;
             margin-bottom: 15px;
-            border: 1px solid #ddd;
+            border: 2px solid #e0e0e0;
             display: none;
         }
         
@@ -208,44 +267,40 @@
         }
         
         .coords-display {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 12px;
-            line-height: 1.6;
+            background: linear-gradient(135deg, #f0f8e6 0%, #e8f5df 100%);
+            padding: 18px;
+            border-radius: 10px;
+            border-left: 5px solid #6db038;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
             margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(109, 176, 56, 0.1);
         }
         
         .coords-display strong {
-            color: #667eea;
+            color: #2d5016;
+            font-weight: 700;
         }
         
         .button-group {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
         }
         
         .button-group button {
             flex: 1;
-            min-width: 150px;
-        }
-        
-        .success {
-            background: #10b981;
-        }
-        
-        .success:hover {
-            background: #059669;
+            min-width: 160px;
         }
         
         .danger {
-            background: #ef4444;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
         }
         
         .danger:hover {
-            background: #dc2626;
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4) !important;
         }
         
         .alert {
@@ -479,12 +534,23 @@
         }
         
         footer {
-            background: #f3f4f6;
-            padding: 20px;
+            background: linear-gradient(135deg, #2d5016 0%, #4a7c27 100%);
+            padding: 30px 20px;
             text-align: center;
-            color: #666;
-            font-size: 12px;
-            border-top: 1px solid #e5e7eb;
+            color: white;
+            font-size: 13px;
+            border-top: 3px solid #6db038;
+            position: relative;
+        }
+        
+        footer p {
+            margin: 8px 0;
+            opacity: 0.95;
+        }
+        
+        footer strong {
+            font-weight: 700;
+            color: #a4d65e;
         }
     </style>
 
@@ -501,85 +567,23 @@
     </div>
     <div class="container">
         <div class="header">
-            <h1>⚡ Dimensionnement SONAGED - Collecte de Données</h1>
-            <p>Application Mobile Collaborative - Avec Support Multi-Partenaires</p>
-            <p style="font-size: 12px; margin-top: 10px; opacity: 0.8;">📱 PWA | 🗺️ GPS | 📷 Caméra | 💾 Local | 🗄️ PostgreSQL | 🤝 Partenaires | 🌐 Offline</p>
-            <div class="partners-logos" style="margin-top: 15px;">
-                <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg" style="height: 60px; width: auto;">
-                    <rect fill="#4CAF50" width="200" height="80" rx="5"/>
-                    <text x="100" y="45" font-size="32" font-weight="bold" fill="white" text-anchor="middle" dy=".3em">SONAGED</text>
-                </svg>
+            <div class="header-logo-container">
+                <img src="logo-sonaged.svg" alt="Logo SONAGED">
+                <div>
+                    <h1>DIMENSIONNEMENT SONAGED</h1>
+                    <p style="font-size: 14px; opacity: 0.95;">Collecte & Gestion des Données Géographiques</p>
+                </div>
+            </div>
+            <div class="header-features">
+                <span>📱 Mobile</span>
+                <span>🗺️ GPS</span>
+                <span>📷 Caméra</span>
+                <span>💾 LocalStorage</span>
+                <span>🗄️ PostgreSQL</span>
+                <span>🌐 Offline</span>
             </div>
         </div>
         
-        <!-- LISTE DES SITES PAR DÉPARTEMENT -->
-        <div style="padding: 30px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border-top: 3px solid #667eea;">
-            <h2 style="color: #667eea; text-align: center; margin-bottom: 30px; font-size: 24px;">
-                📍 Sites Concernés par Département
-            </h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                <!-- Ziguinchor -->
-                <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 6px solid #667eea;">
-                    <h3 style="color: #667eea; margin-bottom: 15px; font-size: 16px; border-bottom: 2px solid #667eea; padding-bottom: 10px;">
-                        Département de Ziguinchor (5 sites)
-                    </h3>
-                    <ul style="list-style: none; padding: 0; margin: 0;">
-                        <li style="padding: 8px 0 8px 25px; color: #333; font-size: 14px; position: relative;">
-                            <span style="position: absolute; left: 0;">📍</span>Agence principal de Ziguinchor
-                        </li>
-                        <li style="padding: 8px 0 8px 25px; color: #333; font-size: 14px; position: relative;">
-                            <span style="position: absolute; left: 0;">📍</span>Bureau Commercial de Ziguinchor
-                        </li>
-                        <li style="padding: 8px 0 8px 25px; color: #333; font-size: 14px; position: relative;">
-                            <span style="position: absolute; left: 0;">📍</span>Centre de distribution de Ziguinchor
-                        </li>
-                        <li style="padding: 8px 0 8px 25px; color: #333; font-size: 14px; position: relative;">
-                            <span style="position: absolute; left: 0;">📍</span>Parc de carburant
-                        </li>
-                        <li style="padding: 8px 0 8px 25px; color: #333; font-size: 14px; position: relative;">
-                            <span style="position: absolute; left: 0;">📍</span>La sous station Kankourang
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Bignona -->
-                <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 6px solid #10b981;">
-                    <h3 style="color: #10b981; margin-bottom: 15px; font-size: 16px; border-bottom: 2px solid #10b981; padding-bottom: 10px;">
-                        Département de Bignona (4 sites)
-                    </h3>
-                    <ul style="list-style: none; padding: 0; margin: 0;">
-                        <li style="padding: 8px 0 8px 25px; color: #333; font-size: 14px; position: relative;">
-                            <span style="position: absolute; left: 0;">📍</span>Nouveau site à l'entrée de Bignona
-                        </li>
-                        <li style="padding: 8px 0 8px 25px; color: #333; font-size: 14px; position: relative;">
-                            <span style="position: absolute; left: 0;">📍</span>Bureau commercial Thionck-Essyl
-                        </li>
-                        <li style="padding: 8px 0 8px 25px; color: #333; font-size: 14px; position: relative;">
-                            <span style="position: absolute; left: 0;">📍</span>Bureau commercial Djioulou
-                        </li>
-                        <li style="padding: 8px 0 8px 25px; color: #333; font-size: 14px; position: relative;">
-                            <span style="position: absolute; left: 0;">📍</span>Bureau commercial Kafountine
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Oussouye -->
-                <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 6px solid #f59e0b;">
-                    <h3 style="color: #f59e0b; margin-bottom: 15px; font-size: 16px; border-bottom: 2px solid #f59e0b; padding-bottom: 10px;">
-                        Département d'Oussouye (2 sites)
-                    </h3>
-                    <ul style="list-style: none; padding: 0; margin: 0;">
-                        <li style="padding: 8px 0 8px 25px; color: #333; font-size: 14px; position: relative;">
-                            <span style="position: absolute; left: 0;">📍</span>Bureau commercial d'Oussouye
-                        </li>
-                        <li style="padding: 8px 0 8px 25px; color: #333; font-size: 14px; position: relative;">
-                            <span style="position: absolute; left: 0;">📍</span>District Principal Cap Skiring
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
         <div class="content">
             <!-- FORMULAIRE DE SAISIE -->
             <div class="section">
@@ -623,10 +627,6 @@
                 <div class="form-group">
                     <label for="partenaire">Partenaire</label>
                     <input type="text" id="partenaire" placeholder="Ex: SONAGED, ONG, etc." required>
-                </div>
-                    <select id="siteConcerne" required>
-                        <option value="">-- Sélectionner un site --</option>
-                    </select>
                 </div>
                 
                 <div class="form-group">
@@ -714,7 +714,14 @@
                     <textarea id="observation" placeholder="Notes supplémentaires" rows="3"></textarea>
                 </div>
                 
-                <button class="success" onclick="sauvegarderDonneesBD()" style="width: 100%; background: #10b981; margin-top: 20px;">💾 Sauvegarder</button>
+                <!-- RÉSUMÉ DES DONNÉES AVANT SAUVEGARDE -->
+                <div id="resume-section" style="display: none; background: linear-gradient(135deg, #f0f8e6 0%, #e8f5df 100%); padding: 25px; border-radius: 12px; border-left: 6px solid #6db038; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(109, 176, 56, 0.15);">
+                    <h3 style="color: #2d5016; margin-bottom: 18px; font-size: 20px; font-weight: 700;">📋 Résumé des Données</h3>
+                    <div id="resume-contenu" style="font-size: 14px; line-height: 2; color: #333;"></div>
+                </div>
+                
+                <button class="success" onclick="afficherResume()" style="width: 100%; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); margin-top: 15px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">👁️ Voir le Résumé</button>
+                <button class="success" onclick="sauvegarderDonneesBD()" style="width: 100%; margin-top: 5px;">💾 Sauvegarder les Données</button>
             </div>
             
             <!-- LOCALISATION & IMAGES -->
@@ -766,8 +773,9 @@
         </div>
         
         <footer>
-            <p style="margin-bottom: 8px; font-weight: 600;">© 2026 Dimensionnement SONAGED - Collecte de Données | Dernière mise à jour: <span id="date-update"></span></p>
-            <p style="font-size: 11px; opacity: 0.9;">👨‍💻 Développeur: <strong>Habib DIONE</strong> | 🗺️ Chargé SIG Ziguinchor | SONAGED</p>
+            <p style="margin-bottom: 10px; font-weight: 700; font-size: 14px;">© 2026 SONAGED - Système de Dimensionnement & Gestion de Données</p>
+            <p style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;"><strong>🗺️ Application Géographique Progressive</strong> | Dernière mise à jour: <span id="date-update"></span></p>
+            <p style="font-size: 12px; opacity: 0.85; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; margin-top: 10px;">👨‍💻 Développeur: <strong>Habib DIONE</strong> | 🏢 Chargé SIG Ziguinchor | 🌿 SONAGED Sénégal</p>
         </footer>
     </div>
     
@@ -860,33 +868,12 @@
         let userLocationMarker;
         let videoStream;
         
-        // Base de données des sites par département
-        const sitesParDepartement = {
-            'Ziguinchor': [
-                'Agence principal de Ziguinchor',
-                'Bureau Commercial de Ziguinchor',
-                'Centre de distribution de Ziguinchor',
-                'Parc de carburant',
-                'La sous station Kankourang'
-            ],
-            'Bignona': [
-                'Nouveau site à l\'entrée de Bignona',
-                'Bureau commercial Thionck-Essyl',
-                'Bureau commercial Djioulou',
-                'Bureau commercial Kafountine'
-            ],
-            'Oussouye': [
-                'Bureau commercial d\'Oussouye',
-                'District Principal Cap Skiring'
-            ]
-        };
         let donnees = {
             partenaire: '',
             region: '',
             departement: '',
             commune: '',
             typeActivite: [],
-            siteConcerne: '',
             adresse: '',
             superficie: '',
             besoinPersonnel: '',
@@ -950,28 +937,10 @@
             }
         }
         
-        // Mettre à jour les sites disponibles - afficher tous les sites de tous les départements
+        // Mettre à jour les sites - fonction désactivée (le champ siteConcerne a été supprimé)
         function mettreAJourSites() {
-            const siteConcerneSelect = document.getElementById('siteConcerne');
-            
-            // Réinitialiser le select
-            siteConcerneSelect.innerHTML = '<option value="">-- Sélectionner un site --</option>';
-            
-            // Ajouter tous les sites de tous les départements avec leurs labels
-            for (const [departement, sites] of Object.entries(sitesParDepartement)) {
-                // Créer un groupe optgroup pour chaque département
-                const optgroup = document.createElement('optgroup');
-                optgroup.label = `📍 ${departement}`;
-                
-                sites.forEach(site => {
-                    const option = document.createElement('option');
-                    option.value = site;
-                    option.textContent = `  📍 ${site}`;
-                    optgroup.appendChild(option);
-                });
-                
-                siteConcerneSelect.appendChild(optgroup);
-            }
+            // Cette fonction est conservée pour compatibilité mais ne fait rien
+            // Le champ siteConcerne a été supprimé du formulaire
         }
         
         // Géolocalisation GPS
@@ -1176,7 +1145,6 @@
             const typeActiviteSelect = document.getElementById('typeActivite');
             const selectedTypes = Array.from(typeActiviteSelect.selectedOptions).map(option => option.value);
             donnees.typeActivite = selectedTypes.length > 0 ? selectedTypes : [];
-            donnees.siteConcerne = document.getElementById('siteConcerne').value;
             donnees.adresse = document.getElementById('adresse').value;
             donnees.superficie = document.getElementById('superficie').value;
             donnees.besoinPersonnel = document.getElementById('besoinPersonnel').value;
@@ -1226,10 +1194,6 @@
                 <div class="data-item">
                     <div class="data-label">Type d'Activité:</div>
                     <div class="data-value">${Array.isArray(donnees.typeActivite) ? donnees.typeActivite.join(', ') : donnees.typeActivite}</div>
-                </div>
-                <div class="data-item">
-                    <div class="data-label">Site Concerné:</div>
-                    <div class="data-value">${donnees.siteConcerne}</div>
                 </div>
                 <div class="data-item">
                     <div class="data-label">Adresse:</div>
@@ -1364,7 +1328,6 @@
                 ['Département', donnees.departement],
                 ['Commune', donnees.commune],
                 ['Type d\'Activité', donnees.typeActivite],
-                ['Site Concerné', donnees.siteConcerne],
                 ['Adresse', donnees.adresse],
                 ['Superficie (ha)', donnees.superficie],
                 ['Besoin en Personnel', donnees.besoinPersonnel],
@@ -1534,6 +1497,54 @@
             setTimeout(() => {
                 alert.remove();
             }, 4000);
+        }
+        
+        // Afficher le résumé des données avant sauvegarde
+        function afficherResume() {
+            const region = document.getElementById('region').value;
+            const departement = document.getElementById('departement').value;
+            const commune = document.getElementById('commune').value;
+            const typeActivite = Array.from(document.getElementById('typeActivite').selectedOptions).map(opt => opt.text).join(', ');
+            const partenaire = document.getElementById('partenaire').value;
+            const adresse = document.getElementById('adresse').value;
+            const superficie = document.getElementById('superficie').value;
+            const accessibilite = document.getElementById('accessibilite').value;
+            const observation = document.getElementById('observation').value;
+            const lat = document.getElementById('lat').textContent;
+            const lon = document.getElementById('lon').textContent;
+            
+            if (!region || !departement || !commune) {
+                alert('❌ Veuillez sélectionner la région, le département et la commune');
+                return;
+            }
+            
+            let resumeHTML = `
+                <strong>📍 Localisation:</strong><br>
+                Région: <strong>${region}</strong><br>
+                Département: <strong>${departement}</strong><br>
+                Commune: <strong>${commune}</strong><br>
+                Adresse: <strong>${adresse}</strong><br>
+                <br>
+                <strong>📊 Informations:</strong><br>
+                Type d'Activité: <strong>${typeActivite || 'Non spécifié'}</strong><br>
+                Partenaire: <strong>${partenaire}</strong><br>
+                Superficie: <strong>${superficie} ha</strong><br>
+                Accessibilité: <strong>${accessibilite}</strong><br>
+                <br>
+                <strong>🗺️ Coordonnées GPS:</strong><br>
+                Latitude: <strong>${lat}</strong><br>
+                Longitude: <strong>${lon}</strong><br>
+            `;
+            
+            if (observation) {
+                resumeHTML += `<br><strong>📝 Observations:</strong><br><strong>${observation}</strong>`;
+            }
+            
+            document.getElementById('resume-contenu').innerHTML = resumeHTML;
+            document.getElementById('resume-section').style.display = 'block';
+            
+            // Scroller vers le résumé
+            document.getElementById('resume-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         
         // Initialisation

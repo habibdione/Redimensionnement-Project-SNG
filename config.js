@@ -20,8 +20,9 @@ const SENELEC_CONFIG = {
     // Production - Backend sur serveur dédié
     production: {
         // À remplacer par l'URL réelle du serveur backend
-        API_URL: 'https://api.senelec-dimensionnement.sn/api',
-        APP_NAME: 'SENELEC Dimensionnement',
+        // Pour tester localement: remplacez par http://192.168.x.x:3001/api (your PC IP)
+        API_URL: 'http://localhost:3001/api',
+        APP_NAME: 'SONAGED Dimensionnement',
         DEBUG: false
     },
     
