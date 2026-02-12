@@ -1501,17 +1501,32 @@
         
         // Afficher le résumé des données avant sauvegarde
         function afficherResume() {
+            // Récupérer tous les champs du formulaire
             const region = document.getElementById('region').value;
+            const regionLabel = document.getElementById('region').options[document.getElementById('region').selectedIndex]?.text;
             const departement = document.getElementById('departement').value;
+            const departementLabel = document.getElementById('departement').options[document.getElementById('departement').selectedIndex]?.text;
             const commune = document.getElementById('commune').value;
             const typeActivite = Array.from(document.getElementById('typeActivite').selectedOptions).map(opt => opt.text).join(', ');
             const partenaire = document.getElementById('partenaire').value;
             const adresse = document.getElementById('adresse').value;
             const superficie = document.getElementById('superficie').value;
+            const besoinPersonnel = document.getElementById('besoinPersonnel').value;
+            const dispositifDeploy = Array.from(document.getElementById('dispositifDeploy').selectedOptions).map(opt => opt.text).join(', ');
+            const nombreRotation = document.getElementById('nombreRotation').value;
+            const infrastructureGestion = document.getElementById('infrastructureGestion').value;
+            const frequenceCollecte = document.getElementById('frequenceCollecte').value;
+            const bacs240 = document.getElementById('bacs240').value;
+            const caissePolybene = document.getElementById('caissePolybene').value;
+            const bacs660 = document.getElementById('bacs660').value;
             const accessibilite = document.getElementById('accessibilite').value;
             const observation = document.getElementById('observation').value;
             const lat = document.getElementById('lat').textContent;
             const lon = document.getElementById('lon').textContent;
+            const accuracy = document.getElementById('accuracy').textContent;
+            const utmEasting = document.getElementById('utm-easting').textContent;
+            const utmNorthing = document.getElementById('utm-northing').textContent;
+            const photo = donnees.photo;
             
             if (!region || !departement || !commune) {
                 alert('❌ Veuillez sélectionner la région, le département et la commune');
@@ -1519,26 +1534,86 @@
             }
             
             let resumeHTML = `
-                <strong>📍 Localisation:</strong><br>
-                Région: <strong>${region}</strong><br>
-                Département: <strong>${departement}</strong><br>
-                Commune: <strong>${commune}</strong><br>
-                Adresse: <strong>${adresse}</strong><br>
-                <br>
-                <strong>📊 Informations:</strong><br>
-                Type d'Activité: <strong>${typeActivite || 'Non spécifié'}</strong><br>
-                Partenaire: <strong>${partenaire}</strong><br>
-                Superficie: <strong>${superficie} ha</strong><br>
-                Accessibilité: <strong>${accessibilite}</strong><br>
-                <br>
-                <strong>🗺️ Coordonnées GPS:</strong><br>
-                Latitude: <strong>${lat}</strong><br>
-                Longitude: <strong>${lon}</strong><br>
+                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <strong style="color: #2d5016; font-size: 16px;">📍 LOCALISATION</strong>
+                    <div style="margin-top: 10px; margin-left: 10px; border-left: 3px solid #6db038; padding-left: 12px;">
+                        <div>Région: <strong>${regionLabel || region}</strong></div>
+                        <div>Département: <strong>${departementLabel || departement}</strong></div>
+                        <div>Commune: <strong>${commune}</strong></div>
+                        <div>Adresse: <strong>${adresse}</strong></div>
+                    </div>
+                </div>
+                
+                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <strong style="color: #2d5016; font-size: 16px;">📊 INFORMATIONS PRINCIPALES</strong>
+                    <div style="margin-top: 10px; margin-left: 10px; border-left: 3px solid #6db038; padding-left: 12px;">
+                        <div>Type d'Activité: <strong>${typeActivite || 'Non spécifié'}</strong></div>
+                        <div>Partenaire: <strong>${partenaire}</strong></div>
+                        <div>Superficie: <strong>${superficie} ha</strong></div>
+                        <div>Accessibilité: <strong>${accessibilite}</strong></div>
+                    </div>
+                </div>
+                
+                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <strong style="color: #2d5016; font-size: 16px;">👥 RESSOURCES</strong>
+                    <div style="margin-top: 10px; margin-left: 10px; border-left: 3px solid #6db038; padding-left: 12px;">
+                        <div>Besoin en Personnel: <strong>${besoinPersonnel} personne(s)</strong></div>
+                        <div>Nombre de Rotations: <strong>${nombreRotation}</strong></div>
+                    </div>
+                </div>
+                
+                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <strong style="color: #2d5016; font-size: 16px;">🛠️ INFRASTRUCTURE & ÉQUIPEMENTS</strong>
+                    <div style="margin-top: 10px; margin-left: 10px; border-left: 3px solid #6db038; padding-left: 12px;">
+                        <div>Dispositif Déployé: <strong>${dispositifDeploy || 'Non spécifié'}</strong></div>
+                        <div>Infrastructure de Gestion: <strong>${infrastructureGestion}</strong></div>
+                        <div>Fréquence de Collecte: <strong>${frequenceCollecte}</strong></div>
+                        <div>Bacs 240L: <strong>${bacs240}</strong></div>
+                        <div>Caisse Polybène: <strong>${caissePolybene}</strong></div>
+                        <div>Bacs 660L: <strong>${bacs660}</strong></div>
+                    </div>
+                </div>
+                
+                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <strong style="color: #2d5016; font-size: 16px;">🗺️ COORDONNÉES GPS</strong>
+                    <div style="margin-top: 10px; margin-left: 10px; border-left: 3px solid #6db038; padding-left: 12px;">
+                        <div>Latitude: <strong>${lat}</strong></div>
+                        <div>Longitude: <strong>${lon}</strong></div>
+                        <div>Précision: <strong>${accuracy}</strong></div>
+                        <div style="font-size: 12px; margin-top: 8px; color: #666;">
+                            UTM - Easting: <strong>${utmEasting}</strong> | Northing: <strong>${utmNorthing}</strong>
+                        </div>
+                    </div>
+                </div>
             `;
             
             if (observation) {
-                resumeHTML += `<br><strong>📝 Observations:</strong><br><strong>${observation}</strong>`;
+                resumeHTML += `
+                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <strong style="color: #2d5016; font-size: 16px;">📝 OBSERVATIONS</strong>
+                    <div style="margin-top: 10px; margin-left: 10px; border-left: 3px solid #6db038; padding-left: 12px;">
+                        <div>${observation}</div>
+                    </div>
+                </div>
+                `;
             }
+            
+            if (photo) {
+                resumeHTML += `
+                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <strong style="color: #2d5016; font-size: 16px;">📷 PHOTO CAPTURÉE</strong>
+                    <div style="margin-top: 10px; text-align: center;">
+                        <img src="${photo}" alt="Photo capturée" style="max-width: 100%; max-height: 400px; border-radius: 8px; border: 2px solid #e0e0e0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    </div>
+                </div>
+                `;
+            }
+            
+            resumeHTML += `
+                <div style="background: linear-gradient(135deg, #f0f8e6 0%, #e8f5df 100%); padding: 15px; border-radius: 8px; text-align: center; font-size: 12px; color: #2d5016;">
+                    <strong>✅ Vérifiez toutes les informations avant de sauvegarder</strong>
+                </div>
+            `;
             
             document.getElementById('resume-contenu').innerHTML = resumeHTML;
             document.getElementById('resume-section').style.display = 'block';
