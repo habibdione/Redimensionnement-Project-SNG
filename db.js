@@ -51,7 +51,7 @@ async function initDatabase() {
                 longitude DECIMAL(11, 8),
                 precision DECIMAL(10, 2),
                 observation TEXT,
-                image_1 LONGTEXT,
+                image_1 BYTEA,
                 date_collecte TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 date_modification TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 statut VARCHAR(20) DEFAULT 'actif',
