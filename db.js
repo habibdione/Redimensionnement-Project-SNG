@@ -22,7 +22,8 @@ const pool = new Pool({
  * Créer la structure de la base de données
  */
 async function initDatabase() {
-    const client = await pool.connect();
+    const client = 
+    await pool.connect();
 
     try {
         // Créer la table collectes_donnees avec toutes les colonnes requises
