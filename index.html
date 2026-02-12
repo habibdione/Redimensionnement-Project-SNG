@@ -612,11 +612,14 @@
     </div>
     <div class="container">
         <div class="header">
-            <h1>⚡ Dimensionnement SENELEC</h1>
-            <p>Collecte de Données - Localisation et Documentation</p>
-            <div class="partners-logos">
-                <img src="senelec_logo.svg" alt="SENELEC" style="height: 60px;">
-                <img src="sonaged_logo.svg" alt="SONAGED" style="height: 60px;">
+            <h1>⚡ Dimensionnement SONAGED - Collecte de Données</h1>
+            <p>Application Mobile Collaborative - Avec Support Multi-Partenaires</p>
+            <p style="font-size: 12px; margin-top: 10px; opacity: 0.8;">📱 PWA | 🗺️ GPS | 📷 Caméra | 💾 Local | 🗄️ PostgreSQL | 🤝 Partenaires | 🌐 Offline</p>
+            <div class="partners-logos" style="margin-top: 15px;">
+                <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg" style="height: 60px; width: auto;">
+                    <rect fill="#4CAF50" width="200" height="80" rx="5"/>
+                    <text x="100" y="45" font-size="32" font-weight="bold" fill="white" text-anchor="middle" dy=".3em">SONAGED</text>
+                </svg>
             </div>
         </div>
         
@@ -727,19 +730,21 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="typeActivite">Type d'Activité</label>
-                    <select id="typeActivite" required>
-                        <option value="">-- Sélectionner --</option>
+                    <label for="typeActivite">Type d'Activité (Sélectionner plusieurs)</label>
+                    <select id="typeActivite" required multiple size="5">
                         <option value="Levé des dechets vert">Levé des dechets vert</option>
                         <option value="Desherbage">Desherbage</option>
                         <option value="Mecanisation">Mecanisation</option>
                         <option value="Collecte">Collecte</option>
                         <option value="Balayage">Balayage</option>
                     </select>
+                    <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">💡 Maintenez Ctrl (Cmd sur Mac) pour sélectionner plusieurs choix</small>
                 </div>
                 
                 <div class="form-group">
-                    <label for="siteConcerne">Site Concerné</label>
+                    <label for="partenaire">Partenaire</label>
+                    <input type="text" id="partenaire" placeholder="Ex: SONAGED, ONG, etc." required>
+                </div>
                     <select id="siteConcerne" required>
                         <option value="">-- Sélectionner un site --</option>
                     </select>
@@ -830,12 +835,13 @@
                     <textarea id="observation" placeholder="Notes supplémentaires" rows="3"></textarea>
                 </div>
                 
-                <button class="success" onclick="sauvegarderDonnees()">💾 Sauvegarder Données</button>
+                <button class="success" onclick="sauvegarderDonnees()">💾 Sauvegarder Localement</button>
                 
-                <div style="margin-top: 15px; background: #f0f9ff; padding: 15px; border-radius: 8px; border: 2px solid #667eea;">
-                    <h3 style="color: #667eea; margin-bottom: 12px; font-size: 14px;">📥 Exporter les Données</h3>
-                    <button class="success" onclick="exporterExcel(true)" style="background: #10b981; width: 100%;">📊 Excel (avec image)</button>
-                    <button style="margin-top: 10px; width: 100%; background: #8b5cf6;" onclick="imprimerDonnees()">🖨️ Imprimer</button>
+                <div style="margin-top: 15px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 15px; border-radius: 8px; border: 2px solid #10b981;">
+                    <h3 style="color: white; margin-bottom: 12px; font-size: 14px;">🗄️ Sauvegarde en Base de Données PostgreSQL</h3>
+                    <button class="success" onclick="sauvegarderDonneesBD()" style="width: 100%; background: #10b981; margin-bottom: 10px;">🗄️ Sauvegarder en Base de Données</button>
+                    <button style="width: 100%; background-color: #3b82f6;" onclick="APIClient.exporterCSV()">📥 Exporter en CSV</button>
+                <button style="margin-top: 10px; width: 100%; background: #8b5cf6;" onclick="imprimerDonnees()">🖨️ Imprimer</button>
                 </div>
             </div>
             
@@ -851,18 +857,6 @@
                 </div>
                 
                 <button onclick="obtenirLocalisationGPS()">📡 Obtenir Position GPS</button>
-                
-                <h3 style="color: #667eea; margin-top: 20px;">📍 Localisation du Site (UTM)</h3>
-                
-                <div class="form-group">
-                    <label for="coordonneeX">Coordonnées X (Easting)</label>
-                    <input type="text" id="coordonneeX" placeholder="Entrez la coordonnée X (UTM)" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="coordonneeY">Coordonnées Y (Northing)</label>
-                    <input type="text" id="coordonneeY" placeholder="Entrez la coordonnée Y (UTM)" required>
-                </div>
                 
                 <div id="map"></div>
                 
@@ -890,8 +884,8 @@
             <div class="data-summary" id="summary" style="display: none;">
                 <h3>📋 Résumé des Données Collectées</h3>
                 <div id="summary-content"></div>
-                <button class="success" onclick="exporterExcel(true)" style="background: #10b981; width: 100%; margin-bottom: 10px;">📊 Excel (avec image)</button>
-                <button class="success" onclick="exporterJSON()" style="background: #3b82f6; width: 100%; margin-bottom: 10px;">📥 Exporter JSON</button>
+                <button class="success" onclick="sauvegarderDonneesBD()" style="background: #10b981; width: 100%; margin-bottom: 10px;">�️ Sauvegarder en Base de Données</button>
+                <button class="success" onclick="APIClient.exporterCSV()" style="background: #3b82f6; width: 100%; margin-bottom: 10px;">📥 Exporter en CSV</button>
                 <button style="width: 100%;" onclick="imprimerDonnees()">🖨️ Imprimer</button>
             </div>
         </div>
@@ -1017,10 +1011,11 @@
             ]
         };
         let donnees = {
+            partenaire: '',
             region: '',
             departement: '',
             commune: '',
-            typeActivite: '',
+            typeActivite: [],
             siteConcerne: '',
             adresse: '',
             superficie: '',
@@ -1299,10 +1294,14 @@
         
         // Formulaire
         function sauvegarderDonnees() {
+            donnees.partenaire = document.getElementById('partenaire').value;
             donnees.region = document.getElementById('region').value;
             donnees.departement = document.getElementById('departement').value;
             donnees.commune = document.getElementById('commune').value;
-            donnees.typeActivite = document.getElementById('typeActivite').value;
+            // Récupérer tous les types d'activité sélectionnés
+            const typeActiviteSelect = document.getElementById('typeActivite');
+            const selectedTypes = Array.from(typeActiviteSelect.selectedOptions).map(option => option.value);
+            donnees.typeActivite = selectedTypes.length > 0 ? selectedTypes : [];
             donnees.siteConcerne = document.getElementById('siteConcerne').value;
             donnees.adresse = document.getElementById('adresse').value;
             donnees.superficie = document.getElementById('superficie').value;
@@ -1319,10 +1318,13 @@
             donnees.bacs660 = document.getElementById('bacs660').value;
             donnees.accessibilite = document.getElementById('accessibilite').value;
             donnees.observation = document.getElementById('observation').value;
-            donnees.coordonneeX = document.getElementById('coordonneeX').value;
-            donnees.coordonneeY = document.getElementById('coordonneeY').value;
+            // Récupérer les coordonnées UTM si elles existent
+            const coordXElem = document.getElementById('coordonneeX');
+            const coordYElem = document.getElementById('coordonneeY');
+            donnees.coordonneeX = coordXElem ? coordXElem.value : '';
+            donnees.coordonneeY = coordYElem ? coordYElem.value : '';
             
-            showAlert('success', '✅ Données sauvegardées avec succès!');
+            showAlert('success', '✅ Données sauvegardées localement avec succès!');
             affichageResume();
         }
         
@@ -1331,6 +1333,10 @@
             const summaryContent = document.getElementById('summary-content');
             
             let html = `
+                <div class="data-item">
+                    <div class="data-label">Partenaire:</div>
+                    <div class="data-value">${donnees.partenaire}</div>
+                </div>
                 <div class="data-item">
                     <div class="data-label">Région:</div>
                     <div class="data-value">${donnees.region}</div>
@@ -1345,7 +1351,7 @@
                 </div>
                 <div class="data-item">
                     <div class="data-label">Type d'Activité:</div>
-                    <div class="data-value">${donnees.typeActivite}</div>
+                    <div class="data-value">${Array.isArray(donnees.typeActivite) ? donnees.typeActivite.join(', ') : donnees.typeActivite}</div>
                 </div>
                 <div class="data-item">
                     <div class="data-label">Site Concerné:</div>
@@ -1740,6 +1746,11 @@
             });
         }
     </script>
+    
+    <!-- Configuration d'environnement (doit être avant api-client.js) -->
+    <script src="config.js"></script>
+    <!-- Client API pour communication avec PostgreSQL backend -->
+    <script src="api-client.js"></script>
 
 </body>
 </html>
