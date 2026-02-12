@@ -714,14 +714,7 @@
                     <textarea id="observation" placeholder="Notes supplémentaires" rows="3"></textarea>
                 </div>
                 
-                <button class="success" onclick="sauvegarderDonnees()">💾 Sauvegarder Localement</button>
-                
-                <div style="margin-top: 15px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 15px; border-radius: 8px; border: 2px solid #10b981;">
-                    <h3 style="color: white; margin-bottom: 12px; font-size: 14px;">🗄️ Sauvegarde en Base de Données PostgreSQL</h3>
-                    <button class="success" onclick="sauvegarderDonneesBD()" style="width: 100%; background: #10b981; margin-bottom: 10px;">🗄️ Sauvegarder en Base de Données</button>
-                    <button style="width: 100%; background-color: #3b82f6;" onclick="APIClient.exporterCSV()">📥 Exporter en CSV</button>
-                <button style="margin-top: 10px; width: 100%; background: #8b5cf6;" onclick="imprimerDonnees()">🖨️ Imprimer</button>
-                </div>
+                <button class="success" onclick="sauvegarderDonneesBD()" style="width: 100%; background: #10b981; margin-top: 20px;">💾 Sauvegarder</button>
             </div>
             
             <!-- LOCALISATION & IMAGES -->
@@ -768,9 +761,7 @@
             <div class="data-summary" id="summary" style="display: none;">
                 <h3>📋 Résumé des Données Collectées</h3>
                 <div id="summary-content"></div>
-                <button class="success" onclick="sauvegarderDonneesBD()" style="background: #10b981; width: 100%; margin-bottom: 10px;">�️ Sauvegarder en Base de Données</button>
-                <button class="success" onclick="APIClient.exporterCSV()" style="background: #3b82f6; width: 100%; margin-bottom: 10px;">📥 Exporter en CSV</button>
-                <button style="width: 100%;" onclick="imprimerDonnees()">🖨️ Imprimer</button>
+                <button class="success" onclick="sauvegarderDonneesBD()" style="background: #10b981; width: 100%; margin-top: 15px;">💾 Sauvegarder</button>
             </div>
         </div>
         
@@ -1637,3 +1628,4 @@
 
 </body>
 </html>
+
