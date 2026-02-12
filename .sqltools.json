@@ -1,0 +1,18 @@
+{
+  "connections": [
+    {
+      "name": "PostgreSQL - dimentionnement_SNG",
+      "driver": "PostgreSQL",
+      "host": "localhost",
+      "port": 5432,
+      "database": "dimentionnement_SNG",
+      "username": "postgres",
+      "password": "postgres",
+      "askForPassword": false,
+      "connectionTimeout": 30,
+      "useSSL": "disable",
+      "previewLimit": 50,
+      "server": "PostgreSQL"
+    }
+  ]
+}

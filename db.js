@@ -30,7 +30,7 @@ async function initDatabase() {
         const createTableQuery = `
             CREATE TABLE IF NOT EXISTS collectes_donnees (
                 id SERIAL PRIMARY KEY,
-                partenariat VARCHAR(255),
+                partenaire VARCHAR(255),
                 region VARCHAR(255),
                 departement VARCHAR(255),
                 commune VARCHAR(255),
@@ -72,13 +72,13 @@ async function initDatabase() {
         await client.query(createIndexQuery);
         console.log('✅ Index créé sur date_collecte');
 
-        // Créer un index sur partenariat
-        const createPartenariatIndexQuery = `
-            CREATE INDEX IF NOT EXISTS idx_partenariat 
-            ON collectes_donnees (partenariat);
+        // Créer un index sur partenaire
+        const createpartenaireIndexQuery = `
+            CREATE INDEX IF NOT EXISTS idx_partenaire 
+            ON collectes_donnees (partenaire);
         `;
-        await client.query(createPartenariatIndexQuery);
-        console.log('✅ Index créé sur partenariat');
+        await client.query(createpartenaireIndexQuery);
+        console.log('✅ Index créé sur partenaire');
 
         // Tester la connexion
         const testQuery = 'SELECT NOW() as current_time;';
@@ -171,7 +171,7 @@ async function getStatistics() {
         const query = `
             SELECT
                 COUNT(*) as total_collectes,
-                COUNT(DISTINCT partenariat) as nombre_partenariats,
+                COUNT(DISTINCT partenaire) as nombre_partenaires,
                 COUNT(DISTINCT departement) as nombre_departements,
                 COUNT(DISTINCT commune) as nombre_communes,
                 SUM(CAST(superficie AS FLOAT)) as superficie_totale,

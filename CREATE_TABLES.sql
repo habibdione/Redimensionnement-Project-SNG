@@ -12,7 +12,7 @@ CREATE TABLE collectes_donnees (
     id BIGSERIAL PRIMARY KEY,
     
     -- Informations de partenariat et localisation
-    partenariat VARCHAR(255) NOT NULL,
+    partenaire VARCHAR(255) NOT NULL,
     region VARCHAR(255) NOT NULL,
     departement VARCHAR(255) NOT NULL,
     commune VARCHAR(255) NOT NULL,
@@ -41,10 +41,13 @@ CREATE TABLE collectes_donnees (
     latitude DECIMAL(10, 8) CHECK (latitude >= -90 AND latitude <= 90),
     longitude DECIMAL(11, 8) CHECK (longitude >= -180 AND longitude <= 180),
     precision DECIMAL(10, 2) CHECK (precision >= 0),
+    coordonnee_x DECIMAL(10, 2),  -- UTM Easting
+    coordonnee_y DECIMAL(10, 2),  -- UTM Northing
     
     -- Observations et images
     observation TEXT,
     image_1 BYTEA,
+    photo BYTEA,  -- Photo capturée depuis la caméra (JPEG base64)
     
     -- Timestamps et statut
     date_collecte TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -55,9 +58,12 @@ CREATE TABLE collectes_donnees (
 );
 
 -- Ajouter des commentaires pour la documentation
-COMMENT ON TABLE collectes_donnees IS 'Table des collectes de données de dimensionnement SENELEC';
+COMMENT ON TABLE collectes_donnees IS 'Table des collectes de données de dimensionnement SONAGED';
 COMMENT ON COLUMN collectes_donnees.id IS 'Identifiant unique auto-incrémenté';
-COMMENT ON COLUMN collectes_donnees.partenariat IS 'Nom du partenaire/organisme';
+COMMENT ON COLUMN collectes_donnees.partenaire IS 'Nom du partenaire/organisme';
+COMMENT ON COLUMN collectes_donnees.coordonnee_x IS 'Coordonnée UTM Easting';
+COMMENT ON COLUMN collectes_donnees.coordonnee_y IS 'Coordonnée UTM Northing';
+COMMENT ON COLUMN collectes_donnees.photo IS 'Photo capturée depuis la caméra (JPEG en BYTEA)';
 COMMENT ON COLUMN collectes_donnees.statut IS 'État de la collecte: actif, archive, brouillon, valide';
 
 -- ============================================
@@ -68,8 +74,8 @@ COMMENT ON COLUMN collectes_donnees.statut IS 'État de la collecte: actif, arch
 CREATE INDEX idx_date_collecte ON collectes_donnees (date_collecte DESC) 
 WHERE statut = 'actif';
 
--- Index simple pour filtrer par partenariat
-CREATE INDEX idx_partenariat ON collectes_donnees (partenariat) 
+-- Index simple pour filtrer par partenaire
+CREATE INDEX idx_partenaire ON collectes_donnees (partenaire) 
 WHERE statut = 'actif';
 
 -- Index pour requêtes par région
@@ -87,8 +93,8 @@ CREATE INDEX idx_statut ON collectes_donnees (statut);
 CREATE INDEX idx_region_departement ON collectes_donnees (region, departement) 
 WHERE statut = 'actif';
 
--- Index pour recherche par partenariat et date
-CREATE INDEX idx_partenariat_date ON collectes_donnees (partenariat, date_collecte DESC) 
+-- Index pour recherche par partenaire et date
+CREATE INDEX idx_partenaire_date ON collectes_donnees (partenaire, date_collecte DESC) 
 WHERE statut = 'actif';
 
 -- Index pour localisation GPS (recherche spatiale)
@@ -130,8 +136,8 @@ CREATE TRIGGER update_collectes_donnees_timestamp
 -- ============================================
 -- Données de test (optionnel)
 -- ============================================
--- INSERT INTO collectes_donnees (partenariat, region, departement, commune, type_activite, site_concerne, adresse, statut)
--- VALUES ('SONAGED', 'Région de Ziguinchor', 'Ziguinchor', 'Ziguinchor', 'Résidentiel', 'Site Test', '123 Rue Test', 'brouillon');
+-- INSERT INTO collectes_donnees (partenaire, region, departement, commune, type_activite, adresse, statut)
+-- VALUES ('SONAGED', 'Région de Ziguinchor', 'Ziguinchor', 'Ziguinchor', 'Résidentiel', '123 Rue Test', 'brouillon');
 
 -- ============================================
 -- Vérification de la création

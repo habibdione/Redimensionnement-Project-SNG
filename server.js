@@ -68,24 +68,25 @@ const { pool, initDatabase } = require('./db');
 
 /**
  * POST /api/collecte
- * Sauvegarder une nouvelle collecte de données
+ * Sauvegarder une nouvelle collecte de données (VERSION MISE À JOUR)
  */
 app.post('/api/collecte', async (req, res) => {
     try {
+        console.log('📥 Requête POST /api/collecte reçue');
+        console.log('📊 Champs reçus:', Object.keys(req.body));
+        
         const {
-            partenariat,
+            partenaire,
             region,
             departement,
             commune,
             typeActivite,
-            siteConcerne,
             adresse,
             superficie,
             besoinPersonnel,
             dispositifDeploy,
             nombreRotation,
             infrastructureGestion,
-            prnPp,
             frequenceCollecte,
             bacs240,
             caissePolybene,
@@ -94,55 +95,92 @@ app.post('/api/collecte', async (req, res) => {
             latitude,
             longitude,
             precision,
+            coordonneeX,
+            coordonneeY,
             observation,
-            image1
+            photo,  // Base64 JPEG
+            dateCollecte
         } = req.body;
+
+        // Validation des champs requis
+        if (!partenaire || !region || !departement || !commune) {
+            return res.status(400).json({
+                success: false,
+                error: 'Champs requis manquants: partenaire, région, département, commune'
+            });
+        }
+
+        if (!latitude || !longitude) {
+            return res.status(400).json({
+                success: false,
+                error: 'Coordonnées GPS obligatoires'
+            });
+        }
+
+        // Convertir la photo base64 en buffer si présente
+        let photoBinary = null;
+        if (photo && typeof photo === 'string' && photo.startsWith('data:image')) {
+            try {
+                const base64Data = photo.replace(/^data:image\/\w+;base64,/, '');
+                photoBinary = Buffer.from(base64Data, 'base64');
+                console.log('📷 Photo convertie en buffer:', photoBinary.length, 'bytes');
+            } catch (e) {
+                console.error('❌ Erreur conversion photo:', e.message);
+            }
+        }
 
         const query = `
             INSERT INTO collectes_donnees (
-                partenariat, region, departement, commune, type_activite,
-                site_concerne, adresse, superficie, besoin_personnel,
+                partenaire, region, departement, commune, type_activite,
+                adresse, superficie, besoin_personnel,
                 dispositif_deploye, nombre_rotation, infrastructure_gestion,
-                prn_pp, frequence_collecte, bacs_240l, caisse_polybene,
+                frequence_collecte, bacs_240l, caisse_polybene,
                 bacs_660l, accessibilite, latitude, longitude, precision,
-                observation, image_1, date_collecte
+                coordonnee_x, coordonnee_y, observation, photo,
+                date_collecte, statut
             ) VALUES (
-                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13,
-                $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, NOW()
+                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,
+                $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23,
+                $24, $25
             ) RETURNING id, date_collecte;
         `;
 
         const values = [
-            partenariat,
-            region,
-            departement,
-            commune,
-            Array.isArray(typeActivite) ? typeActivite.join(', ') : typeActivite,
-            siteConcerne,
-            adresse,
-            parseFloat(superficie),
-            parseInt(besoinPersonnel),
-            Array.isArray(dispositifDeploy) ? dispositifDeploy.join(', ') : dispositifDeploy,
-            parseInt(nombreRotation),
-            infrastructureGestion,
-            prnPp,
-            frequenceCollecte,
-            parseInt(bacs240),
-            parseInt(caissePolybene),
-            parseInt(bacs660),
-            accessibilite,
+            partenaire || '',
+            region || '',
+            departement || '',
+            commune || '',
+            Array.isArray(typeActivite) ? typeActivite.join(', ') : (typeActivite || ''),
+            adresse || '',
+            parseFloat(superficie) || 0,
+            parseInt(besoinPersonnel) || 0,
+            Array.isArray(dispositifDeploy) ? dispositifDeploy.join(', ') : (dispositifDeploy || ''),
+            parseInt(nombreRotation) || 0,
+            infrastructureGestion || '',
+            frequenceCollecte || '',
+            parseInt(bacs240) || 0,
+            parseInt(caissePolybene) || 0,
+            parseInt(bacs660) || 0,
+            accessibilite || '',
             parseFloat(latitude),
             parseFloat(longitude),
-            parseFloat(precision),
-            observation,
-            image1 || null
+            parseFloat(precision) || 0,
+            parseFloat(coordonneeX) || 0,
+            parseFloat(coordonneeY) || 0,
+            observation || '',
+            photoBinary,
+            new Date(dateCollecte || new Date()),
+            'actif'
         ];
 
+        console.log('🔄 Exécution requête INSERT...');
         const result = await pool.query(query, values);
+
+        console.log('✅ Données insérées avec succès, ID:', result.rows[0].id);
 
         res.status(201).json({
             success: true,
-            message: 'Données sauvegardées avec succès',
+            message: 'Données sauvegardées avec succès en base de données',
             data: {
                 id: result.rows[0].id,
                 dateCollecte: result.rows[0].date_collecte
@@ -150,11 +188,11 @@ app.post('/api/collecte', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Erreur lors de la sauvegarde:', error);
+        console.error('❌ Erreur INSERT /api/collecte:', error);
         res.status(500).json({
             success: false,
-            error: 'Erreur lors de la sauvegarde des données',
-            details: error.message
+            error: error.message,
+            detail: error.detail || 'Erreur lors de la sauvegarde'
         });
     }
 });
@@ -240,20 +278,20 @@ app.get('/api/collectes', async (req, res) => {
 });
 
 /**
- * GET /api/collectes/partenariat/:partenariat
- * Récupérer les collectes par partenariat
+ * GET /api/collectes/partenaire/:partenaire
+ * Récupérer les collectes par partenaire
  */
-app.get('/api/collectes/partenariat/:partenariat', async (req, res) => {
+app.get('/api/collectes/partenaire/:partenaire', async (req, res) => {
     try {
-        const { partenariat } = req.params;
+        const { partenaire } = req.params;
 
         const query = `
             SELECT * FROM collectes_donnees
-            WHERE partenariat = $1
+            WHERE partenaire = $1
             ORDER BY date_collecte DESC;
         `;
 
-        const result = await pool.query(query, [partenariat]);
+        const result = await pool.query(query, [partenaire]);
 
         res.json({
             success: true,
@@ -278,7 +316,7 @@ app.put('/api/collecte/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const {
-            partenariat,
+            partenaire,
             region,
             departement,
             commune,
@@ -305,7 +343,7 @@ app.put('/api/collecte/:id', async (req, res) => {
 
         const query = `
             UPDATE collectes_donnees SET
-                partenariat = $1,
+                partenaire = $1,
                 region = $2,
                 departement = $3,
                 commune = $4,
@@ -333,7 +371,7 @@ app.put('/api/collecte/:id', async (req, res) => {
         `;
 
         const values = [
-            partenariat, region, departement, commune,
+            partenaire, region, departement, commune,
             Array.isArray(typeActivite) ? typeActivite.join(', ') : typeActivite,
             siteConcerne, adresse, parseFloat(superficie),
             parseInt(besoinPersonnel),
@@ -410,7 +448,7 @@ app.get('/api/statistiques', async (req, res) => {
         const query = `
             SELECT
                 COUNT(*) as total_collectes,
-                COUNT(DISTINCT partenariat) as nombre_partenariats,
+                COUNT(DISTINCT partenaire) as nombre_partenaires,
                 COUNT(DISTINCT departement) as nombre_departements,
                 COUNT(DISTINCT commune) as nombre_communes,
                 SUM(CAST(superficie AS FLOAT)) as superficie_totale,
