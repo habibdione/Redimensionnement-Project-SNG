@@ -41,17 +41,17 @@ const SENEGAL_DATA = {
                 {
                     id: 'thies-dept',
                     nom: 'Thiès',
-                    communes: ['Thiès']
+                    communes: ['Thiès', 'Popenguine', 'Sindia']
                 },
                 {
                     id: 'mbour-dept',
                     nom: 'Mbour',
-                    communes: ['Mbour']
+                    communes: ['Mbour', 'Nianing', 'Joal-Fadiouth', 'Malicounda', 'Ngaparou', 'Toubab Dialao']
                 },
                 {
                     id: 'tivaouane-dept',
                     nom: 'Tivaouane',
-                    communes: ['Tivaouane']
+                    communes: ['Tivaouane', 'Mekhé', 'Mérinagène', 'Gningue']
                 }
             ]
         },
@@ -67,17 +67,17 @@ const SENEGAL_DATA = {
                 {
                     id: 'saint-louis-dept',
                     nom: 'Saint-Louis',
-                    communes: ['Saint-Louis']
+                    communes: ['Saint-Louis', 'Guet N Dar', 'Sor']
                 },
                 {
                     id: 'dagana-dept',
                     nom: 'Dagana',
-                    communes: ['Dagana']
+                    communes: ['Dagana', 'Ronchamp', 'Diama']
                 },
                 {
                     id: 'podor-dept',
                     nom: 'Podor',
-                    communes: ['Podor']
+                    communes: ['Podor', 'Tandilao', 'Madina']
                 }
             ]
         },
@@ -93,17 +93,17 @@ const SENEGAL_DATA = {
                 {
                     id: 'diourbel-dept',
                     nom: 'Diourbel',
-                    communes: ['Diourbel']
+                    communes: ['Diourbel', 'Gueule Tapée', 'Touba', 'Gueule Ndar']
                 },
                 {
                     id: 'bambey-dept',
                     nom: 'Bambey',
-                    communes: ['Bambey']
+                    communes: ['Bambey', 'Ngoye']
                 },
                 {
                     id: 'mbacke-dept',
                     nom: 'Mbacké',
-                    communes: ['Mbacké']
+                    communes: ['Mbacké', 'Darou Mouhty', 'Lamina', 'Keur Modou']
                 }
             ]
         },
@@ -119,27 +119,27 @@ const SENEGAL_DATA = {
                 {
                     id: 'tambacounda-dept',
                     nom: 'Tambacounda',
-                    communes: ['Tambacounda']
+                    communes: ['Tambacounda', 'Sinthiou Lemba', 'Guel Malick', 'Banda Ré']
                 },
                 {
                     id: 'bakel-dept',
                     nom: 'Bakel',
-                    communes: ['Bakel']
+                    communes: ['Bakel', 'Kanel']
                 },
                 {
                     id: 'goudiry-dept',
                     nom: 'Goudiry',
-                    communes: ['Goudiry']
+                    communes: ['Goudiry', 'Kidira']
                 },
                 {
                     id: 'koumpentoum-dept',
                     nom: 'Koumpentoum',
-                    communes: ['Koumpentoum']
+                    communes: ['Koumpentoum', 'Gueumane']
                 },
                 {
                     id: 'kidira-dept',
                     nom: 'Kidira',
-                    communes: ['Kidira']
+                    communes: ['Kidira', 'Gabu']
                 }
             ]
         },
@@ -155,17 +155,17 @@ const SENEGAL_DATA = {
                 {
                     id: 'ziguinchor-dept',
                     nom: 'Ziguinchor',
-                    communes: ['Ziguinchor']
+                    communes: ['Ziguinchor', 'Tenghory', 'Karaia']
                 },
                 {
                     id: 'bignona-dept',
                     nom: 'Bignona',
-                    communes: ['Bignona']
+                    communes: ['Bignona', 'Kabrousse', 'Ehtiolo']
                 },
                 {
                     id: 'oussouye-dept',
                     nom: 'Oussouye',
-                    communes: ['Oussouye']
+                    communes: ['Oussouye', 'Diembéring', 'Mlomp']
                 }
             ]
         },
@@ -181,17 +181,17 @@ const SENEGAL_DATA = {
                 {
                     id: 'kaolack-dept',
                     nom: 'Kaolack',
-                    communes: ['Kaolack']
+                    communes: ['Kaolack', 'Lamin Sine', 'Ndiédiéme', 'Gankette Soulé']
                 },
                 {
                     id: 'nioro-dept',
                     nom: 'Nioro du Rip',
-                    communes: ['Nioro du Rip']
+                    communes: ['Nioro du Rip', 'Kolia']
                 },
                 {
                     id: 'guinguineo-dept',
                     nom: 'Guinguinéo',
-                    communes: ['Guinguinéo']
+                    communes: ['Guinguinéo', 'Taiba Niassène', 'Ndengler']
                 }
             ]
         },
@@ -207,17 +207,17 @@ const SENEGAL_DATA = {
                 {
                     id: 'fatick-dept',
                     nom: 'Fatick',
-                    communes: ['Fatick']
+                    communes: ['Fatick', 'Keur Samba Gueye', 'Missirah', 'Passe']
                 },
                 {
                     id: 'foundiougne-dept',
                     nom: 'Foundiougne',
-                    communes: ['Foundiougne']
+                    communes: ['Foundiougne', 'Missirah Wadène']
                 },
                 {
                     id: 'gossas-dept',
                     nom: 'Gossas',
-                    communes: ['Gossas']
+                    communes: ['Gossas', 'Rip', 'Sarelle']
                 }
             ]
         },
@@ -233,22 +233,22 @@ const SENEGAL_DATA = {
                 {
                     id: 'kaffrine-dept',
                     nom: 'Kaffrine',
-                    communes: ['Kaffrine']
+                    communes: ['Kaffrine', 'Sinthé', 'Saré Yerma']
                 },
                 {
                     id: 'birkelane-dept',
                     nom: 'Birkelane',
-                    communes: ['Birkelane']
+                    communes: ['Birkelane', 'Ndiobène']
                 },
                 {
                     id: 'malem-hodar-dept',
                     nom: 'Malem Hodar',
-                    communes: ['Malem Hodar']
+                    communes: ['Malem Hodar', 'Maka Kolé']
                 },
                 {
                     id: 'koungheul-dept',
                     nom: 'Koungheul',
-                    communes: ['Koungheul']
+                    communes: ['Koungheul', 'Guelel Yerguel']
                 }
             ]
         },
@@ -264,17 +264,17 @@ const SENEGAL_DATA = {
                 {
                     id: 'matam-dept',
                     nom: 'Matam',
-                    communes: ['Matam']
+                    communes: ['Matam', 'Kassan', 'Orbé']
                 },
                 {
                     id: 'kanel-dept',
                     nom: 'Kanel',
-                    communes: ['Kanel']
+                    communes: ['Kanel', 'Ouro Alfa']
                 },
                 {
                     id: 'ranerou-dept',
                     nom: 'Ranérou',
-                    communes: ['Ranérou']
+                    communes: ['Ranérou', 'Sélibaby']
                 }
             ]
         },
@@ -290,17 +290,17 @@ const SENEGAL_DATA = {
                 {
                     id: 'kedougou-dept',
                     nom: 'Kédougou',
-                    communes: ['Kédougou']
+                    communes: ['Kédougou', 'Mampatim']
                 },
                 {
                     id: 'salemata-dept',
                     nom: 'Salemata',
-                    communes: ['Salemata']
+                    communes: ['Salemata', 'Mako']
                 },
                 {
                     id: 'saraya-dept',
                     nom: 'Saraya',
-                    communes: ['Saraya']
+                    communes: ['Saraya', 'Misira']
                 }
             ]
         },
@@ -316,17 +316,17 @@ const SENEGAL_DATA = {
                 {
                     id: 'kolda-dept',
                     nom: 'Kolda',
-                    communes: ['Kolda']
+                    communes: ['Kolda', 'Sibassor', 'Médina El Hadj']
                 },
                 {
                     id: 'velingara-dept',
                     nom: 'Vélingara',
-                    communes: ['Vélingara']
+                    communes: ['Vélingara', 'Gaoual']
                 },
                 {
                     id: 'medina-yoro-foulah-dept',
                     nom: 'Médina Yoro Foulah',
-                    communes: ['Médina Yoro Foulah']
+                    communes: ['Médina Yoro Foulah', 'Dialacoto']
                 }
             ]
         },
@@ -342,17 +342,17 @@ const SENEGAL_DATA = {
                 {
                     id: 'sedhiou-dept',
                     nom: 'Sédhiou',
-                    communes: ['Sédhiou']
+                    communes: ['Sédhiou', 'Kabrousse']
                 },
                 {
                     id: 'bounkiling-dept',
                     nom: 'Bounkiling',
-                    communes: ['Bounkiling']
+                    communes: ['Bounkiling', 'Linkering']
                 },
                 {
                     id: 'goudomp-dept',
                     nom: 'Goudomp',
-                    communes: ['Goudomp']
+                    communes: ['Goudomp', 'Yarol']
                 }
             ]
         },
@@ -368,17 +368,17 @@ const SENEGAL_DATA = {
                 {
                     id: 'louga-dept',
                     nom: 'Louga',
-                    communes: ['Louga']
+                    communes: ['Louga', 'Gueoul']
                 },
                 {
                     id: 'kebemer-dept',
                     nom: 'Kébémer',
-                    communes: ['Kébémer']
+                    communes: ['Kébémer', 'Tataguine']
                 },
                 {
                     id: 'linguere-dept',
                     nom: 'Linguère',
-                    communes: ['Linguère']
+                    communes: ['Linguère', 'Dodji']
                 }
             ]
         }

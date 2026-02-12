@@ -273,7 +273,9 @@ INSERT INTO communes (departement_id, region_id, nom, code) VALUES
 
 -- RÉGION ZIGUINCHOR - DÉPARTEMENT OUSSOUYE
 INSERT INTO communes (departement_id, region_id, nom, code) VALUES
-((SELECT id FROM departements WHERE nom='Oussouye' AND region_id=(SELECT id FROM regions WHERE code='ZG')), (SELECT id FROM regions WHERE code='ZG'), 'Oussouye', 'ZG-OS-OS');
+((SELECT id FROM departements WHERE nom='Oussouye' AND region_id=(SELECT id FROM regions WHERE code='ZG')), (SELECT id FROM regions WHERE code='ZG'), 'Oussouye', 'ZG-OS-OS'),
+((SELECT id FROM departements WHERE nom='Oussouye' AND region_id=(SELECT id FROM regions WHERE code='ZG')), (SELECT id FROM regions WHERE code='ZG'), 'Diembéring', 'ZG-OS-DB'),
+((SELECT id FROM departements WHERE nom='Oussouye' AND region_id=(SELECT id FROM regions WHERE code='ZG')), (SELECT id FROM regions WHERE code='ZG'), 'Mlomp', 'ZG-OS-ML');
 
 -- RÉGION KAOLACK - DÉPARTEMENT KAOLACK
 INSERT INTO communes (departement_id, region_id, nom, code) VALUES
