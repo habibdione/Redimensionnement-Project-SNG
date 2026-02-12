@@ -1126,19 +1126,47 @@
                 return;
             }
             
+            showAlert('info', '📸 Compression de la photo...');
+            
+            // Créer un canvas de taille réduite pour compresser
+            const maxWidth = 800;
+            const maxHeight = 600;
+            
+            let width = video.videoWidth;
+            let height = video.videoHeight;
+            
+            // Redimensionner si trop grand
+            if (width > maxWidth || height > maxHeight) {
+                const ratio = Math.min(maxWidth / width, maxHeight / height);
+                width = width * ratio;
+                height = height * ratio;
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            
             const context = canvas.getContext('2d');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0);
+            context.drawImage(video, 0, 0, width, height);
             canvas.classList.add('active');
             
-            const imageData = canvas.toDataURL('image/jpeg');
+            // Compresser en JPEG basse qualité (0.7 = 70%)
+            const imageData = canvas.toDataURL('image/jpeg', 0.7);
+            
+            // Vérifier la taille maximale (5MB = 5242880 bytes)
+            const maxSize = 5242880;
+            const dataSize = imageData.length;
+            
+            if (dataSize > maxSize) {
+                showAlert('error', `❌ Photo trop grosse: ${(dataSize/1024/1024).toFixed(1)}MB (max 5MB)`);
+                return;
+            }
+            
             donnees.photo = imageData;
             
             document.getElementById('preview-img').src = imageData;
             document.getElementById('image-preview').classList.remove('hidden');
             
-            showAlert('success', '✅ Photo capturée');
+            showAlert('success', `✅ Photo capturée (${(dataSize/1024).toFixed(0)}KB)`);
         }
         
         function effacerPhoto() {
@@ -1688,6 +1716,15 @@
             
             console.log('📨 Données formatées pour envoi (photo size: ' + (dataToSend.photo ? (dataToSend.photo.length/1024).toFixed(0) : 0) + 'KB)');
             
+            // Vérifier la taille totale avant envoi
+            const totalSize = JSON.stringify(dataToSend).length;
+            console.log('📦 Taille totale à envoyer:', (totalSize/1024/1024).toFixed(2), 'MB');
+            
+            if (totalSize > 25 * 1024 * 1024) { // 25MB limit
+                showAlert('error', `❌ Les données sont trop volumineuses: ${(totalSize/1024/1024).toFixed(1)}MB\nVeuillez réduire la taille de la photo.`);
+                return;
+            }
+            
             // Envoyer au serveur avec meilleure gestion d'erreur
             fetch('http://localhost:3001/api/collecte', {
                 method: 'POST',
@@ -1758,13 +1795,17 @@
             .catch(error => {
                 console.error('❌ Erreur complète:', error);
                 console.error('📍 Stack:', error.stack);
+                console.error('📊 Type d\'erreur:', error.name);
+                console.error('💾 Données envoyées (size):', (JSON.stringify(dataToSend).length/1024/1024).toFixed(2), 'MB');
                 
                 // Message plus détaillé basé sur le type d'erreur
                 let errorMsg = error.message;
                 if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-                    errorMsg = 'Le serveur n\'est pas accessible. Vérifiez que: 1) Le serveur est lancé (npm start) 2) L\'URL est correcte (http://localhost:3001)';
-                } else if (error.message.includes('JSON')) {
-                    errorMsg = 'Erreur de format de réponse. Le serveur a peut-être retourné du HTML au lieu du JSON.';
+                    errorMsg = 'Le serveur n\'est pas accessible. Vérifiez que: 1) Le serveur est lancé (npm start) 2) L\'URL est correcte (http://localhost:3001) 3) Votre connexion Internet';
+                } else if (error.message.includes('JSON') || error.message.includes('Unexpected token')) {
+                    errorMsg = 'Erreur de format de réponse. Le serveur a peut-être retourné du HTML au lieu du JSON. Vérifiez la console du serveur.';
+                } else if (error.message.includes('Ressource') || error.message.toString().includes('Ressource')) {
+                    errorMsg = 'La ressource n\'est pas accessible. Cela peut indiquer un problème avec la transmission des données (taille trop grande ou timeout réseau).';
                 }
                 
                 showAlert('error', `⚠️ Erreur: ${errorMsg}`);

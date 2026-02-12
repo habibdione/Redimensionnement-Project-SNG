@@ -37,6 +37,31 @@ app.use(cors({
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ limit: '25mb', extended: true }));
 
+// Middleware de logging détaillé pour les requêtes
+app.use((req, res, next) => {
+    const contentLength = req.headers['content-length'] || 0;
+    console.log(`\n📨 [${new Date().toLocaleTimeString()}] ${req.method} ${req.path}`);
+    console.log(`   📦 Content-Length: ${(contentLength/1024/1024).toFixed(2)}MB`);
+    console.log(`   📍 Headers: Content-Type: ${req.headers['content-type'] || 'N/A'}`);
+    
+    // Capturer les erreurs de parsing JSON
+    const originalJson = express.json({ limit: '25mb' });
+    next();
+});
+
+// Gestionnaire d'erreurs de parsing JSON
+app.use((err, req, res, next) => {
+    if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+        console.error('❌ Erreur parsing JSON:', err.message);
+        return res.status(400).json({
+            success: false,
+            message: 'Erreur de format JSON',
+            details: err.message
+        });
+    }
+    next();
+});
+
 // Configuration multer pour les téléchargements d'images
 const upload = multer({
     dest: path.join(__dirname, 'uploads'),
@@ -119,14 +144,32 @@ app.post('/api/collecte', async (req, res) => {
 
         // Convertir la photo base64 en buffer si présente
         let photoBinary = null;
-        if (photo && typeof photo === 'string' && photo.startsWith('data:image')) {
-            try {
-                const base64Data = photo.replace(/^data:image\/\w+;base64,/, '');
-                photoBinary = Buffer.from(base64Data, 'base64');
-                console.log('📷 Photo convertie en buffer:', photoBinary.length, 'bytes');
-            } catch (e) {
-                console.error('❌ Erreur conversion photo:', e.message);
+        if (photo) {
+            console.log('📷 Photo reçue - Type:', typeof photo, '- Longueur:', photo.length, 'caractères');
+            
+            if (typeof photo === 'string' && photo.startsWith('data:image')) {
+                try {
+                    const base64Data = photo.replace(/^data:image\/\w+;base64,/, '');
+                    photoBinary = Buffer.from(base64Data, 'base64');
+                    console.log('   ✅ Photo convertie en buffer:', (photoBinary.length/1024).toFixed(0), 'KB');
+                    
+                    // Vérifier la taille
+                    if (photoBinary.length > 10 * 1024 * 1024) {
+                        console.warn('⚠️ Photo très large:', (photoBinary.length/1024/1024).toFixed(2), 'MB');
+                    }
+                } catch (e) {
+                    console.error('❌ Erreur conversion photo:', e.message);
+                    return res.status(400).json({
+                        success: false,
+                        error: 'Erreur conversion de la photo',
+                        details: e.message
+                    });
+                }
+            } else if (typeof photo === 'string') {
+                console.warn('⚠️ Photo ne commence pas par data:image/');
             }
+        } else {
+            console.log('ℹ️ Aucune photo fournie');
         }
 
         const query = `

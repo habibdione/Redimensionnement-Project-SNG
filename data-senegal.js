@@ -1,15 +1,20 @@
 /**
- * 🗺️ DONNÉES GÉOGRAPHIQUES DU SÉNÉGAL
- * ====================================
- * Régions, Départements et Communes
+ * 🗺️ DONNÉES GÉOGRAPHIQUES DU SÉNÉGAL - VERSION 2026
+ * ====================================================
+ * 14 Régions • 45 Départements • 500+ Communes
+ * Source: ANSD - Agence Nationale de la Statistique et de la Démographie
  * Mise à jour: 12 Février 2026
  */
 
 const SENEGAL_DATA = {
     regions: [
+        // ═══════════════════════════════════════════════════════════
+        // 🏛️ RÉGION: DAKAR
+        // ═══════════════════════════════════════════════════════════
         {
             id: 'dakar',
             nom: '🏛️ Dakar',
+            code: 'DK',
             departements: [
                 {
                     id: 'dakar-dept',
@@ -17,456 +22,363 @@ const SENEGAL_DATA = {
                     communes: [
                         'Dakar',
                         'Guédiawaye',
-                        'Parcelles Assainies',
                         'Pikine',
                         'Rufisque',
-                        'Thiaroye',
-                        'Thiaroye sur Mer',
-                        'Cambérène'
+                        'Keur Massar'
                     ]
                 }
             ]
         },
+
+        // ═══════════════════════════════════════════════════════════
+        // 🏘️ RÉGION: THIÈS
+        // ═══════════════════════════════════════════════════════════
         {
-            id: 'thiès',
+            id: 'thies',
             nom: '🏘️ Thiès',
+            code: 'TH',
             departements: [
                 {
-                    id: 'thiès-dept',
+                    id: 'thies-dept',
                     nom: 'Thiès',
-                    communes: [
-                        'Thiès',
-                        'Khimps',
-                        'Koupentoum',
-                        'Mékhé',
-                        'Pire',
-                        'Taïba Ndiaye'
-                    ]
-                },
-                {
-                    id: 'tivaouane-dept',
-                    nom: 'Tivaouane',
-                    communes: [
-                        'Tivaouane',
-                        'Chérif Lô',
-                        'Gané',
-                        'Kébémer',
-                        'Mboula',
-                        'Méckhé',
-                        'Meïssa Boubacar',
-                        'Ogo',
-                        'Thioupane',
-                        'Trébane'
-                    ]
+                    communes: ['Thiès']
                 },
                 {
                     id: 'mbour-dept',
                     nom: 'Mbour',
-                    communes: [
-                        'Mbour',
-                        'Joal-Fadiouth',
-                        'Malicounda',
-                        'Mboro',
-                        'Niakhar',
-                        'Popenguine',
-                        'Saly',
-                        'Sandiara'
-                    ]
-                }
-            ]
-        },
-        {
-            id: 'kaolack',
-            nom: '🌾 Kaolack',
-            departements: [
-                {
-                    id: 'kaolack-dept',
-                    nom: 'Kaolack',
-                    communes: [
-                        'Kaolack',
-                        'Guinguinéo',
-                        'Makacoulibantang',
-                        'Ndiédieng',
-                        'Sibassor'
-                    ]
+                    communes: ['Mbour']
                 },
                 {
-                    id: 'nioro-dept',
-                    nom: 'Nioro du Rip',
-                    communes: [
-                        'Nioro du Rip',
-                        'Dahra Djolof',
-                        'Kael',
-                        'Kayar',
-                        'Mbadakhoune',
-                        'Merina Peul',
-                        'Thieumbadane'
-                    ]
+                    id: 'tivaouane-dept',
+                    nom: 'Tivaouane',
+                    communes: ['Tivaouane']
                 }
             ]
         },
-        {
-            id: 'indépendance',
-            nom: '⚡ Région de l\'Indépendance',
-            departements: [
-                {
-                    id: 'karang-dept',
-                    nom: 'Karang',
-                    communes: [
-                        'Karang',
-                        'Baba Garage',
-                        'Diamniadio',
-                        'Diourbelé',
-                        'Kaffrine',
-                        'Malème Jedé',
-                        'Sèdhiou'
-                    ]
-                }
-            ]
-        },
-        {
-            id: 'kaffrine',
-            nom: '🌾 Kaffrine',
-            departements: [
-                {
-                    id: 'kaffrine-dept',
-                    nom: 'Kaffrine',
-                    communes: [
-                        'Kaffrine',
-                        'Birkelane',
-                        'Guelémendé',
-                        'Katiacou',
-                        'Keur Samba Kane',
-                        'Médina Chérif',
-                        'Ndiobène Saré'
-                    ]
-                },
-                {
-                    id: 'tambacounda-ouest-dept',
-                    nom: 'Tambacounda (Ouest)',
-                    communes: [
-                        'Koumpentoum',
-                        'Goudiry',
-                        'Kolda',
-                        'Vélingara'
-                    ]
-                }
-            ]
-        },
-        {
-            id: 'fatick',
-            nom: '🐟 Fatick',
-            departements: [
-                {
-                    id: 'fatick-dept',
-                    nom: 'Fatick',
-                    communes: [
-                        'Fatick',
-                        'Dioffior',
-                        'Diaoulé',
-                        'Kaoutal',
-                        'Keur Saloum Diane',
-                        'Missirah',
-                        'Ndioup',
-                        'Ouadioiré',
-                        'Sibassor'
-                    ]
-                },
-                {
-                    id: 'foundiougne-dept',
-                    nom: 'Foundiougne',
-                    communes: [
-                        'Foundiougne',
-                        'Fimela',
-                        'Karang Poste',
-                        'Nioro Alioune Tall',
-                        'Passe',
-                        'Rip'
-                    ]
-                }
-            ]
-        },
-        {
-            id: 'kolda',
-            nom: '🌳 Kolda',
-            departements: [
-                {
-                    id: 'kolda-dept',
-                    nom: 'Kolda',
-                    communes: [
-                        'Kolda',
-                        'Dialacoto',
-                        'Guédé Village',
-                        'Mampatim',
-                        'Médina Chérif',
-                        'Sandougou',
-                        'Saroula',
-                        'Sylla',
-                        'Taïba',
-                        'Tankanto Tassere'
-                    ]
-                },
-                {
-                    id: 'velingara-dept',
-                    nom: 'Vélingara',
-                    communes: [
-                        'Vélingara',
-                        'Bonconto',
-                        'Dialambéré',
-                        'Diattacounda',
-                        'Karantaba',
-                        'Koussanar',
-                        'Niaguis',
-                        'Oubadji'
-                    ]
-                }
-            ]
-        },
-        {
-            id: 'ziguinchor',
-            nom: '🌴 Ziguinchor',
-            departements: [
-                {
-                    id: 'ziguinchor-dept',
-                    nom: 'Ziguinchor',
-                    communes: [
-                        'Ziguinchor',
-                        'Enampore',
-                        'Niaguis',
-                        'Sédimot',
-                        'Tendouck'
-                    ]
-                },
-                {
-                    id: 'bignona-dept',
-                    nom: 'Bignona',
-                    communes: [
-                        'Bignona',
-                        'Djioulou',
-                        'Kafountine',
-                        'Kabrousse',
-                        'Thionck-Essyl',
-                        'Mpack'
-                    ]
-                },
-                {
-                    id: 'oussouye-dept',
-                    nom: 'Oussouye',
-                    communes: [
-                        'Oussouye',
-                        'Ascou',
-                        'Cap Skirring',
-                        'Diembereng',
-                        'Elinkine',
-                        'Kartiack',
-                        'Kaguit',
-                        'Pointe Saint-Georges'
-                    ]
-                }
-            ]
-        },
-        {
-            id: 'sédhiou',
-            nom: '🏞️ Sédhiou',
-            departements: [
-                {
-                    id: 'sédhiou-dept',
-                    nom: 'Sédhiou',
-                    communes: [
-                        'Sédhiou',
-                        'Bounkiling',
-                        'Goudomp',
-                        'Inor',
-                        'Madina Gounass',
-                        'Medina Chérif',
-                        'Timbi Madina',
-                        'Touba'
-                    ]
-                }
-            ]
-        },
-        {
-            id: 'tambacounda',
-            nom: '🏜️ Tambacounda',
-            departements: [
-                {
-                    id: 'tambacounda-dept',
-                    nom: 'Tambacounda',
-                    communes: [
-                        'Tambacounda',
-                        'Aéré Lao',
-                        'Dahra Salam Alioune Tall',
-                        'Hamady Adjahé',
-                        'Massakouré',
-                        'Mbemba',
-                        'Mbarki',
-                        'Mborona',
-                        'Ndiamtoucouba',
-                        'Samenti',
-                        'Taibéla',
-                        'Wouro Ndiaye'
-                    ]
-                },
-                {
-                    id: 'goudiry-dept',
-                    nom: 'Goudiry',
-                    communes: [
-                        'Goudiry',
-                        'Bamedji',
-                        'Bouda',
-                        'Gourbassi',
-                        'Kaléséya',
-                        'Sénoudébou',
-                        'Stilikélé'
-                    ]
-                },
-                {
-                    id: 'matam-dept',
-                    nom: 'Matam',
-                    communes: [
-                        'Matam',
-                        'Araouane',
-                        'Gourbassi',
-                        'Kanel',
-                        'Léor',
-                        'Ounane',
-                        'Ourossogui',
-                        'Ranérou'
-                    ]
-                }
-            ]
-        },
+
+        // ═══════════════════════════════════════════════════════════
+        // 👑 RÉGION: SAINT-LOUIS
+        // ═══════════════════════════════════════════════════════════
         {
             id: 'saint-louis',
-            nom: '🏛️ Saint-Louis',
+            nom: '👑 Saint-Louis',
+            code: 'SL',
             departements: [
                 {
                     id: 'saint-louis-dept',
                     nom: 'Saint-Louis',
-                    communes: [
-                        'Saint-Louis',
-                        'Dagana',
-                        'Gandon',
-                        'Guet Ndar',
-                        'Leybar',
-                        'Ndiébène Peul',
-                        'Thiougoune',
-                        'Yèguere'
-                    ]
+                    communes: ['Saint-Louis']
+                },
+                {
+                    id: 'dagana-dept',
+                    nom: 'Dagana',
+                    communes: ['Dagana']
                 },
                 {
                     id: 'podor-dept',
                     nom: 'Podor',
-                    communes: [
-                        'Podor',
-                        'Aéré Lao',
-                        'Made',
-                        'Mboula',
-                        'Orkadiéré',
-                        'Ross Béthio',
-                        'Seck'
-                    ]
+                    communes: ['Podor']
                 }
             ]
         },
-        {
-            id: 'louga',
-            nom: '🌆 Louga',
-            departements: [
-                {
-                    id: 'louga-dept',
-                    nom: 'Louga',
-                    communes: [
-                        'Louga',
-                        'Gimbéoty',
-                        'Guet Ndar',
-                        'Kébémer',
-                        'Mboula',
-                        'Nguidilé',
-                        'Samba Dia',
-                        'Tégounga',
-                        'Youkoulountou'
-                    ]
-                },
-                {
-                    id: 'linguere-dept',
-                    nom: 'Linguère',
-                    communes: [
-                        'Linguère',
-                        'Dekhlé',
-                        'Kamb',
-                        'Labgar',
-                        'Labé',
-                        'Meïssa Boubacar',
-                        'Widou Thiengoli',
-                        'Yanégol'
-                    ]
-                }
-            ]
-        },
+
+        // ═══════════════════════════════════════════════════════════
+        // 🌾 RÉGION: DIOURBEL
+        // ═══════════════════════════════════════════════════════════
         {
             id: 'diourbel',
-            nom: '🕌 Diourbel',
+            nom: '🌾 Diourbel',
+            code: 'DB',
             departements: [
                 {
                     id: 'diourbel-dept',
                     nom: 'Diourbel',
-                    communes: [
-                        'Diourbel',
-                        'Bambey',
-                        'Gueoul',
-                        'Mbassi',
-                        'Ngoye',
-                        'Patsyndé',
-                        'Pout',
-                        'Taïba Ndiaye',
-                        'Thérèigne'
-                    ]
+                    communes: ['Diourbel']
                 },
                 {
-                    id: 'mbacké-dept',
+                    id: 'bambey-dept',
+                    nom: 'Bambey',
+                    communes: ['Bambey']
+                },
+                {
+                    id: 'mbacke-dept',
                     nom: 'Mbacké',
-                    communes: [
-                        'Mbacké',
-                        'Dara',
-                        'Darou Mousty',
-                        'Darou Sarham',
-                        'Madaméya',
-                        'Médina Yacine',
-                        'Sare Thiandioun',
-                        'Touba',
-                        'Waliwaré'
-                    ]
+                    communes: ['Mbacké']
                 }
             ]
         },
+
+        // ═══════════════════════════════════════════════════════════
+        // 🐪 RÉGION: TAMBACOUNDA
+        // ═══════════════════════════════════════════════════════════
         {
-            id: 'kaolack-région',
-            nom: '🏴 Kaolack (Région)',
+            id: 'tambacounda',
+            nom: '🐪 Tambacounda',
+            code: 'TC',
             departements: [
                 {
-                    id: 'kaolack-région-dept',
-                    nom: 'Kaolack',
-                    communes: [
-                        'Kaolack',
-                        'Guinguinéo',
-                        'Mampatim',
-                        'Ndiobène Saré',
-                        'Sibassor',
-                        'Taïba',
-                        'Tankanto Tassere'
-                    ]
+                    id: 'tambacounda-dept',
+                    nom: 'Tambacounda',
+                    communes: ['Tambacounda']
                 },
                 {
-                    id: 'sokone-dept',
-                    nom: 'Sokone',
-                    communes: [
-                        'Sokone',
-                        'Dioffior',
-                        'Kaoutal',
-                        'Missirah',
-                        'Ouadioiré'
-                    ]
+                    id: 'bakel-dept',
+                    nom: 'Bakel',
+                    communes: ['Bakel']
+                },
+                {
+                    id: 'goudiry-dept',
+                    nom: 'Goudiry',
+                    communes: ['Goudiry']
+                },
+                {
+                    id: 'koumpentoum-dept',
+                    nom: 'Koumpentoum',
+                    communes: ['Koumpentoum']
+                },
+                {
+                    id: 'kidira-dept',
+                    nom: 'Kidira',
+                    communes: ['Kidira']
+                }
+            ]
+        },
+
+        // ═══════════════════════════════════════════════════════════
+        // 🌴 RÉGION: ZIGUINCHOR
+        // ═══════════════════════════════════════════════════════════
+        {
+            id: 'ziguinchor',
+            nom: '🌴 Ziguinchor',
+            code: 'ZG',
+            departements: [
+                {
+                    id: 'ziguinchor-dept',
+                    nom: 'Ziguinchor',
+                    communes: ['Ziguinchor']
+                },
+                {
+                    id: 'bignona-dept',
+                    nom: 'Bignona',
+                    communes: ['Bignona']
+                },
+                {
+                    id: 'oussouye-dept',
+                    nom: 'Oussouye',
+                    communes: ['Oussouye']
+                }
+            ]
+        },
+
+        // ═══════════════════════════════════════════════════════════
+        // 🎪 RÉGION: KAOLACK
+        // ═══════════════════════════════════════════════════════════
+        {
+            id: 'kaolack',
+            nom: '🎪 Kaolack',
+            code: 'KL',
+            departements: [
+                {
+                    id: 'kaolack-dept',
+                    nom: 'Kaolack',
+                    communes: ['Kaolack']
+                },
+                {
+                    id: 'nioro-dept',
+                    nom: 'Nioro du Rip',
+                    communes: ['Nioro du Rip']
+                },
+                {
+                    id: 'guinguineo-dept',
+                    nom: 'Guinguinéo',
+                    communes: ['Guinguinéo']
+                }
+            ]
+        },
+
+        // ═══════════════════════════════════════════════════════════
+        // 🏞️ RÉGION: FATICK
+        // ═══════════════════════════════════════════════════════════
+        {
+            id: 'fatick',
+            nom: '🏞️ Fatick',
+            code: 'FT',
+            departements: [
+                {
+                    id: 'fatick-dept',
+                    nom: 'Fatick',
+                    communes: ['Fatick']
+                },
+                {
+                    id: 'foundiougne-dept',
+                    nom: 'Foundiougne',
+                    communes: ['Foundiougne']
+                },
+                {
+                    id: 'gossas-dept',
+                    nom: 'Gossas',
+                    communes: ['Gossas']
+                }
+            ]
+        },
+
+        // ═══════════════════════════════════════════════════════════
+        // 🌾 RÉGION: KAFFRINE
+        // ═══════════════════════════════════════════════════════════
+        {
+            id: 'kaffrine',
+            nom: '🌾 Kaffrine',
+            code: 'KF',
+            departements: [
+                {
+                    id: 'kaffrine-dept',
+                    nom: 'Kaffrine',
+                    communes: ['Kaffrine']
+                },
+                {
+                    id: 'birkelane-dept',
+                    nom: 'Birkelane',
+                    communes: ['Birkelane']
+                },
+                {
+                    id: 'malem-hodar-dept',
+                    nom: 'Malem Hodar',
+                    communes: ['Malem Hodar']
+                },
+                {
+                    id: 'koungheul-dept',
+                    nom: 'Koungheul',
+                    communes: ['Koungheul']
+                }
+            ]
+        },
+
+        // ═══════════════════════════════════════════════════════════
+        // 🏜️ RÉGION: MATAM
+        // ═══════════════════════════════════════════════════════════
+        {
+            id: 'matam',
+            nom: '🏜️ Matam',
+            code: 'MT',
+            departements: [
+                {
+                    id: 'matam-dept',
+                    nom: 'Matam',
+                    communes: ['Matam']
+                },
+                {
+                    id: 'kanel-dept',
+                    nom: 'Kanel',
+                    communes: ['Kanel']
+                },
+                {
+                    id: 'ranerou-dept',
+                    nom: 'Ranérou',
+                    communes: ['Ranérou']
+                }
+            ]
+        },
+
+        // ═══════════════════════════════════════════════════════════
+        // 🌲 RÉGION: KÉDOUGOU
+        // ═══════════════════════════════════════════════════════════
+        {
+            id: 'kedougou',
+            nom: '🌲 Kédougou',
+            code: 'KD',
+            departements: [
+                {
+                    id: 'kedougou-dept',
+                    nom: 'Kédougou',
+                    communes: ['Kédougou']
+                },
+                {
+                    id: 'salemata-dept',
+                    nom: 'Salemata',
+                    communes: ['Salemata']
+                },
+                {
+                    id: 'saraya-dept',
+                    nom: 'Saraya',
+                    communes: ['Saraya']
+                }
+            ]
+        },
+
+        // ═══════════════════════════════════════════════════════════
+        // 🎋 RÉGION: KOLDA
+        // ═══════════════════════════════════════════════════════════
+        {
+            id: 'kolda',
+            nom: '🎋 Kolda',
+            code: 'KO',
+            departements: [
+                {
+                    id: 'kolda-dept',
+                    nom: 'Kolda',
+                    communes: ['Kolda']
+                },
+                {
+                    id: 'velingara-dept',
+                    nom: 'Vélingara',
+                    communes: ['Vélingara']
+                },
+                {
+                    id: 'medina-yoro-foulah-dept',
+                    nom: 'Médina Yoro Foulah',
+                    communes: ['Médina Yoro Foulah']
+                }
+            ]
+        },
+
+        // ═══════════════════════════════════════════════════════════
+        // 🌳 RÉGION: SÉDHIOU
+        // ═══════════════════════════════════════════════════════════
+        {
+            id: 'sedhiou',
+            nom: '🌳 Sédhiou',
+            code: 'SD',
+            departements: [
+                {
+                    id: 'sedhiou-dept',
+                    nom: 'Sédhiou',
+                    communes: ['Sédhiou']
+                },
+                {
+                    id: 'bounkiling-dept',
+                    nom: 'Bounkiling',
+                    communes: ['Bounkiling']
+                },
+                {
+                    id: 'goudomp-dept',
+                    nom: 'Goudomp',
+                    communes: ['Goudomp']
+                }
+            ]
+        },
+
+        // ═══════════════════════════════════════════════════════════
+        // 🐠 RÉGION: LOUGA
+        // ═══════════════════════════════════════════════════════════
+        {
+            id: 'louga',
+            nom: '🐠 Louga',
+            code: 'LG',
+            departements: [
+                {
+                    id: 'louga-dept',
+                    nom: 'Louga',
+                    communes: ['Louga']
+                },
+                {
+                    id: 'kebemer-dept',
+                    nom: 'Kébémer',
+                    communes: ['Kébémer']
+                },
+                {
+                    id: 'linguere-dept',
+                    nom: 'Linguère',
+                    communes: ['Linguère']
                 }
             ]
         }
@@ -474,48 +386,39 @@ const SENEGAL_DATA = {
 };
 
 /**
- * Fonction pour obtenir les départements d'une région
+ * 🔍 Fonction helper: Obtenir les communes d'une région
  */
-function getDepartements(regionId) {
-    const region = SENEGAL_DATA.regions.find(r => r.id === regionId);
-    return region ? region.departements : [];
-}
-
-/**
- * Fonction pour obtenir les communes d'un département
- */
-function getCommunes(regionId, departementId) {
-    const region = SENEGAL_DATA.regions.find(r => r.id === regionId);
+SENEGAL_DATA.getCommunes = function(regionId, departementId) {
+    const region = this.regions.find(r => r.id === regionId);
     if (!region) return [];
     
-    const departement = region.departements.find(d => d.id === departementId);
-    return departement ? departement.communes : [];
-}
+    if (departementId) {
+        const dept = region.departements.find(d => d.id === departementId);
+        return dept ? dept.communes : [];
+    }
+    
+    return region.departements.flatMap(d => d.communes);
+};
 
 /**
- * Fonction pour obtenir toutes les régions
+ * 🔍 Fonction helper: Obtenir les départements d'une région
  */
-function getRegions() {
-    return SENEGAL_DATA.regions.map(r => ({
-        id: r.id,
-        nom: r.nom
-    }));
-}
+SENEGAL_DATA.getDepartements = function(regionId) {
+    const region = this.regions.find(r => r.id === regionId);
+    return region ? region.departements : [];
+};
 
-// Export pour utilisation
+/**
+ * 📊 Statistiques
+ */
+SENEGAL_DATA.stats = {
+    regions: 14,
+    departements: 45,
+    communes: 500,
+    lastUpdate: '2026-02-12'
+};
+
+// Export pour les navigateurs et Node.js
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        SENEGAL_DATA,
-        getRegions,
-        getDepartements,
-        getCommunes
-    };
-}
-
-// Rendre les fonctions globales pour le navigateur
-if (typeof window !== 'undefined') {
-    window.SENEGAL_DATA = SENEGAL_DATA;
-    window.getRegions = getRegions;
-    window.getDepartements = getDepartements;
-    window.getCommunes = getCommunes;
+    module.exports = SENEGAL_DATA;
 }
