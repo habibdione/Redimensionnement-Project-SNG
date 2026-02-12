@@ -1,0 +1,213 @@
+# Configuration Apache pour PWA SENELEC
+# Copier ce fichier à la racine du serveur: .htaccess
+
+# ==============================
+# ACTIVER MOD_REWRITE
+# ==============================
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # SPA Fallback - Rediriger les routes non-fichier/dossier vers index.html
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ Dimensionnement.html [QSA,L]
+</IfModule>
+
+# ==============================
+# TYPES MIME
+# ==============================
+<IfModule mod_mime.c>
+  # WebManifest PWA
+  AddType application/manifest+json .webmanifest
+  AddType application/json .json
+
+  # Service Worker
+  AddType application/javascript .js
+
+  # Images modernes
+  AddType image/webp .webp
+  AddType image/svg+xml .svg
+  AddEncoding gzip .svgz
+  AddType image/svg+xml .svg
+
+  # Fonts
+  AddType font/woff2 .woff2
+  AddType font/woff .woff
+</IfModule>
+
+# ==============================
+# HEADERS HTTP PWA
+# ==============================
+<IfModule mod_headers.c>
+  # Service Worker - TRÈS IMPORTANT!
+  <FilesMatch "^sw\.js$">
+    Header set Service-Worker-Allowed "/"
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+    Header set Content-Type "application/javascript; charset=utf-8"
+  </FilesMatch>
+
+  # Manifest.json
+  <FilesMatch "^manifest\.(json|webmanifest)$">
+    Header set Content-Type "application/manifest+json; charset=utf-8"
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+  </FilesMatch>
+
+  # HTML - Jamais mettre en cache
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  # Assets statiques - Cache long terme
+  <FilesMatch "\.(jpg|jpeg|png|gif|ico|svg|woff2|woff|eot|ttf|js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # CORS - Permettre accès CDN
+  <FilesMatch "\.(js|css|json|xml|txt)$">
+    Header set Access-Control-Allow-Origin "*"
+    Header set Vary "Accept-Encoding"
+  </FilesMatch>
+
+  # Sécurité
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-XSS-Protection "1; mode=block"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Performance
+  Header set Connection "keep-alive"
+</IfModule>
+
+# ==============================
+# COMPRESSION GZIP
+# ==============================
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/xml
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE application/xhtml+xml
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/x-javascript
+  AddOutputFilterByType DEFLATE image/svg+xml
+
+  # Exclure les formats déjà comprimés
+  SetEnvIfNoCase Request_URI \.(?:jpg|jpeg|png|gif|eot|woff2?|) no-gzip dont-vary
+</IfModule>
+
+# ==============================
+# CERTIFICAT SSL/HTTPS
+# ==============================
+# Pour Let's Encrypt, Certbot génère automatiquement ces lignes
+<IfModule mod_ssl.c>
+  SSLEngine on
+  SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
+  SSLCipherSuite HIGH:!aNULL:!MD5
+</IfModule>
+
+# Redirection HTTP → HTTPS
+<IfModule mod_rewrite.c>
+  RewriteCond %{HTTPS} off
+  RewriteCond %{REQUEST_URI} !^/\.well-known
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ==============================
+# CACHE BUSTING & VERSIONING
+# ==============================
+# Les fichiers avec version dans le nom ne sont jamais supprimés du cache
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # Assets versionés (app-123abc.js) → cache long
+  <FilesMatch "\-[0-9a-f]{8}\.(js|css|jpg|png|svg)$">
+    ExpiresDefault "max-age=31536000"
+  </FilesMatch>
+
+  # Fichiers modernes → cache moyen
+  <FilesMatch "\.(jpg|jpeg|png|gif|ico|svg)$">
+    ExpiresDefault "max-age=2592000"
+  </FilesMatch>
+
+  # HTML → pas de cache
+  <FilesMatch "\.(html|htm)$">
+    ExpiresDefault "max-age=0"
+  </FilesMatch>
+
+  # JSON/Manifest → pas de cache
+  <FilesMatch "\.(json|webmanifest)$">
+    ExpiresDefault "max-age=0"
+  </FilesMatch>
+</IfModule>
+
+# ==============================
+# OPTIMISATIONS SUPPLÉMENTAIRES
+# ==============================
+
+# Support des range requests (pour video, etc.)
+<IfModule mod_headers.c>
+  <FilesMatch "\.(mp4|webm|ogv|mov)$">
+    Header set Accept-Ranges "bytes"
+  </FilesMatch>
+</IfModule>
+
+# Désactiver les ETags (utiliser Last-Modified)
+<IfModule mod_headers.c>
+  Header unset ETag
+  FileETag None
+</IfModule>
+
+# ==============================
+# LIMITATIONS SÉCURITÉ
+# ==============================
+
+# Empêcher l'accès aux fichiers sensibles
+<FilesMatch "^(\.htaccess|\.env|package\.json|gulpfile|config)">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# Empêcher l'accès à certains répertoires
+<DirectoryMatch "(^\.|node_modules|\.git)">
+  Order allow,deny
+  Deny from all
+</DirectoryMatch>
+
+# ==============================
+# LOGS (Optionnel)
+# ==============================
+# Décommenter pour logger les SW requests
+# <IfModule mod_log_config.c>
+#   CustomLog logs/sw.log "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\""
+# </IfModule>
+
+# ============================================================================
+# NOTES D'INSTALLATION:
+# ============================================================================
+# 1. Copier ce fichier à la racine: /var/www/html/.htaccess
+# 2. Assurez-vous que mod_rewrite est activé:
+#    sudo a2enmod rewrite
+#    sudo a2enmod headers
+#    sudo a2enmod deflate
+#    sudo systemctl restart apache2
+#
+# 3. Vérifier la configuration:
+#    apache2ctl -t
+#    # devrait afficher: Syntax OK
+#
+# 4. Pour HTTPS avec Let's Encrypt:
+#    sudo apt-get install certbot python3-certbot-apache
+#    sudo certbot certonly --apache -d votre-domaine.com
+#    # Certbot modifie automatiquement .htaccess
+#
+# ============================================================================

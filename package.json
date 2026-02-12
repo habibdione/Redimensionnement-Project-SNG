@@ -1,0 +1,94 @@
+{
+  "name": "senelec-dimensionnement-pwa",
+  "version": "1.0.0",
+  "description": "Application Progressive Web App (PWA) pour la collecte de données cartographiques de dimensionnement SENELEC",
+  "main": "Dimensionnement.html",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/senelec/dimensionnement.git"
+  },
+  "keywords": [
+    "PWA",
+    "cartographie",
+    "GPS",
+    "collecte-données",
+    "Leaflet",
+    "OpenStreetMap",
+    "SENELEC",
+    "mobile",
+    "offline-first"
+  ],
+  "author": "SENELEC",
+  "license": "MIT",
+  "scripts": {
+    "start": "http-server -c-1 -p 5000 --cors",
+    "dev": "http-server -c-1 -p 3000",
+    "serve": "node server.js",
+    "test": "echo \"Tests manuels via checklist\" && exit 0",
+    "audit": "lighthouse http://localhost:5000 --chrome-flags=\"--headless --no-sandbox\"",
+    "validate:manifest": "npx manifest-validator manifest.json",
+    "validate:sw": "echo 'Service Worker validation manuelle recommandée'",
+    "build": "echo 'No build needed - fichiers statiques'"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "lighthouse": "^9.6.8",
+    "manifest-validator": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "Firefox 60",
+    "Chrome 60",
+    "Safari 12",
+    "> 1%"
+  ],
+  "pwa": {
+    "name": "SENELEC Dimensionnement",
+    "shortName": "SENELEC Map",
+    "description": "Collecte de données cartographiques hors ligne",
+    "startUrl": "/index.html",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "themeColor": "#667eea",
+    "backgroundColor": "#ffffff",
+    "categories": [
+      "productivity",
+      "utilities"
+    ],
+    "screenshots": [
+      {
+        "src": "data:image/svg+xml,...",
+        "sizes": "540x720",
+        "type": "image/svg+xml",
+        "formFactor": "narrow"
+      },
+      {
+        "src": "data:image/svg+xml,...",
+        "sizes": "1280x720",
+        "type": "image/svg+xml",
+        "formFactor": "wide"
+      }
+    ]
+  },
+  "about": {
+    "app_name": "SENELEC Dimensionnement - Collecte de Données Cartographique",
+    "version": "1.0.0",
+    "environment": "Production",
+    "deployed": "2026-02-12",
+    "region": "Ziguinchor, Sénégal",
+    "offline_capable": true,
+    "installable": true,
+    "camera_support": true,
+    "geolocation": true,
+    "export_formats": [
+      "Excel (.xlsx)",
+      "JSON (.json)",
+      "PDF (print)"
+    ]
+  }
+}
