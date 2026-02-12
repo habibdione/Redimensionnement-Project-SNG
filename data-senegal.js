@@ -511,3 +511,11 @@ if (typeof module !== 'undefined' && module.exports) {
         getCommunes
     };
 }
+
+// Rendre les fonctions globales pour le navigateur
+if (typeof window !== 'undefined') {
+    window.SENEGAL_DATA = SENEGAL_DATA;
+    window.getRegions = getRegions;
+    window.getDepartements = getDepartements;
+    window.getCommunes = getCommunes;
+}
