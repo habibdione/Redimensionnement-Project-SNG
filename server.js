@@ -506,10 +506,10 @@ async function startServer() {
         await initDatabase();
         console.log('✅ Base de données initialisée');
 
-        app.listen(PORT, () => {
+        const server = app.listen(PORT, () => {
             console.log(`
 ╔═══════════════════════════════════════════════╗
-║   SERVEUR DIMENSIONNEMENT SENELEC ACTIF       ║
+║   SERVEUR DIMENSIONNEMENT SONAGED ACTIF       ║
 ╠═══════════════════════════════════════════════╣
 ║   Port: ${PORT}
 ║   URL: http://localhost:${PORT}
@@ -518,8 +518,26 @@ async function startServer() {
 ╚═══════════════════════════════════════════════╝
             `);
         });
+
+        // Gestion des erreurs de port déjà utilisé
+        server.on('error', (error) => {
+            if (error.code === 'EADDRINUSE') {
+                console.error(`\n❌ ERREUR: Le port ${PORT} est déjà utilisé!`);
+                console.error('\n💡 Solutions:');
+                console.error(`   1. Attendez quelques secondes et relancez...`);
+                console.error(`   2. Ou: Get-NetTCPConnection -LocalPort ${PORT} | Stop-Process -Force`);
+                console.error(`   3. Ou: changez le port dans .env (PORT=3002)\n`);
+                process.exit(1);
+            } else {
+                throw error;
+            }
+        });
+
     } catch (error) {
-        console.error('❌ Erreur au démarrage du serveur:', error);
+        console.error('❌ Erreur au démarrage du serveur:', error.message);
+        if (error.message.includes('EADDRINUSE')) {
+            console.error('\n🔧 Le port est occupé. Tentative de nettoyage...');
+        }
         process.exit(1);
     }
 }
