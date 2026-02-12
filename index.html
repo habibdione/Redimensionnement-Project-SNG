@@ -699,33 +699,23 @@
                 <div id="alert-container"></div>
                 
                 <div class="form-group">
-                    <label for="region">Région</label>
-                    <select id="region" required>
-                        <option value="Région de Ziguinchor">Région de Ziguinchor</option>
+                    <label for="region">🗺️ Région</label>
+                    <select id="region" required onchange="mettreAJourDepartements()">
+                        <option value="">-- Sélectionner une région --</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
-                    <label for="departement">Département</label>
-                    <select id="departement" required>
-                        <option value="">-- Sélectionner --</option>
-                        <option value="Ziguinchor">Ziguinchor</option>
-                        <option value="Bignona">Bignona</option>
-                        <option value="Oussouye">Oussouye</option>
+                    <label for="departement">📍 Département</label>
+                    <select id="departement" required onchange="mettreAJourCommunes()">
+                        <option value="">-- Sélectionner un département --</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
-                    <label for="commune">Commune</label>
+                    <label for="commune">🏘️ Commune</label>
                     <select id="commune" required>
                         <option value="">-- Sélectionner une commune --</option>
-                        <option value="Ziguinchor">Ziguinchor</option>
-                        <option value="Bignona">Bignona</option>
-                        <option value="Oussoye">Oussoye</option>
-                        <option value="Djimbering">Djimbering</option>
-                        <option value="Diouloulou">Diouloulou</option>
-                        <option value="Kafountine">Kafountine</option>
-                        <option value="Thionck-Essil">Thionck-Essil</option>
                     </select>
                 </div>
                 
@@ -1670,12 +1660,80 @@
             afficherCalendrier();
             mettreAJourSites();
             
+            // Initialiser les selects géographiques
+            initialiserSelectsGeographiques();
+            
             // Vérifier le statut PWA
             if (window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches) {
                 console.log('✅ Exécution en mode PWA');
                 showAlert('success', '📱 Application PWA chargée!');
             }
         });
+        
+        /**
+         * ============================================
+         * GESTION DES SELECTS GÉOGRAPHIQUES EN CASCADE
+         * ============================================
+         */
+        
+        function initialiserSelectsGeographiques() {
+            // Remplir le select des régions
+            const regionSelect = document.getElementById('region');
+            regionSelect.innerHTML = '<option value="">-- Sélectionner une région --</option>';
+            
+            getRegions().forEach(region => {
+                const option = document.createElement('option');
+                option.value = region.id;
+                option.textContent = region.nom;
+                regionSelect.appendChild(option);
+            });
+        }
+        
+        function mettreAJourDepartements() {
+            const regionSelect = document.getElementById('region');
+            const departementSelect = document.getElementById('departement');
+            const communeSelect = document.getElementById('commune');
+            
+            const regionId = regionSelect.value;
+            
+            // Réinitialiser les autres selects
+            departementSelect.innerHTML = '<option value="">-- Sélectionner un département --</option>';
+            communeSelect.innerHTML = '<option value="">-- Sélectionner une commune --</option>';
+            
+            if (!regionId) return;
+            
+            // Récupérer et remplir les départements
+            const departements = getDepartements(regionId);
+            departements.forEach(dept => {
+                const option = document.createElement('option');
+                option.value = dept.id;
+                option.textContent = dept.nom;
+                departementSelect.appendChild(option);
+            });
+        }
+        
+        function mettreAJourCommunes() {
+            const regionSelect = document.getElementById('region');
+            const departementSelect = document.getElementById('departement');
+            const communeSelect = document.getElementById('commune');
+            
+            const regionId = regionSelect.value;
+            const departementId = departementSelect.value;
+            
+            // Réinitialiser le select des communes
+            communeSelect.innerHTML = '<option value="">-- Sélectionner une commune --</option>';
+            
+            if (!regionId || !departementId) return;
+            
+            // Récupérer et remplir les communes
+            const communes = getCommunes(regionId, departementId);
+            communes.forEach(commune => {
+                const option = document.createElement('option');
+                option.value = commune;
+                option.textContent = commune;
+                communeSelect.appendChild(option);
+            });
+        }
         
         // Calendrier des activités
         function afficherCalendrier() {
@@ -1747,6 +1805,8 @@
         }
     </script>
     
+    <!-- Données géographiques du Sénégal avec cascading selects -->
+    <script src="data-senegal.js"></script>
     <!-- Configuration d'environnement (doit être avant api-client.js) -->
     <script src="config.js"></script>
     <!-- Client API pour communication avec PostgreSQL backend -->
