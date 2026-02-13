@@ -7,9 +7,9 @@
             "port": 5432,
             "driver": "PostgreSQL",
             "name": "postgres",
-            "username": "postgresql",
+            "username": "postgres",
             "database": "dimentionnement_SNG",
-            "password": "tjtmmaman96"
+            "password": "jtmmaman96"
         }
     ]
 }
