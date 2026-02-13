@@ -775,7 +775,7 @@
         <footer>
             <p style="margin-bottom: 10px; font-weight: 700; font-size: 14px;">© 2026 SONAGED - Système de Dimensionnement & Gestion de Données</p>
             <p style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;"><strong>🗺️ Application Géographique Progressive</strong> | Dernière mise à jour: <span id="date-update"></span></p>
-            <p style="font-size: 12px; opacity: 0.85; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; margin-top: 10px;">👨‍💻 Développeur: <strong>Habib DIONE</strong> | 🏢 Chargé SIG Ziguinchor | 🌿 SONAGED Sénégal</p>
+            <p style="font-size: 12px; opacity: 0.85; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; margin-top: 10px;">👨‍💻 <strong>Habib DIONE</strong> | 🏢 Chargé SIG Ziguinchor</p>
         </footer>
     </div>
     
@@ -1759,57 +1759,6 @@
         function sauvegarderDonneesBD() {
             // Collecter les données du formulaire EN PREMIER
             sauvegarderDonnees();
-            
-            // Vérifier que les champs requis sont remplis
-            if (!donnees.partenaire || !donnees.region || !donnees.departement || !donnees.commune) {
-                const champsManquants = [];
-                const champsOK = [];
-                
-                if (donnees.partenaire) {
-                    champsOK.push(`✅ Partenaire: "${donnees.partenaire}"`);
-                } else {
-                    champsManquants.push('❌ Partenaire (VIDE)');
-                }
-                
-                if (donnees.region) {
-                    champsOK.push(`✅ Région: "${donnees.region}"`);
-                } else {
-                    champsManquants.push('❌ Région (VIDE - Click sur le dropdown pour sélectionner!)');
-                }
-                
-                if (donnees.departement) {
-                    champsOK.push(`✅ Département: "${donnees.departement}"`);
-                } else {
-                    champsManquants.push('❌ Département (VIDE - Click sur le dropdown pour sélectionner!)');
-                }
-                
-                if (donnees.commune) {
-                    champsOK.push(`✅ Commune: "${donnees.commune}"`);
-                } else {
-                    champsManquants.push('❌ Commune (VIDE - Click sur le dropdown pour sélectionner!)');
-                }
-                
-                const message = `
-⚠️ IMPOSSIBLE DE SAUVEGARDER - Données manquantes!
-
-📊 CHAMPS REMPLIS:
-${champsOK.length > 0 ? champsOK.join('\n') : 'AUCUN CHAMP REMPLI!'}
-
-❌ CHAMPS MANQUANTS:
-${champsManquants.join('\n')}
-
-✅ SOLUTION:
-1. Clique sur "Région" → sélectionne "Ziguinchor"
-2. Clique sur "Département" → sélectionne "Ziguinchor"
-3. Clique sur "Commune" → sélectionne "Ziguinchor"
-4. Remplis "Partenaire"
-5. Obtiens la position GPS
-6. Réessaie
-                `;
-                showAlert('error', message);
-                console.error('📋 Données actuelles:', donnees);
-                return;
-            }
             
             // D'abord afficher le résumé pour vérification
             afficherResume();

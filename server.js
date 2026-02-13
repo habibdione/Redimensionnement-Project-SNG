@@ -142,25 +142,7 @@ app.post('/api/collecte', async (req, res) => {
             commune: commune || '(VIDE)'
         });
 
-        // Validation des champs requis avec meilleur message
-        if (!partenaire || !region || !departement || !commune) {
-            const champsManquants = [];
-            if (!partenaire) champsManquants.push('partenaire');
-            if (!region) champsManquants.push('région');
-            if (!departement) champsManquants.push('département');
-            if (!commune) champsManquants.push('commune');
-            
-            const errorMsg = `Champs requis manquants ou vides: ${champsManquants.join(', ')}`;
-            console.error('❌', errorMsg);
-            console.error('   Données reçues:', req.body);
-            
-            return res.status(400).json({
-                success: false,
-                error: errorMsg,
-                received: { partenaire, region, departement, commune }
-            });
-        }
-
+        // ✅ VALIDATION GPS OBLIGATOIRE SEULEMENT
         if (!latitude || !longitude) {
             return res.status(400).json({
                 success: false,
