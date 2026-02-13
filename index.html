@@ -2228,6 +2228,40 @@
                     console.log('✅ Formulaire réinitialisé');
                 }, 2000);
             })
+            .then(response => {
+                // ✅ Vérifier le Content-Type avant de parser
+                const contentType = response.headers.get('content-type');
+                console.log(`   📋 Content-Type: ${contentType}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                if (!contentType || !contentType.includes('application/json')) {
+                    console.error('❌ Réponse non-JSON reçue:', contentType);
+                    return response.text().then(text => {
+                        console.error('📄 Texte reçu:', text.substring(0, 200));
+                        throw new Error(`Réponse invalide (${contentType || 'unknown'}): ${text.substring(0, 100)}`);
+                    });
+                }
+                
+                return response.json();
+            })
+            .then(data => {
+                if (!data.success) {
+                    throw new Error(data.error || data.message || 'Erreur serveur');
+                }
+
+                console.log('✅ Données sauvegardées avec succès!');
+                console.log('   ID:', data.data.id);
+                console.log('   Date:', data.data.dateCollecte);
+                showAlert('success', '✅ Données envoyées avec succès!');
+                
+                // Vider le formulaire
+                document.getElementById('collecte-form').reset();
+                previewImg.style.display = 'none';
+                console.log('📋 Formulaire réinitialisé');
+            })
             .catch(error => {
                 console.error('❌ Erreur complète:', error);
                 console.error('📍 Stack:', error.stack);
@@ -2242,6 +2276,12 @@
                     errorMsg = 'Erreur de format de réponse. Le serveur a peut-être retourné du HTML au lieu du JSON. Vérifiez la console du serveur.';
                 } else if (error.message.includes('Ressource') || error.message.toString().includes('Ressource')) {
                     errorMsg = 'La ressource n\'est pas accessible. Cela peut indiquer un problème avec la transmission des données (taille trop grande ou timeout réseau).';
+                } else if (error.message.includes('HTTP 500')) {
+                    errorMsg = 'Erreur serveur (500). Vérifiez la console du serveur pour plus de détails.';
+                } else if (error.message.includes('HTTP')) {
+                    errorMsg = error.message;
+                } else if (error.message.includes('Réponse invalide')) {
+                    errorMsg = error.message;
                 }
                 
                 showAlert('error', `⚠️ Erreur: ${errorMsg}`);

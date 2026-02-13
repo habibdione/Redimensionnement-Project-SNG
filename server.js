@@ -631,6 +631,35 @@ async function startServer() {
     }
 }
 
+// ============================================
+// GESTIONNAIRE D'ERREUR GLOBAL (EXPRESS)
+// ============================================
+// IMPORTANT: Ce middleware DOIT être après toutes les autres routes
+app.use((err, req, res, next) => {
+    console.error('\n❌ ERREUR NON CAPTURÉE:', err.message);
+    console.error('   Stack:', err.stack);
+    
+    // S'assurer de toujours envoyer du JSON, jamais du HTML
+    if (!res.headersSent) {
+        res.status(err.status || 500).json({
+            success: false,
+            error: err.message || 'Erreur interne du serveur',
+            details: process.env.NODE_ENV === 'development' ? err.stack : undefined
+        });
+    }
+});
+
+// Route 404 - Doit aussi envoyer du JSON
+app.use((req, res) => {
+    console.warn(`⚠️ Route non trouvée: ${req.method} ${req.url}`);
+    res.status(404).json({
+        success: false,
+        error: 'Route non trouvée',
+        path: req.path,
+        method: req.method
+    });
+});
+
 // Gestion des erreurs non attrapées
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Rejection non gérée:', reason);
