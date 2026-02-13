@@ -108,9 +108,19 @@ app.get('/', (req, res) => {
  */
 app.post('/api/collecte', async (req, res) => {
     try {
-        console.log('📥 Requête POST /api/collecte reçue');
-        console.log('📊 Champs reçus:', Object.keys(req.body));
-        console.log('📋 Body complet:', JSON.stringify(req.body, null, 2).substring(0, 800));
+        console.log('\n' + '='.repeat(80));
+        console.log('📥 NOUVELLE REQUÊTE POST /api/collecte reçue');
+        console.log('='.repeat(80));
+        
+        console.log('📊 Champs reçus du client:', Object.keys(req.body).join(', '));
+        console.log('\n📋 DÉTAILS DES DONNÉES REÇUES:');
+        console.log('   Partenaire:', req.body.partenaire || '(VIDE)');
+        console.log('   Région:', req.body.region || '(VIDE)');
+        console.log('   Département:', req.body.departement || '(VIDE)');
+        console.log('   Commune:', req.body.commune || '(VIDE)');
+        console.log('   Adresse:', req.body.adresse || '(VIDE)');
+        console.log('   Latitude:', req.body.latitude);
+        console.log('   Longitude:', req.body.longitude);
         
         // Destructurer ET nettoyer les données
         let {
@@ -140,24 +150,23 @@ app.post('/api/collecte', async (req, res) => {
             dateCollecte
         } = req.body;
 
-        // Nettoyer les strings (trim)
+        // 🔴 TRIM todas las strings
         partenaire = typeof partenaire === 'string' ? partenaire.trim() : partenaire;
         region = typeof region === 'string' ? region.trim() : region;
         departement = typeof departement === 'string' ? departement.trim() : departement;
         commune = typeof commune === 'string' ? commune.trim() : commune;
+        adresse = typeof adresse === 'string' ? adresse.trim() : adresse;
 
-        console.log('🔍 Après trim:', {
-            partenaire: `"${partenaire || '(VIDE)'}"`,
-            region: `"${region || '(VIDE)'}"`,
-            departement: `"${departement || '(VIDE)'}"`,
-            commune: `"${commune || '(VIDE)'}"`,
-            adresse: `"${adresse || '(VIDE)'}"`,
-            latitude: latitude,
-            longitude: longitude
-        });
+        console.log('\n✅ APRÈS TRIM - Valeurs finales:');
+        console.log('   Partenaire:', partenaire || '❌ VIDE');
+        console.log('   Région:', region || '❌ VIDE');
+        console.log('   Département:', departement || '❌ VIDE');
+        console.log('   Commune:', commune || '❌ VIDE');
+        console.log('   Adresse:', adresse || '❌ VIDE');
 
         // ✅ VALIDATION GPS OBLIGATOIRE SEULEMENT
         if (!latitude || !longitude) {
+            console.error('❌ GPS MANQUANTS!');
             return res.status(400).json({
                 success: false,
                 error: 'Coordonnées GPS obligatoires'
@@ -238,10 +247,25 @@ app.post('/api/collecte', async (req, res) => {
             'actif'
         ];
 
-        console.log('🔄 Exécution requête INSERT...');
+        console.log('\n📝 VALEURS À INSÉRER DANS LA BASE:');
+        console.log('   $1 (partenaire):', values[0] || '❌ VIDE');
+        console.log('   $2 (region):', values[1] || '❌ VIDE');
+        console.log('   $3 (departement):', values[2] || '❌ VIDE');
+        console.log('   $4 (commune):', values[3] || '❌ VIDE');
+        console.log('   $5 (type_activite):', values[4] || '(optionnel)');
+        console.log('   $6 (adresse):', values[5] || '❌ VIDE');
+        console.log('   $7 (superficie):', values[6]);
+        console.log('   $17 (latitude):', values[16]);
+        console.log('   $18 (longitude):', values[17]);
+        console.log('   $19 (precision):', values[18]);
+
+        console.log('\n🔄 Exécution requête SQL INSERT...');
         const result = await pool.query(query, values);
 
-        console.log('✅ Données insérées avec succès, ID:', result.rows[0].id);
+        console.log('\n✅ INSERTION RÉUSSIE!');
+        console.log('   ID enregistrement:', result.rows[0].id);
+        console.log('   Date collecte:', result.rows[0].date_collecte);
+        console.log('='.repeat(80) + '\n');
 
         res.status(201).json({
             success: true,

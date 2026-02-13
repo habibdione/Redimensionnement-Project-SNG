@@ -2036,198 +2036,176 @@
         
         // Fonction pour sauvegarder en base de données
         function sauvegarderDonneesBD() {
-            // Collecter les données du formulaire EN PREMIER
-            sauvegarderDonnees();
+            console.group('🔴 COLLECTE DIRECTE DEPUIS LE FORMULAIRE HTML');
             
-            // ✅ VALIDATION STRICTE - S'ASSURER QUE LES CHAMPS OBLIGATOIRES SONT REMPLIS
-            console.group('🔴 VALIDATION STRICTE');
+            // 🔴 COLLECTER DIRECTEMENT DES ÉLÉMENTS HTML (pas de dépendance sur l'objet donnees)
+            const partenaire = (document.getElementById('partenaire')?.value || '').trim();
+            const region = (document.getElementById('region')?.value || '').trim();
+            const departement = (document.getElementById('departement')?.value || '').trim();
+            const commune = (document.getElementById('commune')?.value || '').trim();
+            const adresse = (document.getElementById('adresse')?.value || '').trim();
+            const superficie = (document.getElementById('superficie')?.value || '').trim();
+            const besoinPersonnel = (document.getElementById('besoinPersonnel')?.value || '').trim();
+            const observation = (document.getElementById('observation')?.value || '').trim();
             
-            const validations = {
-                'partenaire': donnees.partenaire,
-                'région': donnees.region,
-                'département': donnees.departement,
-                'commune': donnees.commune,
-                'adresse': donnees.adresse,
-                'superficie': donnees.superficie,
-                'personnel': donnees.besoinPersonnel
-            };
+            // Collecte des éléments multi-select
+            const typeActiviteSelect = document.getElementById('typeActivite');
+            const typeActivite = typeActiviteSelect ? Array.from(typeActiviteSelect.selectedOptions).map(opt => opt.value) : [];
+            
+            const dispositifDeploySelect = document.getElementById('dispositifDeploy');
+            const dispositifDeploy = dispositifDeploySelect ? Array.from(dispositifDeploySelect.selectedOptions).map(opt => opt.value) : [];
+            
+            // Collecte des champs optionnels
+            const nombreRotation = (document.getElementById('nombreRotation')?.value || '').trim();
+            const infrastructureGestion = (document.getElementById('infrastructureGestion')?.value || '').trim();
+            const frequenceCollecte = (document.getElementById('frequenceCollecte')?.value || '').trim();
+            const bacs240 = (document.getElementById('bacs240')?.value || '').trim();
+            const caissePolybene = (document.getElementById('caissePolybene')?.value || '').trim();
+            const bacs660 = (document.getElementById('bacs660')?.value || '').trim();
+            const accessibilite = (document.getElementById('accessibilite')?.value || '').trim();
+            
+            // Collecte des GPS
+            const latitude = parseFloat(document.getElementById('lat')?.textContent || donnees.latitude || '');
+            const longitude = parseFloat(document.getElementById('lon')?.textContent || donnees.longitude || '');
+            const precision = parseFloat(document.getElementById('accuracy')?.textContent || donnees.precision || '');
+            const coordonneeX = (document.getElementById('utm-easting')?.textContent || donnees.coordonneeX || '').trim();
+            const coordonneeY = (document.getElementById('utm-northing')?.textContent || donnees.coordonneeY || '').trim();
+            
+            // Photo depuis donnees globales
+            const photo = donnees.photo || null;
+            
+            console.log('✅ COLLECTE DIRECTE - Résultats:');
+            console.log('  Partenaire:', partenaire);
+            console.log('  Région:', region);
+            console.log('  Département:', departement);
+            console.log('  Commune:', commune);
+            console.log('  Adresse:', adresse);
+            console.log('  Superficie:', superficie);
+            console.log('  Personnel:', besoinPersonnel);
+            console.log('  Latitude:', latitude);
+            console.log('  Longitude:', longitude);
+            console.log('  Precision:', precision);
+            
+            console.groupEnd();
+            
+            // ✅ VALIDATION STRICTE DES CHAMPS OBLIGATOIRES
+            console.group('🔴 VALIDATION STRUCTE');
             
             const champs_vides = [];
-            Object.entries(validations).forEach(([champ, valeur]) => {
-                if (!valeur || valeur.toString().trim() === '') {
-                    champs_vides.push(champ);
-                    console.error(`❌ ${champ} est VIDE`);
-                } else {
-                    console.log(`✅ ${champ}: "${valeur}"`);
-                }
-            });
+            
+            if (!partenaire) champs_vides.push('Partenaire');
+            if (!region) champs_vides.push('Région');
+            if (!departement) champs_vides.push('Département');
+            if (!commune) champs_vides.push('Commune');
+            if (!adresse) champs_vides.push('Adresse');
+            if (!superficie) champs_vides.push('Superficie');
+            if (!besoinPersonnel) champs_vides.push('Besoin en Personnel');
+            
+            // Afficher les vérifications
+            champs_vides.length === 0 && console.log('✅ Tous les champs obligatoires sont remplis!');
+            champs_vides.forEach(champ => console.error(`❌ ${champ} est VIDE`));
             
             console.groupEnd();
             
             // Si des champs obligatoires sont vides
             if (champs_vides.length > 0) {
-                const message = `❌ Veuillez remplir les champs obligatoires:\n\n${champs_vides.map(c => '• ' + c).join('\n')}`;
+                const message = `❌ ERREUR: Veuillez remplir les champs obligatoires manquants:\n\n${champs_vides.map(c => '• ' + c).join('\n')}`;
+                console.error(message);
                 alert(message);
                 showAlert('error', message);
                 return;
             }
             
             // GPS obligatoire
-            if (!donnees.latitude || !donnees.longitude) {
-                showAlert('error', '📍 Les coordonnées GPS sont obligatoires. Veuillez capturer votre position.');
+            if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
+                showAlert('error', '📍 Les coordonnées GPS sont obligatoires. Cliquez sur "📡 Obtenir Position GPS" d\'abord.');
+                console.error('❌ GPS invalide - Latitude:', latitude, 'Longitude:', longitude);
                 return;
             }
             
-            // D'abord afficher le résumé pour vérification
+            // Afficher le résumé pour vérification
             afficherResume();
             
             // Demander confirmation
             if (!confirm('✅ Êtes-vous sûr(e) de vouloir sauvegarder ces données en base de données ?')) {
+                console.log('ℹ️ Sauvegarde annulée par l\'utilisateur');
                 return;
             }
             
-            console.log('📤 Données complètes avant envoi:', donnees);
+            console.log('📤 Prêt à envoyer les données au serveur');
             
-            // Préparer les données pour l'envoi
+            // Préparer les données pour l'envoi (DIRECTEMENT depuis les variables locales)
             const dataToSend = {
-                partenaire: donnees.partenaire || '',
-                region: donnees.region || '',
-                departement: donnees.departement || '',
-                commune: donnees.commune || '',
-                typeActivite: Array.isArray(donnees.typeActivite) ? donnees.typeActivite.join(',') : (donnees.typeActivite || ''),
-                adresse: donnees.adresse || '',
-                superficie: donnees.superficie || '',
-                besoinPersonnel: donnees.besoinPersonnel || '',
-                dispositifDeploy: Array.isArray(donnees.dispositifDeploy) ? donnees.dispositifDeploy.join(',') : (donnees.dispositifDeploy || ''),
-                nombreRotation: donnees.nombreRotation || '',
-                infrastructureGestion: donnees.infrastructureGestion || '',
-                frequenceCollecte: donnees.frequenceCollecte || '',
-                bacs240: donnees.bacs240 || '',
-                caissePolybene: donnees.caissePolybene || '',
-                bacs660: donnees.bacs660 || '',
-                accessibilite: donnees.accessibilite || '',
-                observation: donnees.observation || '',
-                latitude: donnees.latitude || document.getElementById('lat').textContent || '',
-                longitude: donnees.longitude || document.getElementById('lon').textContent || '',
-                precision: donnees.precision || document.getElementById('accuracy').textContent || '',
-                coordonneeX: donnees.coordonneeX || document.getElementById('utm-easting').textContent || '',
-                coordonneeY: donnees.coordonneeY || document.getElementById('utm-northing').textContent || '',
-                photo: donnees.photo || null,
+                partenaire: partenaire,
+                region: region,
+                departement: departement,
+                commune: commune,
+                typeActivite: typeActivite.length > 0 ? typeActivite.join(',') : '',
+                adresse: adresse,
+                superficie: superficie,
+                besoinPersonnel: besoinPersonnel,
+                dispositifDeploy: dispositifDeploy.length > 0 ? dispositifDeploy.join(',') : '',
+                nombreRotation: nombreRotation,
+                infrastructureGestion: infrastructureGestion,
+                frequenceCollecte: frequenceCollecte,
+                bacs240: bacs240,
+                caissePolybene: caissePolybene,
+                bacs660: bacs660,
+                accessibilite: accessibilite,
+                observation: observation,
+                latitude: latitude,
+                longitude: longitude,
+                precision: precision,
+                coordonneeX: coordonneeX,
+                coordonneeY: coordonneeY,
+                photo: photo,
                 dateCollecte: new Date().toISOString()
             };
             
-            console.group('🟢 DONNÉES À ENVOYER');
+            console.group('🟢 DONNÉES À ENVOYER AU SERVEUR');
             console.log('Partenaire:', dataToSend.partenaire);
             console.log('Région:', dataToSend.region);
             console.log('Département:', dataToSend.departement);
             console.log('Commune:', dataToSend.commune);
+            console.log('Adresse:', dataToSend.adresse);
             console.log('Latitude:', dataToSend.latitude);
             console.log('Longitude:', dataToSend.longitude);
-            console.log('Full dataToSend:', dataToSend);
+            console.log('Full dataToSend:', JSON.stringify(dataToSend, null, 2));
             console.groupEnd();
             
-            // Valider les données critiques
-            if (!dataToSend.latitude || !dataToSend.longitude) {
-                showAlert('error', '❌ Les coordonnées GPS sont obligatoires. Veuillez capturer votre position.');
-                return;
-            }
-            
-            showAlert('success', '⏳ Sauvegarde en cours... Veuillez patienter.');
-            
-            console.log('📨 Données formatées pour envoi (photo size: ' + (dataToSend.photo ? (dataToSend.photo.length/1024).toFixed(0) : 0) + 'KB)');
+            showAlert('success', '⏳ Envoi des données au serveur... Veuillez patienter.');
             
             // Vérifier la taille totale avant envoi
             const totalSize = JSON.stringify(dataToSend).length;
             console.log('📦 Taille totale à envoyer:', (totalSize/1024/1024).toFixed(2), 'MB');
             
-            if (totalSize > 25 * 1024 * 1024) { // 25MB limit
-                showAlert('error', `❌ Les données sont trop volumineuses: ${(totalSize/1024/1024).toFixed(1)}MB\nVeuillez réduire la taille de la photo.`);
+            if (totalSize > 25 * 1024 * 1024) {
+                showAlert('error', `❌ Les données sont trop volumineuses: ${(totalSize/1024/1024).toFixed(1)}MB`);
                 return;
             }
             
-            // 🔍 LOG DÉTAILLÉ AVANT ENVOI
-            console.log('🚀 ENVOI AU SERVEUR - Données exactes:', {
-                partenaire: dataToSend.partenaire,
-                region: dataToSend.region,
-                departement: dataToSend.departement,
-                commune: dataToSend.commune,
-                latitude: dataToSend.latitude,
-                longitude: dataToSend.longitude,
-                adresse: dataToSend.adresse,
-                photo_size: dataToSend.photo ? 'OUI (' + (dataToSend.photo.length/1024).toFixed(0) + 'KB)' : 'NON'
-            });
-            console.log('📨 Body JSON qui va être envoyé:', dataToSend);
+            console.log('🚀 Envoi des données au serveur...');
             
-            // Envoyer au serveur avec meilleure gestion d'erreur
+            // Envoyer au serveur
             fetch('http://localhost:3001/api/collecte', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(dataToSend)
             })
             .then(response => {
-                console.log('📡 Réponse serveur status:', response.status, response.statusText);
-                
-                // Vérifier le type de contenu
-                const contentType = response.headers.get('content-type');
-                console.log('📡 Content-Type:', contentType);
-                console.log('📡 Headers complets:', response.headers);
+                console.log('📡 Réponse serveur:', response.status, response.statusText);
                 
                 if (!response.ok) {
-                    // Lire le texte de la réponse d'erreur
-                    return response.text().then(text => {
-                        console.error('❌ Erreur serveur - Status:', response.status);
-                        console.error('❌ Erreur serveur - Texte brut (premiers 1000 chars):', text.substring(0, 1000));
-                        console.error('❌ Erreur serveur - Longueur totale du texte:', text.length);
-                        
-                        // Essayer de parser comme JSON en cas d'erreur
-                        try {
-                            const errorJson = JSON.parse(text);
-                            console.error('❌ Erreur parsée JSON:', errorJson);
-                            throw new Error(`Serveur erreur ${response.status}: ${errorJson.message || JSON.stringify(errorJson)}`);
-                        } catch (parseError) {
-                            if (!text.includes('<!DOCTYPE') && !text.includes('<html')) {
-                                console.error('📋 Réponse brute (pas HTML):', text);
-                                throw new Error(`Erreur ${response.status}: ${text.substring(0, 200)}`);
-                            }
-                            console.error('📋 Réponse HTML (page d\'erreur):', text.substring(0, 500));
-                            throw new Error(`Erreur ${response.status}: Le serveur a retourné une page d'erreur. Vérifiez la console du serveur.`);
-                        }
-                    });
+                    throw new Error(`Erreur serveur ${response.status}: ${response.statusText}`);
                 }
                 
-                // Essayer de parser la réponse
-                const contentTypeText = contentType ? contentType.split(';')[0] : '';
-                console.log('📡 Content-Type détecté:', contentTypeText);
-                
-                if (contentTypeText.includes('application/json')) {
-                    return response.json().then(json => {
-                        console.log('✅ JSON parsé:', json);
-                        return json;
-                    }).catch(parseErr => {
-                        console.error('❌ Erreur parsing JSON malgré le Content-Type:', parseErr);
-                        return response.text().then(text => {
-                            console.error('❌ Texte exact reçu:', text.substring(0, 1000));
-                            throw new Error(`Erreur parsing JSON: ${parseErr.message}\n\nTexte reçu: ${text.substring(0, 200)}`);
-                        });
-                    });
-                } else {
-                    return response.text().then(text => {
-                        console.warn('⚠️ Réponse non-JSON reçue:', text.substring(0, 200));
-                        console.warn('⚠️ Content-Type était:', contentTypeText);
-                        try {
-                            return JSON.parse(text);
-                        } catch {
-                            throw new Error(`Réponse non-JSON du serveur: ${contentTypeText || 'none'}`);
-                        }
-                    });
-                }
+                return response.json();
             })
             .then(result => {
-                console.log('✅ Réponse du serveur:', result);
-                showAlert('success', '✅ Données sauvegardées en base de données avec succès!');
+                console.log('✅ Réponse du serveur (SUCCESS):', result);
+                showAlert('success', '✅ Données sauvegardées avec succès dans la base de données!');
                 
                 // Sauvegarder aussi localement
                 sauvegarderEnLocal(dataToSend);
@@ -2247,7 +2225,7 @@
                         coordonneeX: '', coordonneeY: '', photo: null,
                         dateCollecte: new Date().toISOString()
                     };
-                    showAlert('success', '✅ Formulaire réinitialisé. Prêt pour une nouvelle collecte.');
+                    console.log('✅ Formulaire réinitialisé');
                 }, 2000);
             })
             .catch(error => {
