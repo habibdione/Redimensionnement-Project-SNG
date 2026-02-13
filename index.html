@@ -780,9 +780,6 @@
                     <h3 style="color: #2d5016; margin-bottom: 18px; font-size: 20px; font-weight: 700;">📋 Résumé des Données</h3>
                     <div id="resume-contenu" style="font-size: 14px; line-height: 2; color: #333;"></div>
                 </div>
-                
-                <button class="success" onclick="afficherResume()" style="width: 100%; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); margin-top: 15px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">👁️ Voir le Résumé</button>
-                <button class="success" onclick="validerEtSauvegarder()" style="width: 100%; margin-top: 5px;">💾 Sauvegarder les Données</button>
             </div>
             </form>
             
@@ -824,6 +821,14 @@
                 <div id="image-preview" class="hidden">
                     <img id="preview-img" src="" alt="Aperçu" style="width: 100%; border-radius: 8px; margin: 10px 0; max-height: 300px;">
                     <button class="danger" onclick="effacerPhoto()" style="width: 100%; margin-top: 10px;">🗑️ Effacer Photo</button>
+                </div>
+                
+                <!-- BOUTONS D'ACTION - EN BAS DE TOUS LES CHAMPS -->
+                <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); padding: 25px; border-radius: 12px; border-top: 3px solid #6db038; margin-top: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    <div style="display: flex; gap: 15px; flex-direction: column;">
+                        <button class="success" onclick="afficherResume()" style="width: 100%; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); padding: 14px; font-size: 16px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); transition: all 0.3s;">👁️ Voir le Résumé</button>
+                        <button class="success" onclick="validerEtSauvegarder()" style="width: 100%; background: linear-gradient(135deg, #6db038 0%, #5ba837 100%); padding: 14px; font-size: 16px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(109, 176, 56, 0.3); transition: all 0.3s;">💾 Sauvegarder les Données</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2420,8 +2425,23 @@
                 
                 // Réinitialiser le formulaire après 2 secondes
                 setTimeout(() => {
-                    document.getElementById('donnees-form').reset();
+                    // ✅ Réinitialiser le formulaire correctement
+                    const form = document.getElementById('collecte-form');
+                    if (form) {
+                        form.reset();
+                    }
+                    
+                    // ✅ Réinitialiser les affichages
                     document.getElementById('resume-section').style.display = 'none';
+                    document.getElementById('lat').textContent = '--';
+                    document.getElementById('lon').textContent = '--';
+                    document.getElementById('accuracy').textContent = '--';
+                    document.getElementById('utm-easting').textContent = '--';
+                    document.getElementById('utm-northing').textContent = '--';
+                    document.getElementById('image-preview').classList.add('hidden');
+                    document.getElementById('canvas').style.display = 'none';
+                    
+                    // ✅ Réinitialiser l'objet donnees global
                     donnees = {
                         partenaire: '', region: '', departement: '', commune: '',
                         typeActivite: [], adresse: '', superficie: '',
@@ -2433,7 +2453,14 @@
                         coordonneeX: '', coordonneeY: '', photo: null,
                         dateCollecte: new Date().toISOString()
                     };
-                    console.log('✅ Formulaire réinitialisé');
+                    
+                    // ✅ Réinitialiser la map et le marqueur
+                    if (map && marker) {
+                        map.removeLayer(marker);
+                        marker = null;
+                    }
+                    
+                    console.log('✅ Formulaire, GPS et images complètement réinitialisés');
                 }, 2000);
             })
             .then(response => {
