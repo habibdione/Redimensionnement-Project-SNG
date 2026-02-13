@@ -1235,45 +1235,65 @@
         // Formulaire
         function sauvegarderDonnees() {
             try {
-                donnees.partenaire = document.getElementById('partenaire').value;
-                donnees.region = document.getElementById('region').value;
-                donnees.departement = document.getElementById('departement').value;
-                donnees.commune = document.getElementById('commune').value;
+                // 🔍 Vérifier d'abord que les éléments existent
+                console.group('🔍 VÉRIFICATION DES ÉLÉMENTS HTML');
+                
+                const partenaire_elem = document.getElementById('partenaire');
+                const region_elem = document.getElementById('region');
+                const departement_elem = document.getElementById('departement');
+                const commune_elem = document.getElementById('commune');
+                
+                console.log('Éléments trouvés:', {
+                    partenaire_elem: partenaire_elem ? '✅ EXISTE' : '❌ PAS TROUVÉ',
+                    region_elem: region_elem ? '✅ EXISTE' : '❌ PAS TROUVÉ',
+                    departement_elem: departement_elem ? '✅ EXISTE' : '❌ PAS TROUVÉ',
+                    commune_elem: commune_elem ? '✅ EXISTE' : '❌ PAS TROUVÉ'
+                });
+                
+                // Récupérer les valeurs
+                donnees.partenaire = partenaire_elem ? partenaire_elem.value.trim() : '';
+                donnees.region = region_elem ? region_elem.value.trim() : '';
+                donnees.departement = departement_elem ? departement_elem.value.trim() : '';
+                donnees.commune = commune_elem ? commune_elem.value.trim() : '';
+                
+                console.log('Valeurs RAW (brutes):', {
+                    partenaire: `"${donnees.partenaire}"`,
+                    region: `"${donnees.region}"`,
+                    departement: `"${donnees.departement}"`,
+                    commune: `"${donnees.commune}"`
+                });
+                
                 // Récupérer tous les types d'activité sélectionnés
                 const typeActiviteSelect = document.getElementById('typeActivite');
-                const selectedTypes = Array.from(typeActiviteSelect.selectedOptions).map(option => option.value);
+                const selectedTypes = typeActiviteSelect ? Array.from(typeActiviteSelect.selectedOptions).map(option => option.value) : [];
                 donnees.typeActivite = selectedTypes.length > 0 ? selectedTypes : [];
-                donnees.adresse = document.getElementById('adresse').value;
-                donnees.superficie = document.getElementById('superficie').value;
-                donnees.besoinPersonnel = document.getElementById('besoinPersonnel').value;
+                
+                donnees.adresse = document.getElementById('adresse') ? document.getElementById('adresse').value : '';
+                donnees.superficie = document.getElementById('superficie') ? document.getElementById('superficie').value : '';
+                donnees.besoinPersonnel = document.getElementById('besoinPersonnel') ? document.getElementById('besoinPersonnel').value : '';
+                
                 // Récupérer tous les dispositifs sélectionnés
                 const dispositifSelect = document.getElementById('dispositifDeploy');
-                const selectedDisposition = Array.from(dispositifSelect.selectedOptions).map(option => option.value);
+                const selectedDisposition = dispositifSelect ? Array.from(dispositifSelect.selectedOptions).map(option => option.value) : [];
                 donnees.dispositifDeploy = selectedDisposition.length > 0 ? selectedDisposition : [];
-                donnees.nombreRotation = document.getElementById('nombreRotation').value;
-                donnees.infrastructureGestion = document.getElementById('infrastructureGestion').value;
-                donnees.frequenceCollecte = document.getElementById('frequenceCollecte').value;
-                donnees.bacs240 = document.getElementById('bacs240').value;
-                donnees.caissePolybene = document.getElementById('caissePolybene').value;
-                donnees.bacs660 = document.getElementById('bacs660').value;
-                donnees.accessibilite = document.getElementById('accessibilite').value;
-                donnees.observation = document.getElementById('observation').value;
+                
+                donnees.nombreRotation = document.getElementById('nombreRotation') ? document.getElementById('nombreRotation').value : '';
+                donnees.infrastructureGestion = document.getElementById('infrastructureGestion') ? document.getElementById('infrastructureGestion').value : '';
+                donnees.frequenceCollecte = document.getElementById('frequenceCollecte') ? document.getElementById('frequenceCollecte').value : '';
+                donnees.bacs240 = document.getElementById('bacs240') ? document.getElementById('bacs240').value : '';
+                donnees.caissePolybene = document.getElementById('caissePolybene') ? document.getElementById('caissePolybene').value : '';
+                donnees.bacs660 = document.getElementById('bacs660') ? document.getElementById('bacs660').value : '';
+                donnees.accessibilite = document.getElementById('accessibilite') ? document.getElementById('accessibilite').value : '';
+                donnees.observation = document.getElementById('observation') ? document.getElementById('observation').value : '';
+                
                 // Récupérer les coordonnées UTM si elles existent
                 const coordXElem = document.getElementById('coordonneeX');
                 const coordYElem = document.getElementById('coordonneeY');
                 donnees.coordonneeX = coordXElem ? coordXElem.value : '';
                 donnees.coordonneeY = coordYElem ? coordYElem.value : '';
                 
-                // Logger les valeurs critiques pour debug
-                console.log('📋 Données récupérées:', {
-                    partenaire: donnees.partenaire || '(VIDE)',
-                    region: donnees.region || '(VIDE)',
-                    departement: donnees.departement || '(VIDE)',
-                    commune: donnees.commune || '(VIDE)',
-                    typeActivite: donnees.typeActivite,
-                    latitude: donnees.latitude || '(PAS ENCORE)',
-                    longitude: donnees.longitude || '(PAS ENCORE)'
-                });
+                console.log('📋 DONNÉES RÉCUPÉRÉES COMPLÈTES:', donnees);
+                console.groupEnd();
                 
                 showAlert('success', '✅ Données sauvegardées localement avec succès!');
                 affichageResume();
@@ -1743,23 +1763,48 @@
             // Vérifier que les champs requis sont remplis
             if (!donnees.partenaire || !donnees.region || !donnees.departement || !donnees.commune) {
                 const champsManquants = [];
-                if (!donnees.partenaire) champsManquants.push('❌ Partenaire');
-                if (!donnees.region) champsManquants.push('❌ Région');
-                if (!donnees.departement) champsManquants.push('❌ Département');
-                if (!donnees.commune) champsManquants.push('❌ Commune');
+                const champsOK = [];
+                
+                if (donnees.partenaire) {
+                    champsOK.push(`✅ Partenaire: "${donnees.partenaire}"`);
+                } else {
+                    champsManquants.push('❌ Partenaire (VIDE)');
+                }
+                
+                if (donnees.region) {
+                    champsOK.push(`✅ Région: "${donnees.region}"`);
+                } else {
+                    champsManquants.push('❌ Région (VIDE - Click sur le dropdown pour sélectionner!)');
+                }
+                
+                if (donnees.departement) {
+                    champsOK.push(`✅ Département: "${donnees.departement}"`);
+                } else {
+                    champsManquants.push('❌ Département (VIDE - Click sur le dropdown pour sélectionner!)');
+                }
+                
+                if (donnees.commune) {
+                    champsOK.push(`✅ Commune: "${donnees.commune}"`);
+                } else {
+                    champsManquants.push('❌ Commune (VIDE - Click sur le dropdown pour sélectionner!)');
+                }
                 
                 const message = `
-⚠️ ERREUR: Champs manquants ou vides!
+⚠️ IMPOSSIBLE DE SAUVEGARDER - Données manquantes!
 
+📊 CHAMPS REMPLIS:
+${champsOK.length > 0 ? champsOK.join('\n') : 'AUCUN CHAMP REMPLI!'}
+
+❌ CHAMPS MANQUANTS:
 ${champsManquants.join('\n')}
 
-✅ SOLUTION: Veuillez vérifier que vous avez rempli TOUS ces champs:
-• Appuyez sur "Région" et SÉLECTIONNEZ une région
-• Appuyez sur "Département" et SÉLECTIONNEZ un département  
-• Appuyez sur "Commune" et SÉLECTIONNEZ une commune
-• Remplissez le champ "Partenaire"
-
-⚠️ Ne cliquez pas juste à côté - CLIQUEZ DIRECTEMENT sur le dropdown!
+✅ SOLUTION:
+1. Clique sur "Région" → sélectionne "Ziguinchor"
+2. Clique sur "Département" → sélectionne "Ziguinchor"
+3. Clique sur "Commune" → sélectionne "Ziguinchor"
+4. Remplis "Partenaire"
+5. Obtiens la position GPS
+6. Réessaie
                 `;
                 showAlert('error', message);
                 console.error('📋 Données actuelles:', donnees);
