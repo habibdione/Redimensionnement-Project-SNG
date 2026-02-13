@@ -10,14 +10,15 @@
  */
 
 const { Pool } = require('pg');
-const SENEGAL_DATA = require('./data-senegal.js');
 const dotenv = require('dotenv');
+const SENEGAL_DATA = require('./data-senegal.js');
 
+// Charger les variables d'environnement
 dotenv.config();
 
 const pool = new Pool({
     user: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD || 'postgres',
+    password: process.env.DB_PASSWORD || 'password',
     host: process.env.DB_HOST || 'localhost',
     port: process.env.DB_PORT || 5432,
     database: process.env.DB_NAME || 'dimentionnement_SNG'

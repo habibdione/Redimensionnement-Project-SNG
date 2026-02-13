@@ -494,6 +494,84 @@ app.delete('/api/collecte/:id', async (req, res) => {
 });
 
 /**
+ * GET /api/regions
+ * Récupérer la liste de toutes les régions
+ */
+app.get('/api/regions', async (req, res) => {
+    try {
+        const query = 'SELECT id, code, nom, emoji, description FROM regions ORDER BY id ASC';
+        const result = await pool.query(query);
+        
+        res.json({
+            success: true,
+            data: result.rows
+        });
+    } catch (error) {
+        console.error('❌ Erreur GET /api/regions:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Erreur lors de la récupération des régions'
+        });
+    }
+});
+
+/**
+ * GET /api/departements/:regionId
+ * Récupérer les départements d'une région
+ */
+app.get('/api/departements/:regionId', async (req, res) => {
+    try {
+        const { regionId } = req.params;
+        const query = `
+            SELECT id, region_id, nom, code 
+            FROM departements 
+            WHERE region_id = $1 
+            ORDER BY nom ASC
+        `;
+        const result = await pool.query(query, [regionId]);
+        
+        res.json({
+            success: true,
+            data: result.rows
+        });
+    } catch (error) {
+        console.error('❌ Erreur GET /api/departements/:regionId:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Erreur lors de la récupération des départements'
+        });
+    }
+});
+
+/**
+ * GET /api/communes/:departementId
+ * Récupérer les communes d'un département
+ */
+app.get('/api/communes/:departementId', async (req, res) => {
+    try {
+        const { departementId } = req.params;
+        const query = `
+            SELECT id, nom, code 
+            FROM communes 
+            WHERE departement_id = $1 
+            ORDER BY nom ASC
+        `;
+        const result = await pool.query(query, [departementId]);
+        
+        res.json({
+            success: true,
+            data: result.rows
+        });
+    } catch (error) {
+        console.error('❌ Erreur GET /api/communes/:departementId:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Erreur lors de la récupération des communes'
+        });
+    }
+});
+
+/**
  * GET /api/statistiques
  * Obtenir les statistiques des collectes
  */

@@ -2049,186 +2049,116 @@
          * Structure complète: 14 Régions • 45 Départements • 500+ Communes
          */
         
+        // Cache pour les données géographiques
         const SENEGAL_REGIONS = {
-            regions: [
-                {
-                    id: 'dakar',
-                    nom: '🏛️ Dakar',
-                    code: 'DK',
-                    departements: [
-                        {
-                            id: 'dakar-dept',
-                            nom: 'Dakar',
-                            communes: ['Dakar', 'Guédiawaye', 'Pikine', 'Rufisque', 'Keur Massar']
-                        }
-                    ]
-                },
-                {
-                    id: 'thies',
-                    nom: '🏘️ Thiès',
-                    code: 'TH',
-                    departements: [
-                        { id: 'thies-dept', nom: 'Thiès', communes: ['Thiès', 'Popenguine', 'Sindia'] },
-                        { id: 'mbour-dept', nom: 'Mbour', communes: ['Mbour', 'Nianing', 'Joal-Fadiouth', 'Malicounda', 'Ngaparou', 'Toubab Dialao'] },
-                        { id: 'tivaouane-dept', nom: 'Tivaouane', communes: ['Tivaouane', 'Mekhé', 'Mérinagène', 'Gningue'] }
-                    ]
-                },
-                {
-                    id: 'saint-louis',
-                    nom: '👑 Saint-Louis',
-                    code: 'SL',
-                    departements: [
-                        { id: 'saint-louis-dept', nom: 'Saint-Louis', communes: ['Saint-Louis', 'Guet N Dar', 'Sor'] },
-                        { id: 'dagana-dept', nom: 'Dagana', communes: ['Dagana', 'Ronchamp', 'Diama'] },
-                        { id: 'podor-dept', nom: 'Podor', communes: ['Podor', 'Tandilao', 'Madina'] }
-                    ]
-                },
-                {
-                    id: 'diourbel',
-                    nom: '🌾 Diourbel',
-                    code: 'DB',
-                    departements: [
-                        { id: 'diourbel-dept', nom: 'Diourbel', communes: ['Diourbel', 'Gueule Tapée', 'Touba', 'Gueule Ndar'] },
-                        { id: 'bambey-dept', nom: 'Bambey', communes: ['Bambey', 'Ngoye'] },
-                        { id: 'mbacke-dept', nom: 'Mbacké', communes: ['Mbacké', 'Darou Mouhty', 'Lamina', 'Keur Modou'] }
-                    ]
-                },
-                {
-                    id: 'tambacounda',
-                    nom: '🐪 Tambacounda',
-                    code: 'TC',
-                    departements: [
-                        { id: 'tambacounda-dept', nom: 'Tambacounda', communes: ['Tambacounda', 'Sinthiou Lemba', 'Guel Malick', 'Banda Ré'] },
-                        { id: 'bakel-dept', nom: 'Bakel', communes: ['Bakel', 'Kanel'] },
-                        { id: 'goudiry-dept', nom: 'Goudiry', communes: ['Goudiry', 'Kidira'] },
-                        { id: 'koumpentoum-dept', nom: 'Koumpentoum', communes: ['Koumpentoum', 'Gueumane'] },
-                        { id: 'kidira-dept', nom: 'Kidira', communes: ['Kidira', 'Gabu'] }
-                    ]
-                },
-                {
-                    id: 'ziguinchor',
-                    nom: '🌴 Ziguinchor',
-                    code: 'ZG',
-                    departements: [
-                        { id: 'ziguinchor-dept', nom: 'Ziguinchor', communes: ['Ziguinchor', 'Adéane', 'Niaguis', 'Niassia', 'Boutoupa Camara Kounda'] },
-                        { id: 'bignona-dept', nom: 'Bignona', communes: ['Bignona', 'Thionck-Essyl', 'Kafountine', 'Diouloulou', 'Balingore', 'Coubalan', 'Diégoune', 'Djibidione', 'Djinaki', 'Karthiack', 'Kataba 1', 'Mangagoulack', 'Mlomp', 'Niamone', 'Oulampane', 'Quonck', 'Sindian', 'Suelle', 'Tenghory'] },
-                        { id: 'oussouye-dept', nom: 'Oussouye', communes: ['Oussouye', 'Diembéring', 'Mlomp'] }
-                    ]
-                },
-                {
-                    id: 'kaolack',
-                    nom: '🎪 Kaolack',
-                    code: 'KL',
-                    departements: [
-                        { id: 'kaolack-dept', nom: 'Kaolack', communes: ['Kaolack', 'Lamin Sine', 'Ndiédiéme', 'Gankette Soulé'] },
-                        { id: 'nioro-dept', nom: 'Nioro du Rip', communes: ['Nioro du Rip', 'Kolia'] },
-                        { id: 'guinguineo-dept', nom: 'Guinguinéo', communes: ['Guinguinéo', 'Taiba Niassène', 'Ndengler'] }
-                    ]
-                },
-                {
-                    id: 'fatick',
-                    nom: '🏞️ Fatick',
-                    code: 'FT',
-                    departements: [
-                        { id: 'fatick-dept', nom: 'Fatick', communes: ['Fatick', 'Keur Samba Gueye', 'Missirah', 'Passe'] },
-                        { id: 'foundiougne-dept', nom: 'Foundiougne', communes: ['Foundiougne', 'Missirah Wadène'] },
-                        { id: 'gossas-dept', nom: 'Gossas', communes: ['Gossas', 'Rip', 'Sarelle'] }
-                    ]
-                },
-                {
-                    id: 'kaffrine',
-                    nom: '🌾 Kaffrine',
-                    code: 'KF',
-                    departements: [
-                        { id: 'kaffrine-dept', nom: 'Kaffrine', communes: ['Kaffrine', 'Sinthé', 'Saré Yerma'] },
-                        { id: 'birkelane-dept', nom: 'Birkelane', communes: ['Birkelane', 'Ndiobène'] },
-                        { id: 'malem-hodar-dept', nom: 'Malem Hodar', communes: ['Malem Hodar', 'Maka Kolé'] },
-                        { id: 'koungheul-dept', nom: 'Koungheul', communes: ['Koungheul', 'Guelel Yerguel'] }
-                    ]
-                },
-                {
-                    id: 'matam',
-                    nom: '🏜️ Matam',
-                    code: 'MT',
-                    departements: [
-                        { id: 'matam-dept', nom: 'Matam', communes: ['Matam', 'Kassan', 'Orbé'] },
-                        { id: 'kanel-dept', nom: 'Kanel', communes: ['Kanel', 'Ouro Alfa'] },
-                        { id: 'ranerou-dept', nom: 'Ranérou', communes: ['Ranérou', 'Sélibaby'] }
-                    ]
-                },
-                {
-                    id: 'kedougou',
-                    nom: '🌲 Kédougou',
-                    code: 'KD',
-                    departements: [
-                        { id: 'kedougou-dept', nom: 'Kédougou', communes: ['Kédougou', 'Mampatim'] },
-                        { id: 'salemata-dept', nom: 'Salemata', communes: ['Salemata', 'Mako'] },
-                        { id: 'saraya-dept', nom: 'Saraya', communes: ['Saraya', 'Misira'] }
-                    ]
-                },
-                {
-                    id: 'kolda',
-                    nom: '🎋 Kolda',
-                    code: 'KO',
-                    departements: [
-                        { id: 'kolda-dept', nom: 'Kolda', communes: ['Kolda', 'Sibassor', 'Médina El Hadj'] },
-                        { id: 'velingara-dept', nom: 'Vélingara', communes: ['Vélingara', 'Gaoual'] },
-                        { id: 'medina-yoro-foulah-dept', nom: 'Médina Yoro Foulah', communes: ['Médina Yoro Foulah', 'Dialacoto'] }
-                    ]
-                },
-                {
-                    id: 'sedhiou',
-                    nom: '🌳 Sédhiou',
-                    code: 'SD',
-                    departements: [
-                        { id: 'sedhiou-dept', nom: 'Sédhiou', communes: ['Sédhiou', 'Kabrousse'] },
-                        { id: 'bounkiling-dept', nom: 'Bounkiling', communes: ['Bounkiling', 'Linkering'] },
-                        { id: 'goudomp-dept', nom: 'Goudomp', communes: ['Goudomp', 'Yarol'] }
-                    ]
-                },
-                {
-                    id: 'louga',
-                    nom: '🐠 Louga',
-                    code: 'LG',
-                    departements: [
-                        { id: 'louga-dept', nom: 'Louga', communes: ['Louga', 'Gueoul'] },
-                        { id: 'kebemer-dept', nom: 'Kébémer', communes: ['Kébémer', 'Tataguine'] },
-                        { id: 'linguere-dept', nom: 'Linguère', communes: ['Linguère', 'Dodji'] }
-                    ]
+            regions: [],
+            departementsByRegion: {},
+            communesByDepartement: {},
+            isLoaded: false,
+            
+            async chargerDonnees() {
+                if (this.isLoaded) return;
+                
+                try {
+                    console.log('📡 Chargement des données géographiques...');
+                    
+                    // Charger les régions
+                    const regionsResp = await fetch('/api/regions');
+                    const regionsData = await regionsResp.json();
+                    
+                    if (regionsData.success) {
+                        this.regions = regionsData.data.map(r => ({
+                            id: r.id,
+                            nom: `${r.emoji} ${r.nom}`,
+                            code: r.code,
+                            region_db_id: r.id
+                        }));
+                        console.log(`✅ ${this.regions.length} régions chargées`);
+                    }
+                    
+                    this.isLoaded = true;
+                } catch (error) {
+                    console.error('❌ Erreur chargement régions:', error);
+                    this.isLoaded = false;
                 }
-            ],
+            },
             
             getRegions: function() {
                 return this.regions;
             },
             
-            getDepartements: function(regionId) {
-                const region = this.regions.find(r => r.id === regionId);
-                return region ? region.departements : [];
+            async getDepartements(regionId) {
+                try {
+                    if (this.departementsByRegion[regionId]) {
+                        return this.departementsByRegion[regionId];
+                    }
+                    
+                    const response = await fetch(`/api/departements/${regionId}`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.departementsByRegion[regionId] = data.data.map(d => ({
+                            id: d.id,
+                            nom: d.nom,
+                            region_db_id: d.region_id
+                        }));
+                        return this.departementsByRegion[regionId];
+                    }
+                    return [];
+                } catch (error) {
+                    console.error(`❌ Erreur chargement départements (${regionId}):`, error);
+                    return [];
+                }
             },
             
-            getCommunes: function(regionId, departementId) {
-                const region = this.regions.find(r => r.id === regionId);
-                if (!region) return [];
-                const dept = region.departements.find(d => d.id === departementId);
-                return dept ? dept.communes : [];
+            async getCommunes(departementId) {
+                try {
+                    if (this.communesByDepartement[departementId]) {
+                        return this.communesByDepartement[departementId];
+                    }
+                    
+                    const response = await fetch(`/api/communes/${departementId}`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.communesByDepartement[departementId] = data.data.map(c => ({
+                            id: c.id,
+                            nom: c.nom
+                        }));
+                        return this.communesByDepartement[departementId];
+                    }
+                    return [];
+                } catch (error) {
+                    console.error(`❌ Erreur chargement communes (${departementId}):`, error);
+                    return [];
+                }
             }
         };
         
-        function initialiserSelectsGeographiques() {
-            // Remplir le select des régions
-            const regionSelect = document.getElementById('region');
-            regionSelect.innerHTML = '<option value="">-- Sélectionner une région --</option>';
-            
-            SENEGAL_REGIONS.getRegions().forEach(region => {
-                const option = document.createElement('option');
-                option.value = region.id;
-                option.textContent = region.nom;
-                regionSelect.appendChild(option);
-            });
+        async function initialiserSelectsGeographiques() {
+            try {
+                // Charger les données depuis l'API
+                await SENEGAL_REGIONS.chargerDonnees();
+                
+                // Remplir le select des régions
+                const regionSelect = document.getElementById('region');
+                regionSelect.innerHTML = '<option value="">-- Sélectionner une région --</option>';
+                
+                SENEGAL_REGIONS.getRegions().forEach(region => {
+                    const option = document.createElement('option');
+                    option.value = region.region_db_id;
+                    option.textContent = region.nom;
+                    regionSelect.appendChild(option);
+                });
+                
+                console.log('✅ Sélecteurs géographiques initialisés');
+            } catch (error) {
+                console.error('❌ Erreur initialisation sélecteurs:', error);
+                showAlert('error', '❌ Erreur lors du chargement des régions');
+            }
         }
         
-        function mettreAJourDepartements() {
+        async function mettreAJourDepartements() {
             const regionSelect = document.getElementById('region');
             const departementSelect = document.getElementById('departement');
             const communeSelect = document.getElementById('commune');
@@ -2241,37 +2171,49 @@
             
             if (!regionId) return;
             
-            // Récupérer et remplir les départements
-            const departements = SENEGAL_REGIONS.getDepartements(regionId);
-            departements.forEach(dept => {
-                const option = document.createElement('option');
-                option.value = dept.id;
-                option.textContent = dept.nom;
-                departementSelect.appendChild(option);
-            });
+            try {
+                // Récupérer et remplir les départements
+                const departements = await SENEGAL_REGIONS.getDepartements(regionId);
+                departements.forEach(dept => {
+                    const option = document.createElement('option');
+                    option.value = dept.id;
+                    option.textContent = dept.nom;
+                    departementSelect.appendChild(option);
+                });
+                
+                console.log(`✅ ${departements.length} départements chargés`);
+            } catch (error) {
+                console.error('❌ Erreur chargement départements:', error);
+                showAlert('error', '❌ Erreur lors du chargement des départements');
+            }
         }
         
-        function mettreAJourCommunes() {
-            const regionSelect = document.getElementById('region');
+        async function mettreAJourCommunes() {
             const departementSelect = document.getElementById('departement');
             const communeSelect = document.getElementById('commune');
             
-            const regionId = regionSelect.value;
             const departementId = departementSelect.value;
             
             // Réinitialiser le select des communes
             communeSelect.innerHTML = '<option value="">-- Sélectionner une commune --</option>';
             
-            if (!regionId || !departementId) return;
+            if (!departementId) return;
             
-            // Récupérer et remplir les communes
-            const communes = SENEGAL_REGIONS.getCommunes(regionId, departementId);
-            communes.forEach(commune => {
-                const option = document.createElement('option');
-                option.value = commune;
-                option.textContent = commune;
-                communeSelect.appendChild(option);
-            });
+            try {
+                // Récupérer et remplir les communes
+                const communes = await SENEGAL_REGIONS.getCommunes(departementId);
+                communes.forEach(commune => {
+                    const option = document.createElement('option');
+                    option.value = commune.id;
+                    option.textContent = commune.nom;
+                    communeSelect.appendChild(option);
+                });
+                
+                console.log(`✅ ${communes.length} communes chargées`);
+            } catch (error) {
+                console.error('❌ Erreur chargement communes:', error);
+                showAlert('error', '❌ Erreur lors du chargement des communes');
+            }
         }
     </script>
     

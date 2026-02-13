@@ -9,11 +9,12 @@ const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
 
+// Charger les variables d'environnement
 dotenv.config();
 
 const pool = new Pool({
     user: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD || 'postgres',
+    password: process.env.DB_PASSWORD || 'password',
     host: process.env.DB_HOST || 'localhost',
     port: process.env.DB_PORT || 5432,
     database: 'postgres'  // Se connecter à la db par défaut d'abord
@@ -40,10 +41,10 @@ async function initDatabase() {
         console.log('2️⃣ Connexion à la base dimentionnement_SNG...');
         const dbPool = new Pool({
             user: process.env.DB_USER || 'postgres',
-            password: process.env.DB_PASSWORD || 'postgres',
+            password: process.env.DB_PASSWORD || 'password',
             host: process.env.DB_HOST || 'localhost',
             port: process.env.DB_PORT || 5432,
-            database: process.env.DB_NAME || 'dimentionnement_SNG'
+            database: 'dimentionnement_SNG'
         });
 
         // 3️⃣ Lire et exécuter le script SQL
