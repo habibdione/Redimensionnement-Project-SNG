@@ -7,12 +7,15 @@
 const { Pool } = require('pg');
 const fs = require('fs');
 const path = require('path');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const pool = new Pool({
-    user: 'postgres',
-    password: 'postgres',
-    host: 'localhost',
-    port: 5432,
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || 'postgres',
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 5432,
     database: 'postgres'  // Se connecter à la db par défaut d'abord
 });
 
@@ -36,11 +39,11 @@ async function initDatabase() {
         // 2️⃣ Se connecter à la nouvelle base
         console.log('2️⃣ Connexion à la base dimentionnement_SNG...');
         const dbPool = new Pool({
-            user: 'postgres',
-            password: 'postgres',
-            host: 'localhost',
-            port: 5432,
-            database: 'dimentionnement_SNG'
+            user: process.env.DB_USER || 'postgres',
+            password: process.env.DB_PASSWORD || 'postgres',
+            host: process.env.DB_HOST || 'localhost',
+            port: process.env.DB_PORT || 5432,
+            database: process.env.DB_NAME || 'dimentionnement_SNG'
         });
 
         // 3️⃣ Lire et exécuter le script SQL

@@ -11,13 +11,16 @@
 
 const { Pool } = require('pg');
 const SENEGAL_DATA = require('./data-senegal.js');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const pool = new Pool({
-    user: 'postgres',
-    password: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    database: 'dimentionnement_SNG'
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || 'postgres',
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 5432,
+    database: process.env.DB_NAME || 'dimentionnement_SNG'
 });
 
 async function insertSenegalData() {
