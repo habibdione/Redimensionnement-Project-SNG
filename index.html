@@ -740,8 +740,7 @@
                 <input type="hidden" id="coordonneeX" value="">
                 <input type="hidden" id="coordonneeY" value="">
                 
-                <button onclick="obtenirLocalisationGPS()">📡 Obtenir Position GPS & Ajouter Marqueur</button>
-                <button onclick="diagnostiquerProblemes()" style="background: #ff9800; margin-top: 10px; width: 100%;">🔧 Diagnostiquer Problèmes</button>
+                <button onclick="obtenirLocalisationGPS()" style="width: 100%;">📡 Obtenir Position GPS & Ajouter Marqueur</button>
                 
                 <div id="map"></div>
                 
@@ -1235,37 +1234,53 @@
         
         // Formulaire
         function sauvegarderDonnees() {
-            donnees.partenaire = document.getElementById('partenaire').value;
-            donnees.region = document.getElementById('region').value;
-            donnees.departement = document.getElementById('departement').value;
-            donnees.commune = document.getElementById('commune').value;
-            // Récupérer tous les types d'activité sélectionnés
-            const typeActiviteSelect = document.getElementById('typeActivite');
-            const selectedTypes = Array.from(typeActiviteSelect.selectedOptions).map(option => option.value);
-            donnees.typeActivite = selectedTypes.length > 0 ? selectedTypes : [];
-            donnees.adresse = document.getElementById('adresse').value;
-            donnees.superficie = document.getElementById('superficie').value;
-            donnees.besoinPersonnel = document.getElementById('besoinPersonnel').value;
-            // Récupérer tous les dispositifs sélectionnés
-            const dispositifSelect = document.getElementById('dispositifDeploy');
-            const selectedDisposition = Array.from(dispositifSelect.selectedOptions).map(option => option.value);
-            donnees.dispositifDeploy = selectedDisposition.length > 0 ? selectedDisposition : [];
-            donnees.nombreRotation = document.getElementById('nombreRotation').value;
-            donnees.infrastructureGestion = document.getElementById('infrastructureGestion').value;
-            donnees.frequenceCollecte = document.getElementById('frequenceCollecte').value;
-            donnees.bacs240 = document.getElementById('bacs240').value;
-            donnees.caissePolybene = document.getElementById('caissePolybene').value;
-            donnees.bacs660 = document.getElementById('bacs660').value;
-            donnees.accessibilite = document.getElementById('accessibilite').value;
-            donnees.observation = document.getElementById('observation').value;
-            // Récupérer les coordonnées UTM si elles existent
-            const coordXElem = document.getElementById('coordonneeX');
-            const coordYElem = document.getElementById('coordonneeY');
-            donnees.coordonneeX = coordXElem ? coordXElem.value : '';
-            donnees.coordonneeY = coordYElem ? coordYElem.value : '';
-            
-            showAlert('success', '✅ Données sauvegardées localement avec succès!');
-            affichageResume();
+            try {
+                donnees.partenaire = document.getElementById('partenaire').value;
+                donnees.region = document.getElementById('region').value;
+                donnees.departement = document.getElementById('departement').value;
+                donnees.commune = document.getElementById('commune').value;
+                // Récupérer tous les types d'activité sélectionnés
+                const typeActiviteSelect = document.getElementById('typeActivite');
+                const selectedTypes = Array.from(typeActiviteSelect.selectedOptions).map(option => option.value);
+                donnees.typeActivite = selectedTypes.length > 0 ? selectedTypes : [];
+                donnees.adresse = document.getElementById('adresse').value;
+                donnees.superficie = document.getElementById('superficie').value;
+                donnees.besoinPersonnel = document.getElementById('besoinPersonnel').value;
+                // Récupérer tous les dispositifs sélectionnés
+                const dispositifSelect = document.getElementById('dispositifDeploy');
+                const selectedDisposition = Array.from(dispositifSelect.selectedOptions).map(option => option.value);
+                donnees.dispositifDeploy = selectedDisposition.length > 0 ? selectedDisposition : [];
+                donnees.nombreRotation = document.getElementById('nombreRotation').value;
+                donnees.infrastructureGestion = document.getElementById('infrastructureGestion').value;
+                donnees.frequenceCollecte = document.getElementById('frequenceCollecte').value;
+                donnees.bacs240 = document.getElementById('bacs240').value;
+                donnees.caissePolybene = document.getElementById('caissePolybene').value;
+                donnees.bacs660 = document.getElementById('bacs660').value;
+                donnees.accessibilite = document.getElementById('accessibilite').value;
+                donnees.observation = document.getElementById('observation').value;
+                // Récupérer les coordonnées UTM si elles existent
+                const coordXElem = document.getElementById('coordonneeX');
+                const coordYElem = document.getElementById('coordonneeY');
+                donnees.coordonneeX = coordXElem ? coordXElem.value : '';
+                donnees.coordonneeY = coordYElem ? coordYElem.value : '';
+                
+                // Logger les valeurs critiques pour debug
+                console.log('📋 Données récupérées:', {
+                    partenaire: donnees.partenaire || '(VIDE)',
+                    region: donnees.region || '(VIDE)',
+                    departement: donnees.departement || '(VIDE)',
+                    commune: donnees.commune || '(VIDE)',
+                    typeActivite: donnees.typeActivite,
+                    latitude: donnees.latitude || '(PAS ENCORE)',
+                    longitude: donnees.longitude || '(PAS ENCORE)'
+                });
+                
+                showAlert('success', '✅ Données sauvegardées localement avec succès!');
+                affichageResume();
+            } catch (error) {
+                console.error('❌ Erreur lors de la récupération des données:', error);
+                showAlert('error', '❌ Erreur: ' + error.message);
+            }
         }
         
         function affichageResume() {
@@ -1722,22 +1737,37 @@
         
         // Fonction pour sauvegarder en base de données
         function sauvegarderDonneesBD() {
-            // D'abord afficher le résumé pour vérification
-            afficherResume();
-            
-            // Collecter les données du formulaire
+            // Collecter les données du formulaire EN PREMIER
             sauvegarderDonnees();
             
             // Vérifier que les champs requis sont remplis
             if (!donnees.partenaire || !donnees.region || !donnees.departement || !donnees.commune) {
                 const champsManquants = [];
-                if (!donnees.partenaire) champsManquants.push('Partenaire');
-                if (!donnees.region) champsManquants.push('Région');
-                if (!donnees.departement) champsManquants.push('Département');
-                if (!donnees.commune) champsManquants.push('Commune');
-                showAlert('error', '❌ ERREUR: Champs manquants!\n\n' + champsManquants.join(', ') + '\n\n✅ Veuillez remplir TOUS les champs obligatoires avant de sauvegarder.');
+                if (!donnees.partenaire) champsManquants.push('❌ Partenaire');
+                if (!donnees.region) champsManquants.push('❌ Région');
+                if (!donnees.departement) champsManquants.push('❌ Département');
+                if (!donnees.commune) champsManquants.push('❌ Commune');
+                
+                const message = `
+⚠️ ERREUR: Champs manquants ou vides!
+
+${champsManquants.join('\n')}
+
+✅ SOLUTION: Veuillez vérifier que vous avez rempli TOUS ces champs:
+• Appuyez sur "Région" et SÉLECTIONNEZ une région
+• Appuyez sur "Département" et SÉLECTIONNEZ un département  
+• Appuyez sur "Commune" et SÉLECTIONNEZ une commune
+• Remplissez le champ "Partenaire"
+
+⚠️ Ne cliquez pas juste à côté - CLIQUEZ DIRECTEMENT sur le dropdown!
+                `;
+                showAlert('error', message);
+                console.error('📋 Données actuelles:', donnees);
                 return;
             }
+            
+            // D'abord afficher le résumé pour vérification
+            afficherResume();
             
             // Demander confirmation
             if (!confirm('✅ Êtes-vous sûr(e) de vouloir sauvegarder ces données en base de données ?')) {
@@ -1792,6 +1822,19 @@
                 showAlert('error', `❌ Les données sont trop volumineuses: ${(totalSize/1024/1024).toFixed(1)}MB\nVeuillez réduire la taille de la photo.`);
                 return;
             }
+            
+            // 🔍 LOG DÉTAILLÉ AVANT ENVOI
+            console.log('🚀 ENVOI AU SERVEUR - Données exactes:', {
+                partenaire: dataToSend.partenaire,
+                region: dataToSend.region,
+                departement: dataToSend.departement,
+                commune: dataToSend.commune,
+                latitude: dataToSend.latitude,
+                longitude: dataToSend.longitude,
+                adresse: dataToSend.adresse,
+                photo_size: dataToSend.photo ? 'OUI (' + (dataToSend.photo.length/1024).toFixed(0) + 'KB)' : 'NON'
+            });
+            console.log('📨 Body JSON qui va être envoyé:', dataToSend);
             
             // Envoyer au serveur avec meilleure gestion d'erreur
             fetch('http://localhost:3001/api/collecte', {
@@ -1908,39 +1951,6 @@
         }
         
         // Fonction de diagnostic pour vérifier les permissions et connexion
-        function diagnostiquerProblemes() {
-            console.log('🔧 === DIAGNOSTIC ===');
-            
-            // 1. Vérifier la géolocalisation
-            console.log('1️⃣ Géolocalisation:', navigator.geolocation ? '✅ Supportée' : '❌ Non supportée');
-            console.log('   Protocole:', location.protocol);
-            console.log('   Host:', location.hostname);
-            
-            // 2. Vérifier les permissions
-            if (navigator.permissions && navigator.permissions.query) {
-                navigator.permissions.query({ name: 'geolocation' })
-                    .then(permissionStatus => {
-                        console.log('2️⃣ Permission géolocalisation:', permissionStatus.state);
-                        showAlert('info', `📍 Permission géolocalisation: ${permissionStatus.state === 'granted' ? '✅ Autorisée' : permissionStatus.state === 'denied' ? '❌ Refusée - Réinitialisez les permissions' : '⏳ Non demandée encore'}`);
-                    })
-                    .catch(err => console.log('   Erreur vérification permission:', err));
-            }
-            
-            // 3. Vérifier le serveur
-            console.log('3️⃣ Test connexion serveur...');
-            fetch('http://localhost:3001/api/health', { method: 'GET' })
-                .then(r => {
-                    console.log('   ✅ Serveur accessible (status:', r.status + ')');
-                    showAlert('success', '✅ Serveur API accessible sur http://localhost:3001');
-                })
-                .catch(err => {
-                    console.log('   ❌ Serveur non accessible:', err.message);
-                    showAlert('error', '❌ Serveur non accessible. Veuillez lancer: npm start');
-                });
-            
-            console.log('🔧 === FIN DIAGNOSTIC ===');
-        }
-        
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
             initMap();

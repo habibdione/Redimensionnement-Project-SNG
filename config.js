@@ -62,7 +62,13 @@ function getEnvironment() {
 
 // Obtenir la configuration actuelle
 const CURRENT_ENV = getEnvironment();
-const CONFIG = SENELEC_CONFIG[CURRENT_ENV] || SENELEC_CONFIG.production;
+let CONFIG = SENELEC_CONFIG[CURRENT_ENV] || SENELEC_CONFIG.production;
+
+// Sécurité: Si l'URL de production contient un placeholder, utiliser le fallback development
+if (CONFIG.API_URL.includes('[ta-vraie-url]')) {
+    console.warn('⚠️ Configuration production invalide - URL placeholder détectée. Utilisation du fallback localhost...');
+    CONFIG = SENELEC_CONFIG.development;
+}
 
 // Logger les informations de configuration
 console.log(`

@@ -99,8 +99,10 @@ app.post('/api/collecte', async (req, res) => {
     try {
         console.log('📥 Requête POST /api/collecte reçue');
         console.log('📊 Champs reçus:', Object.keys(req.body));
+        console.log('📋 Body complet:', JSON.stringify(req.body, null, 2).substring(0, 500));
         
-        const {
+        // Destructurer ET nettoyer les données
+        let {
             partenaire,
             region,
             departement,
@@ -127,11 +129,35 @@ app.post('/api/collecte', async (req, res) => {
             dateCollecte
         } = req.body;
 
-        // Validation des champs requis
+        // Nettoyer les strings (trim)
+        partenaire = typeof partenaire === 'string' ? partenaire.trim() : partenaire;
+        region = typeof region === 'string' ? region.trim() : region;
+        departement = typeof departement === 'string' ? departement.trim() : departement;
+        commune = typeof commune === 'string' ? commune.trim() : commune;
+
+        console.log('🔍 Après trim:', {
+            partenaire: partenaire || '(VIDE)',
+            region: region || '(VIDE)',
+            departement: departement || '(VIDE)',
+            commune: commune || '(VIDE)'
+        });
+
+        // Validation des champs requis avec meilleur message
         if (!partenaire || !region || !departement || !commune) {
+            const champsManquants = [];
+            if (!partenaire) champsManquants.push('partenaire');
+            if (!region) champsManquants.push('région');
+            if (!departement) champsManquants.push('département');
+            if (!commune) champsManquants.push('commune');
+            
+            const errorMsg = `Champs requis manquants ou vides: ${champsManquants.join(', ')}`;
+            console.error('❌', errorMsg);
+            console.error('   Données reçues:', req.body);
+            
             return res.status(400).json({
                 success: false,
-                error: 'Champs requis manquants: partenaire, région, département, commune'
+                error: errorMsg,
+                received: { partenaire, region, departement, commune }
             });
         }
 
