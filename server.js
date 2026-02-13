@@ -82,6 +82,14 @@ if (!fs.existsSync(path.join(__dirname, 'uploads'))) {
     fs.mkdirSync(path.join(__dirname, 'uploads'), { recursive: true });
 }
 
+// 🌐 Servir les fichiers statiques (HTML, CSS, JS, images)
+app.use(express.static(path.join(__dirname, '.')));
+
+// Rediriger la route racine vers index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // Import de la base de données
 const { pool, initDatabase } = require('./db');
 

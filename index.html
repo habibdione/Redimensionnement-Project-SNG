@@ -2018,14 +2018,19 @@
         
         // Fonction de diagnostic pour vérifier les permissions et connexion
         // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             initMap();
             afficherInfoCache();
             document.getElementById('date-update').textContent = new Date().toLocaleDateString('fr-FR');
             mettreAJourSites();
             
-            // Initialiser les selects géographiques
-            initialiserSelectsGeographiques();
+            // Initialiser les selects géographiques - ATTENDRE LA COMPLETION
+            try {
+                await initialiserSelectsGeographiques();
+                console.log('✅ Sélecteurs géographiques prêts');
+            } catch (error) {
+                console.error('❌ Erreur initialisation sélecteurs:', error);
+            }
             
             // Vérifier le statut PWA
             if (window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches) {
