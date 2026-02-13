@@ -21,7 +21,10 @@ const SENELEC_CONFIG = {
     production: {
         // Template: https://[votre-app-name]-production.up.railway.app/api
         // À REMPLACER après déploiement Railway!
-        API_URL: 'https://your-railway-app-production.up.railway.app/api',
+        // Avant:
+        // API_URL: 'https://your-railway-app-production.up.railway.app/api',
+        // Après:
+        API_URL: 'https://[ta-vraie-url]-production.up.railway.app/api',
         APP_NAME: 'SENELEC Dimensionnement',
         DEBUG: false
     },
