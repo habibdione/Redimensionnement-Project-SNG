@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Connexion API</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-bottom: 20px; }
+        .test { 
+            margin: 20px 0; 
+            padding: 15px;
+            border-left: 4px solid #ddd;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+        .test h3 { margin-bottom: 10px; }
+        .test p { font-size: 14px; margin: 5px 0; }
+        .success { border-left-color: #4CAF50; background: #f1f8f4; }
+        .error { border-left-color: #f44336; background: #fcf1f1; }
+        .warning { border-left-color: #ff9800; background: #fef7f1; }
+        .success h3 { color: #4CAF50; }
+        .error h3 { color: #f44336; }
+        .warning h3 { color: #ff9800; }
+        code { 
+            display: block;
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #1976D2; }
+        .response {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 12px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Diagnostic Connexion API</h1>
+        
+        <div class="test warning">
+            <h3>📍 Votre URL d'accès</h3>
+            <code id="currentUrl"></code>
+        </div>
+
+        <div class="test" id="corsTest">
+            <h3>⚙️ Test CORS</h3>
+            <p>Statut: <span id="corsStatus">En attente...</span></p>
+            <button onclick="testCORS()">Tester CORS</button>
+            <div class="response" id="corsResponse"></div>
+        </div>
+
+        <div class="test" id="healthTest">
+            <h3>💓 Test Health Check</h3>
+            <p>Statut: <span id="healthStatus">En attente...</span></p>
+            <button onclick="testHealth()">Tester Health</button>
+            <div class="response" id="healthResponse"></div>
+        </div>
+
+        <div class="test" id="apiTest">
+            <h3>🌐 Test API /collecte</h3>
+            <p>Statut: <span id="apiStatus">En attente...</span></p>
+            <button onclick="testAPI()">Tester API</button>
+            <div class="response" id="apiResponse"></div>
+        </div>
+
+        <div class="test">
+            <h3>📝 Commandes pour démarrer le serveur</h3>
+            <code>cd "c:\DIMENSIONNEMENT\Redimensionnement-Project-ZIG\Redimensionnement-Project-SNG"
+node server.js</code>
+            <p>Ou en PowerShell sécurisé:</p>
+            <code>.\start-server-safe.ps1</code>
+        </div>
+
+        <div class="test">
+            <h3>🔗 Accès recommandé</h3>
+            <p>Servez cette page via http://localhost:5000 ou un serveur local</p>
+            <code>npx http-server -p 5000 -c-1</code>
+        </div>
+    </div>
+
+    <script>
+        // Afficher l'URL courante
+        document.getElementById('currentUrl').textContent = window.location.href;
+
+        const API_URL = 'http://localhost:3001/api';
+
+        async function testCORS() {
+            const corsTest = document.getElementById('corsTest');
+            const corsStatus = document.getElementById('corsStatus');
+            const corsResponse = document.getElementById('corsResponse');
+            
+            corsStatus.textContent = 'Test en cours...';
+            corsTest.className = 'test warning';
+            corsResponse.textContent = '';
+
+            try {
+                const response = await fetch(API_URL + '/health', {
+                    method: 'GET',
+                    headers: {
+                        'Access-Control-Request-Method': 'GET'
+                    }
+                });
+                
+                if (response.ok) {
+                    corsStatus.textContent = '✅ CORS OK';
+                    corsTest.className = 'test success';
+                    corsResponse.textContent = `Status: ${response.status}\nHeaders OK`;
+                } else {
+                    corsStatus.textContent = '⚠️ Réponse ' + response.status;
+                    corsTest.className = 'test warning';
+                }
+            } catch (error) {
+                corsStatus.textContent = '❌ Erreur CORS';
+                corsTest.className = 'test error';
+                corsResponse.textContent = error.message;
+            }
+        }
+
+        async function testHealth() {
+            const healthTest = document.getElementById('healthTest');
+            const healthStatus = document.getElementById('healthStatus');
+            const healthResponse = document.getElementById('healthResponse');
+            
+            healthStatus.textContent = 'Test en cours...';
+            healthTest.className = 'test warning';
+            healthResponse.textContent = '';
+
+            try {
+                const response = await fetch(API_URL + '/health');
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    healthStatus.textContent = '✅ Serveur OK';
+                    healthTest.className = 'test success';
+                    healthResponse.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    healthStatus.textContent = '❌ Serveur erreur';
+                    healthTest.className = 'test error';
+                    healthResponse.textContent = JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                healthStatus.textContent = '❌ Pas de connexion';
+                healthTest.className = 'test error';
+                healthResponse.textContent = `Erreur: ${error.message}\n\nAssurez-vous que:\n1. Le serveur est lancé\n2. Il écoute sur le port 3001\n3. CORS est activé`;
+            }
+        }
+
+        async function testAPI() {
+            const apiTest = document.getElementById('apiTest');
+            const apiStatus = document.getElementById('apiStatus');
+            const apiResponse = document.getElementById('apiResponse');
+            
+            apiStatus.textContent = 'Test en cours...';
+            apiTest.className = 'test warning';
+            apiResponse.textContent = '';
+
+            try {
+                const testData = {
+                    partenaire: 'TEST',
+                    region: 'TEST',
+                    departement: 'TEST',
+                    commune: 'TEST'
+                };
+
+                const response = await fetch(API_URL + '/collecte', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    apiStatus.textContent = '✅ API OK';
+                    apiTest.className = 'test success';
+                    apiResponse.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    apiStatus.textContent = '⚠️ Réponse ' + response.status;
+                    apiTest.className = 'test warning';
+                    apiResponse.textContent = JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                apiStatus.textContent = '❌ Erreur API';
+                apiTest.className = 'test error';
+                apiResponse.textContent = `Erreur: ${error.message}`;
+            }
+        }
+
+        // Lancer les tests automatiquement
+        window.addEventListener('load', () => {
+            console.log('🧪 Tests de diagnostic chargés');
+        });
+    </script>
+</body>
+</html>
