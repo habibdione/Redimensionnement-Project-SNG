@@ -1,0 +1,11 @@
+node_modules/
+.env.local
+.DS_Store
+uploads/
+test-*.html
+*.bat
+*.ps1
+.git/
+.gitignore
+README*.md
+TROUBLESHOOTING.md

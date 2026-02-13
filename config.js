@@ -17,12 +17,12 @@ const SENELEC_CONFIG = {
         DEBUG: true
     },
     
-    // Production - Backend sur serveur dédié
+    // Production - Railway Backend + GitHub Pages Frontend
     production: {
-        // À remplacer par l'URL réelle du serveur backend
-        // Pour tester localement: remplacez par http://192.168.x.x:3001/api (your PC IP)
-        API_URL: 'http://localhost:3001/api',
-        APP_NAME: 'SONAGED Dimensionnement',
+        // Template: https://[votre-app-name]-production.up.railway.app/api
+        // À REMPLACER après déploiement Railway!
+        API_URL: 'https://your-railway-app-production.up.railway.app/api',
+        APP_NAME: 'SENELEC Dimensionnement',
         DEBUG: false
     },
     
