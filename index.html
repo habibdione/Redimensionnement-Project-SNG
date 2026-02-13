@@ -1235,33 +1235,33 @@
         // Formulaire
         function sauvegarderDonnees() {
             try {
+                console.group('📋 COLLECTE DES DONNÉES - sauvegarderDonnees()');
+                
                 // 🔍 Vérifier d'abord que les éléments existent
-                console.group('🔍 VÉRIFICATION DES ÉLÉMENTS HTML');
+                console.log('1️⃣ Récupération des éléments HTML par ID:');
                 
                 const partenaire_elem = document.getElementById('partenaire');
                 const region_elem = document.getElementById('region');
                 const departement_elem = document.getElementById('departement');
                 const commune_elem = document.getElementById('commune');
                 
-                console.log('Éléments trouvés:', {
-                    partenaire_elem: partenaire_elem ? '✅ EXISTE' : '❌ PAS TROUVÉ',
-                    region_elem: region_elem ? '✅ EXISTE' : '❌ PAS TROUVÉ',
-                    departement_elem: departement_elem ? '✅ EXISTE' : '❌ PAS TROUVÉ',
-                    commune_elem: commune_elem ? '✅ EXISTE' : '❌ PAS TROUVÉ'
-                });
+                console.log(`   ✓ partenaire: ${partenaire_elem ? '✅ TROUVÉ' : '❌ MANQUANT'}`);
+                console.log(`   ✓ region: ${region_elem ? '✅ TROUVÉ' : '❌ MANQUANT'}`);
+                console.log(`   ✓ departement: ${departement_elem ? '✅ TROUVÉ' : '❌ MANQUANT'}`);
+                console.log(`   ✓ commune: ${commune_elem ? '✅ TROUVÉ' : '❌ MANQUANT'}`);
                 
                 // Récupérer les valeurs
+                console.log('\n2️⃣ Lecture des valeurs:');
+                
                 donnees.partenaire = partenaire_elem ? partenaire_elem.value.trim() : '';
                 donnees.region = region_elem ? region_elem.value.trim() : '';
                 donnees.departement = departement_elem ? departement_elem.value.trim() : '';
                 donnees.commune = commune_elem ? commune_elem.value.trim() : '';
                 
-                console.log('Valeurs RAW (brutes):', {
-                    partenaire: `"${donnees.partenaire}"`,
-                    region: `"${donnees.region}"`,
-                    departement: `"${donnees.departement}"`,
-                    commune: `"${donnees.commune}"`
-                });
+                console.log(`   partenaire = "${donnees.partenaire}"`);
+                console.log(`   region = "${donnees.region}"`);
+                console.log(`   departement = "${donnees.departement}"`);
+                console.log(`   commune = "${donnees.commune}"`);
                 
                 // Récupérer tous les types d'activité sélectionnés
                 const typeActiviteSelect = document.getElementById('typeActivite');
@@ -1292,13 +1292,13 @@
                 donnees.coordonneeX = coordXElem ? coordXElem.value : '';
                 donnees.coordonneeY = coordYElem ? coordYElem.value : '';
                 
-                console.log('📋 DONNÉES RÉCUPÉRÉES COMPLÈTES:', donnees);
+                console.log('\n3️⃣ OBJET donnees FINAL:', donnees);
                 console.groupEnd();
                 
-                showAlert('success', '✅ Données sauvegardées localement avec succès!');
-                affichageResume();
+                showAlert('success', '✅ Données collectées localement!');
             } catch (error) {
                 console.error('❌ Erreur lors de la récupération des données:', error);
+                console.error('Stack:', error.stack);
                 showAlert('error', '❌ Erreur: ' + error.message);
             }
         }
@@ -1760,6 +1760,43 @@
             // Collecter les données du formulaire EN PREMIER
             sauvegarderDonnees();
             
+            // 🔴 LOG ULTRA-DÉTAILLÉ - Vérifier les éléments HTML
+            console.group('🔴 DIAGNOSTIC - AVANT ENVOI');
+            console.log('1️⃣ OBJET donnees APRÈS sauvegarderDonnees():', donnees);
+            
+            // Vérifier chaque élément HTML individuellement
+            console.log('\n2️⃣ VÉRIFICATION DES ÉLÉMENTS HTML:');
+            const partenaire_elem = document.getElementById('partenaire');
+            const region_elem = document.getElementById('region');
+            const departement_elem = document.getElementById('departement');
+            const commune_elem = document.getElementById('commune');
+            
+            console.log('   partenaire:', {
+                existe: !!partenaire_elem,
+                type: partenaire_elem ? partenaire_elem.tagName : 'N/A',
+                value: partenaire_elem ? `"${partenaire_elem.value}"` : 'N/A',
+                donnees_value: `"${donnees.partenaire}"`
+            });
+            console.log('   region:', {
+                existe: !!region_elem,
+                type: region_elem ? region_elem.tagName : 'N/A',
+                value: region_elem ? `"${region_elem.value}"` : 'N/A',
+                donnees_value: `"${donnees.region}"`
+            });
+            console.log('   departement:', {
+                existe: !!departement_elem,
+                type: departement_elem ? departement_elem.tagName : 'N/A',
+                value: departement_elem ? `"${departement_elem.value}"` : 'N/A',
+                donnees_value: `"${donnees.departement}"`
+            });
+            console.log('   commune:', {
+                existe: !!commune_elem,
+                type: commune_elem ? commune_elem.tagName : 'N/A',
+                value: commune_elem ? `"${commune_elem.value}"` : 'N/A',
+                donnees_value: `"${donnees.commune}"`
+            });
+            console.groupEnd();
+            
             // D'abord afficher le résumé pour vérification
             afficherResume();
             
@@ -1797,6 +1834,16 @@
                 photo: donnees.photo || null,
                 dateCollecte: new Date().toISOString()
             };
+            
+            console.group('🟢 DONNÉES À ENVOYER');
+            console.log('Partenaire:', dataToSend.partenaire);
+            console.log('Région:', dataToSend.region);
+            console.log('Département:', dataToSend.departement);
+            console.log('Commune:', dataToSend.commune);
+            console.log('Latitude:', dataToSend.latitude);
+            console.log('Longitude:', dataToSend.longitude);
+            console.log('Full dataToSend:', dataToSend);
+            console.groupEnd();
             
             // Valider les données critiques
             if (!dataToSend.latitude || !dataToSend.longitude) {

@@ -99,7 +99,7 @@ app.post('/api/collecte', async (req, res) => {
     try {
         console.log('📥 Requête POST /api/collecte reçue');
         console.log('📊 Champs reçus:', Object.keys(req.body));
-        console.log('📋 Body complet:', JSON.stringify(req.body, null, 2).substring(0, 500));
+        console.log('📋 Body complet:', JSON.stringify(req.body, null, 2).substring(0, 800));
         
         // Destructurer ET nettoyer les données
         let {
@@ -136,10 +136,13 @@ app.post('/api/collecte', async (req, res) => {
         commune = typeof commune === 'string' ? commune.trim() : commune;
 
         console.log('🔍 Après trim:', {
-            partenaire: partenaire || '(VIDE)',
-            region: region || '(VIDE)',
-            departement: departement || '(VIDE)',
-            commune: commune || '(VIDE)'
+            partenaire: `"${partenaire || '(VIDE)'}"`,
+            region: `"${region || '(VIDE)'}"`,
+            departement: `"${departement || '(VIDE)'}"`,
+            commune: `"${commune || '(VIDE)'}"`,
+            adresse: `"${adresse || '(VIDE)'}"`,
+            latitude: latitude,
+            longitude: longitude
         });
 
         // ✅ VALIDATION GPS OBLIGATOIRE SEULEMENT
