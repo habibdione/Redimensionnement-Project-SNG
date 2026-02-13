@@ -34,15 +34,6 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// 🌐 Ajouter les headers pour les permissions et sécurité
-app.use((req, res, next) => {
-    // Permettre la géolocalisation sur localhost et HTTPS
-    res.setHeader('Permissions-Policy', 'geolocation=(self "http://localhost:*" "https://*"), camera=(self), microphone=(self)');
-    // CORS pour les embeddings
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    next();
-});
-
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ limit: '25mb', extended: true }));
 
@@ -91,16 +82,19 @@ if (!fs.existsSync(path.join(__dirname, 'uploads'))) {
     fs.mkdirSync(path.join(__dirname, 'uploads'), { recursive: true });
 }
 
-// 🌐 Servir les fichiers statiques (HTML, CSS, JS, images)
-app.use(express.static(path.join(__dirname, '.')));
+// Import de la base de données
+const { pool, initDatabase } = require('./db');
 
-// Rediriger la route racine vers index.html
+// ============================================
+// FICHIERS STATIQUES
+// ============================================
+app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, 'uploads')));
+
+// Route pour index.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
-
-// Import de la base de données
-const { pool, initDatabase } = require('./db');
 
 /**
  * ============================================
@@ -506,84 +500,6 @@ app.delete('/api/collecte/:id', async (req, res) => {
         res.status(500).json({
             success: false,
             error: 'Erreur lors de la suppression'
-        });
-    }
-});
-
-/**
- * GET /api/regions
- * Récupérer la liste de toutes les régions
- */
-app.get('/api/regions', async (req, res) => {
-    try {
-        const query = 'SELECT id, code, nom, emoji, description FROM regions ORDER BY id ASC';
-        const result = await pool.query(query);
-        
-        res.json({
-            success: true,
-            data: result.rows
-        });
-    } catch (error) {
-        console.error('❌ Erreur GET /api/regions:', error);
-        res.status(500).json({
-            success: false,
-            error: 'Erreur lors de la récupération des régions'
-        });
-    }
-});
-
-/**
- * GET /api/departements/:regionId
- * Récupérer les départements d'une région
- */
-app.get('/api/departements/:regionId', async (req, res) => {
-    try {
-        const { regionId } = req.params;
-        const query = `
-            SELECT id, region_id, nom, code 
-            FROM departements 
-            WHERE region_id = $1 
-            ORDER BY nom ASC
-        `;
-        const result = await pool.query(query, [regionId]);
-        
-        res.json({
-            success: true,
-            data: result.rows
-        });
-    } catch (error) {
-        console.error('❌ Erreur GET /api/departements/:regionId:', error);
-        res.status(500).json({
-            success: false,
-            error: 'Erreur lors de la récupération des départements'
-        });
-    }
-});
-
-/**
- * GET /api/communes/:departementId
- * Récupérer les communes d'un département
- */
-app.get('/api/communes/:departementId', async (req, res) => {
-    try {
-        const { departementId } = req.params;
-        const query = `
-            SELECT id, nom, code 
-            FROM communes 
-            WHERE departement_id = $1 
-            ORDER BY nom ASC
-        `;
-        const result = await pool.query(query, [departementId]);
-        
-        res.json({
-            success: true,
-            data: result.rows
-        });
-    } catch (error) {
-        console.error('❌ Erreur GET /api/communes/:departementId:', error);
-        res.status(500).json({
-            success: false,
-            error: 'Erreur lors de la récupération des communes'
         });
     }
 });

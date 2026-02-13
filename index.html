@@ -784,6 +784,244 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
     
     <script>
+        // ============ DONNÉES GÉOGRAPHIQUES DU SÉNÉGAL (PRIORITAIRE) ============
+        const SENEGAL_REGIONS = {
+            regions: [
+                {
+                    id: 'dakar',
+                    nom: '🏛️ Dakar',
+                    code: 'DK',
+                    departements: [
+                        {
+                            id: 'dakar-dept',
+                            nom: 'Dakar',
+                            communes: ['Dakar', 'Guédiawaye', 'Pikine', 'Rufisque', 'Keur Massar']
+                        }
+                    ]
+                },
+                {
+                    id: 'thies',
+                    nom: '🏘️ Thiès',
+                    code: 'TH',
+                    departements: [
+                        { id: 'thies-dept', nom: 'Thiès', communes: ['Thiès', 'Popenguine', 'Sindia'] },
+                        { id: 'mbour-dept', nom: 'Mbour', communes: ['Mbour', 'Nianing', 'Joal-Fadiouth', 'Malicounda', 'Ngaparou', 'Toubab Dialao'] },
+                        { id: 'tivaouane-dept', nom: 'Tivaouane', communes: ['Tivaouane', 'Mekhé', 'Mérinagène', 'Gningue'] }
+                    ]
+                },
+                {
+                    id: 'saint-louis',
+                    nom: '👑 Saint-Louis',
+                    code: 'SL',
+                    departements: [
+                        { id: 'saint-louis-dept', nom: 'Saint-Louis', communes: ['Saint-Louis', 'Guet N Dar', 'Sor'] },
+                        { id: 'dagana-dept', nom: 'Dagana', communes: ['Dagana', 'Ronchamp', 'Diama'] },
+                        { id: 'podor-dept', nom: 'Podor', communes: ['Podor', 'Tandilao', 'Madina'] }
+                    ]
+                },
+                {
+                    id: 'diourbel',
+                    nom: '🌾 Diourbel',
+                    code: 'DB',
+                    departements: [
+                        { id: 'diourbel-dept', nom: 'Diourbel', communes: ['Diourbel', 'Gueule Tapée', 'Touba', 'Gueule Ndar'] },
+                        { id: 'bambey-dept', nom: 'Bambey', communes: ['Bambey', 'Ngoye'] },
+                        { id: 'mbacke-dept', nom: 'Mbacké', communes: ['Mbacké', 'Darou Mouhty', 'Lamina', 'Keur Modou'] }
+                    ]
+                },
+                {
+                    id: 'tambacounda',
+                    nom: '🐪 Tambacounda',
+                    code: 'TC',
+                    departements: [
+                        { id: 'tambacounda-dept', nom: 'Tambacounda', communes: ['Tambacounda', 'Sinthiou Lemba', 'Guel Malick', 'Banda Ré'] },
+                        { id: 'bakel-dept', nom: 'Bakel', communes: ['Bakel', 'Kanel'] },
+                        { id: 'goudiry-dept', nom: 'Goudiry', communes: ['Goudiry', 'Kidira'] },
+                        { id: 'koumpentoum-dept', nom: 'Koumpentoum', communes: ['Koumpentoum', 'Gueumane'] },
+                        { id: 'kidira-dept', nom: 'Kidira', communes: ['Kidira', 'Gabu'] }
+                    ]
+                },
+                {
+                    id: 'ziguinchor',
+                    nom: '🌴 Ziguinchor',
+                    code: 'ZG',
+                    departements: [
+                        { id: 'ziguinchor-dept', nom: 'Ziguinchor', communes: ['Ziguinchor', 'Adéane', 'Niaguis', 'Niassia', 'Boutoupa Camara Kounda'] },
+                        { id: 'bignona-dept', nom: 'Bignona', communes: ['Bignona', 'Thionck-Essyl', 'Kafountine', 'Diouloulou', 'Balingore', 'Coubalan', 'Diégoune', 'Djibidione', 'Djinaki', 'Karthiack', 'Kataba 1', 'Mangagoulack', 'Mlomp', 'Niamone', 'Oulampane', 'Quonck', 'Sindian', 'Suelle', 'Tenghory'] },
+                        { id: 'oussouye-dept', nom: 'Oussouye', communes: ['Oussouye', 'Diembéring', 'Mlomp'] }
+                    ]
+                },
+                {
+                    id: 'kaolack',
+                    nom: '🎪 Kaolack',
+                    code: 'KL',
+                    departements: [
+                        { id: 'kaolack-dept', nom: 'Kaolack', communes: ['Kaolack', 'Lamin Sine', 'Ndiédiéme', 'Gankette Soulé'] },
+                        { id: 'nioro-dept', nom: 'Nioro du Rip', communes: ['Nioro du Rip', 'Kolia'] },
+                        { id: 'guinguineo-dept', nom: 'Guinguinéo', communes: ['Guinguinéo', 'Taiba Niassène', 'Ndengler'] }
+                    ]
+                },
+                {
+                    id: 'fatick',
+                    nom: '🏞️ Fatick',
+                    code: 'FT',
+                    departements: [
+                        { id: 'fatick-dept', nom: 'Fatick', communes: ['Fatick', 'Keur Samba Gueye', 'Missirah', 'Passe'] },
+                        { id: 'foundiougne-dept', nom: 'Foundiougne', communes: ['Foundiougne', 'Missirah Wadène'] },
+                        { id: 'gossas-dept', nom: 'Gossas', communes: ['Gossas', 'Rip', 'Sarelle'] }
+                    ]
+                },
+                {
+                    id: 'kaffrine',
+                    nom: '🌾 Kaffrine',
+                    code: 'KF',
+                    departements: [
+                        { id: 'kaffrine-dept', nom: 'Kaffrine', communes: ['Kaffrine', 'Sinthé', 'Saré Yerma'] },
+                        { id: 'birkelane-dept', nom: 'Birkelane', communes: ['Birkelane', 'Ndiobène'] },
+                        { id: 'malem-hodar-dept', nom: 'Malem Hodar', communes: ['Malem Hodar', 'Maka Kolé'] },
+                        { id: 'koungheul-dept', nom: 'Koungheul', communes: ['Koungheul', 'Guelel Yerguel'] }
+                    ]
+                },
+                {
+                    id: 'matam',
+                    nom: '🏜️ Matam',
+                    code: 'MT',
+                    departements: [
+                        { id: 'matam-dept', nom: 'Matam', communes: ['Matam', 'Kassan', 'Orbé'] },
+                        { id: 'kanel-dept', nom: 'Kanel', communes: ['Kanel', 'Ouro Alfa'] },
+                        { id: 'ranerou-dept', nom: 'Ranérou', communes: ['Ranérou', 'Sélibaby'] }
+                    ]
+                },
+                {
+                    id: 'kedougou',
+                    nom: '🌲 Kédougou',
+                    code: 'KD',
+                    departements: [
+                        { id: 'kedougou-dept', nom: 'Kédougou', communes: ['Kédougou', 'Mampatim'] },
+                        { id: 'salemata-dept', nom: 'Salemata', communes: ['Salemata', 'Mako'] },
+                        { id: 'saraya-dept', nom: 'Saraya', communes: ['Saraya', 'Misira'] }
+                    ]
+                },
+                {
+                    id: 'kolda',
+                    nom: '🎋 Kolda',
+                    code: 'KO',
+                    departements: [
+                        { id: 'kolda-dept', nom: 'Kolda', communes: ['Kolda', 'Sibassor', 'Médina El Hadj'] },
+                        { id: 'velingara-dept', nom: 'Vélingara', communes: ['Vélingara', 'Gaoual'] },
+                        { id: 'medina-yoro-foulah-dept', nom: 'Médina Yoro Foulah', communes: ['Médina Yoro Foulah', 'Dialacoto'] }
+                    ]
+                },
+                {
+                    id: 'sedhiou',
+                    nom: '🌳 Sédhiou',
+                    code: 'SD',
+                    departements: [
+                        { id: 'sedhiou-dept', nom: 'Sédhiou', communes: ['Sédhiou', 'Kabrousse'] },
+                        { id: 'bounkiling-dept', nom: 'Bounkiling', communes: ['Bounkiling', 'Linkering'] },
+                        { id: 'goudomp-dept', nom: 'Goudomp', communes: ['Goudomp', 'Yarol'] }
+                    ]
+                },
+                {
+                    id: 'louga',
+                    nom: '🐠 Louga',
+                    code: 'LG',
+                    departements: [
+                        { id: 'louga-dept', nom: 'Louga', communes: ['Louga', 'Gueoul'] },
+                        { id: 'kebemer-dept', nom: 'Kébémer', communes: ['Kébémer', 'Tataguine'] },
+                        { id: 'linguere-dept', nom: 'Linguère', communes: ['Linguère', 'Dodji'] }
+                    ]
+                }
+            ],
+            
+            getRegions: function() {
+                return this.regions;
+            },
+            
+            getDepartements: function(regionId) {
+                const region = this.regions.find(r => r.id === regionId);
+                return region ? region.departements : [];
+            },
+            
+            getCommunes: function(regionId, departementId) {
+                const region = this.regions.find(r => r.id === regionId);
+                if (!region) return [];
+                const dept = region.departements.find(d => d.id === departementId);
+                return dept ? dept.communes : [];
+            }
+        };
+
+        // ============ FONCTIONS GÉOGRAPHIQUES ============
+        function initialiserSelectsGeographiques() {
+            console.log('✅ Initialiser les selects géographiques');
+            const regionSelect = document.getElementById('region');
+            if (!regionSelect) {
+                console.error('❌ Element region select non trouvé');
+                return;
+            }
+            
+            regionSelect.innerHTML = '<option value="">-- Sélectionner une région --</option>';
+            
+            SENEGAL_REGIONS.getRegions().forEach(region => {
+                const option = document.createElement('option');
+                option.value = region.id;
+                option.textContent = region.nom;
+                regionSelect.appendChild(option);
+            });
+            
+            console.log(`✅ ${SENEGAL_REGIONS.getRegions().length} régions chargées`);
+        }
+        
+        function mettreAJourDepartements() {
+            const regionSelect = document.getElementById('region');
+            const departementSelect = document.getElementById('departement');
+            const communeSelect = document.getElementById('commune');
+            
+            const regionId = regionSelect.value;
+            
+            // Réinitialiser les autres selects
+            departementSelect.innerHTML = '<option value="">-- Sélectionner un département --</option>';
+            communeSelect.innerHTML = '<option value="">-- Sélectionner une commune --</option>';
+            
+            if (!regionId) return;
+            
+            // Récupérer et remplir les départements
+            const departements = SENEGAL_REGIONS.getDepartements(regionId);
+            console.log(`✅ ${departements.length} départements pour ${regionId}`);
+            
+            departements.forEach(dept => {
+                const option = document.createElement('option');
+                option.value = dept.id;
+                option.textContent = dept.nom;
+                departementSelect.appendChild(option);
+            });
+        }
+        
+        function mettreAJourCommunes() {
+            const regionSelect = document.getElementById('region');
+            const departementSelect = document.getElementById('departement');
+            const communeSelect = document.getElementById('commune');
+            
+            const regionId = regionSelect.value;
+            const departementId = departementSelect.value;
+            
+            // Réinitialiser le select des communes
+            communeSelect.innerHTML = '<option value="">-- Sélectionner une commune --</option>';
+            
+            if (!regionId || !departementId) return;
+            
+            // Récupérer et remplir les communes
+            const communes = SENEGAL_REGIONS.getCommunes(regionId, departementId);
+            console.log(`✅ ${communes.length} communes pour ${departementId}`);
+            
+            communes.forEach(commune => {
+                const option = document.createElement('option');
+                option.value = commune;
+                option.textContent = commune;
+                communeSelect.appendChild(option);
+            });
+        }
+
         // ============ PWA & Service Worker Enregistrement ============
         let deferredPrompt;
         let swRegistration = null;
@@ -948,17 +1186,9 @@
         let watchPositionId = null;
 
         function obtenirLocalisationGPS() {
-            // Vérification robuste du protocole
-            const isHTTPS = location.protocol === 'https:';
-            const isLocalhost = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname === '0.0.0.0';
-            
-            console.log('🔍 Vérification géolocalisation:');
-            console.log(`   - Protocol: ${location.protocol} (HTTPS: ${isHTTPS})`);
-            console.log(`   - Hostname: ${location.hostname} (Localhost: ${isLocalhost})`);
-            
-            // La géolocalisation n'est autorisée que sur HTTPS ou localhost
-            if (!isHTTPS && !isLocalhost) {
-                showAlert('error', '⚠️ La géolocalisation nécessite HTTPS ou localhost. Votre URL: ' + location.href);
+            // Vérification du protocole
+            if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+                showAlert('error', '⚠️ La géolocalisation nécessite HTTPS. Veuillez utiliser une connexion sécurisée ou localhost.');
                 return;
             }
             
@@ -968,7 +1198,6 @@
             }
             
             showAlert('info', '📡 Demande de permission pour accéder à la localisation...');
-            console.log('📡 Demande de permission géolocalisation...');
             
             // Options pour haute précision
             const options = {
@@ -990,8 +1219,6 @@
                     donnees.latitude = lat;
                     donnees.longitude = lon;
                     donnees.precision = accuracy;
-                    
-                    console.log('✅ GPS Position reçue:', {lat, lon, accuracy});
                     
                     // Afficher les coordonnées
                     document.getElementById('lat').textContent = lat.toFixed(6);
@@ -1039,39 +1266,20 @@
                     
                     switch(error.code) {
                         case error.PERMISSION_DENIED:
-                            errorMsg = '❌ Permission refusée.\n\n';
-                            errorMsg += '📍 Sur Chrome/Edge:\n';
-                            errorMsg += '1. Cliquez sur le cadenas 🔒 dans la barre d\'URL\n';
-                            errorMsg += '2. Trouvez "Localisation"\n';
-                            errorMsg += '3. Changez en "Autoriser"\n\n';
-                            errorMsg += '📍 Sur Firefox:\n';
-                            errorMsg += '1. Paramètres > Confidentialité\n';
-                            errorMsg += '2. Permissions > Localisation\n';
-                            errorMsg += '3. Autorisez localhost:3001\n\n';
-                            errorMsg += '📍 Sur Safari:\n';
-                            errorMsg += '1. Préférences > Sécurité\n';
-                            errorMsg += '2. Autorisez l\'accès à la localisation';
+                            errorMsg = 'Accès à la géolocalisation refusé. ';
+                            errorMsg += 'Veuillez vérifier les permissions de votre navigateur. ';
+                            errorMsg += 'Allez dans Paramètres > Permissions de site et autorisez l\'accès à votre localisation.';
                             break;
                         case error.POSITION_UNAVAILABLE:
-                            errorMsg = '❌ Position indisponible.\n\n';
-                            errorMsg += '✓ Assurez-vous que:\n';
-                            errorMsg += '• Le GPS est activé (Windows: Paramètres > Confidentialité > Localisation)\n';
-                            errorMsg += '• Vous êtes vous êtes en extérieur avec une bonne réception\n';
-                            errorMsg += '• Vous attendez 15-30 secondes pour la première localisation\n';
-                            errorMsg += '• Aucun VPN n\'interfère avec le GPS';
+                            errorMsg = 'Position indisponible. Assurez-vous que le GPS est activé et que vous êtes en extérieur.';
                             break;
                         case error.TIMEOUT:
-                            errorMsg = '❌ Délai dépassé (15s).\n\n';
-                            errorMsg += '✓ Essayez:\n';
-                            errorMsg += '• Un endroit avec meilleure réception GPS (près d\'une fenêtre)\n';
-                            errorMsg += '• Éteignez et rallumez le GPS\n';
-                            errorMsg += '• Attendez plus longtemps si c\'est la première tentative\n';
-                            errorMsg += '• Cliquez à nouveau sur "Obtenir ma position"';
+                            errorMsg = 'Délai dépassé (15s). Essayez dans un endroit avec meilleure réception GPS.';
                             break;
                         default:
-                            errorMsg = '❌ Erreur inconnue: ' + error.message;
+                            errorMsg = error.message || 'Erreur inconnue';
                     }
-                    showAlert('error', errorMsg);
+                    showAlert('error', '❌ Erreur GPS: ' + errorMsg);
                 },
                 options
             );
@@ -1790,56 +1998,42 @@
             // Collecter les données du formulaire EN PREMIER
             sauvegarderDonnees();
             
-            // 🔴 VALIDATION - Vérifier que tous les champs obligatoires sont remplis
-            console.group('🔍 VALIDATION DES CHAMPS OBLIGATOIRES');
+            // 🔴 LOG ULTRA-DÉTAILLÉ - Vérifier les éléments HTML
+            console.group('🔴 DIAGNOSTIC - AVANT ENVOI');
+            console.log('1️⃣ OBJET donnees APRÈS sauvegarderDonnees():', donnees);
             
-            const champsObligatoires = [
-                { id: 'partenaire', nom: 'Partenaire' },
-                { id: 'region', nom: 'Région' },
-                { id: 'departement', nom: 'Département' },
-                { id: 'commune', nom: 'Commune' },
-                { id: 'typeActivite', nom: 'Type d\'Activité' },
-                { id: 'adresse', nom: 'Adresse' },
-                { id: 'superficie', nom: 'Superficie' },
-                { id: 'besoinPersonnel', nom: 'Besoin Personnel' },
-                { id: 'dispositifDeploy', nom: 'Dispositif Déployé' },
-                { id: 'nombreRotation', nom: 'Nombre de Rotation' },
-                { id: 'infrastructureGestion', nom: 'Infrastructure de Gestion' },
-                { id: 'frequenceCollecte', nom: 'Fréquence de Collecte' }
-            ];
+            // Vérifier chaque élément HTML individuellement
+            console.log('\n2️⃣ VÉRIFICATION DES ÉLÉMENTS HTML:');
+            const partenaire_elem = document.getElementById('partenaire');
+            const region_elem = document.getElementById('region');
+            const departement_elem = document.getElementById('departement');
+            const commune_elem = document.getElementById('commune');
             
-            let champsVides = [];
-            champsObligatoires.forEach(champ => {
-                const elem = document.getElementById(champ.id);
-                let valeur = '';
-                
-                if (champ.id === 'typeActivite' || champ.id === 'dispositifDeploy') {
-                    // Pour les select multiples
-                    const options = elem.selectedOptions;
-                    valeur = Array.from(options).map(o => o.value).join(',');
-                } else {
-                    valeur = elem.value.trim();
-                }
-                
-                if (!valeur) {
-                    champsVides.push(champ.nom);
-                    console.log(`❌ ${champ.nom}: VIDE`);
-                } else {
-                    console.log(`✅ ${champ.nom}: OK`);
-                }
+            console.log('   partenaire:', {
+                existe: !!partenaire_elem,
+                type: partenaire_elem ? partenaire_elem.tagName : 'N/A',
+                value: partenaire_elem ? `"${partenaire_elem.value}"` : 'N/A',
+                donnees_value: `"${donnees.partenaire}"`
             });
-            
+            console.log('   region:', {
+                existe: !!region_elem,
+                type: region_elem ? region_elem.tagName : 'N/A',
+                value: region_elem ? `"${region_elem.value}"` : 'N/A',
+                donnees_value: `"${donnees.region}"`
+            });
+            console.log('   departement:', {
+                existe: !!departement_elem,
+                type: departement_elem ? departement_elem.tagName : 'N/A',
+                value: departement_elem ? `"${departement_elem.value}"` : 'N/A',
+                donnees_value: `"${donnees.departement}"`
+            });
+            console.log('   commune:', {
+                existe: !!commune_elem,
+                type: commune_elem ? commune_elem.tagName : 'N/A',
+                value: commune_elem ? `"${commune_elem.value}"` : 'N/A',
+                donnees_value: `"${donnees.commune}"`
+            });
             console.groupEnd();
-            
-            // Si des champs sont vides, afficher l'erreur et arrêter
-            if (champsVides.length > 0) {
-                const listeChamps = champsVides.map((c, i) => `${i+1}. ${c}`).join('\n');
-                showAlert('error', `❌ CHAMPS OBLIGATOIRES NON REMPLIS:\n\n${listeChamps}\n\nVeuillez compléter tous les champs avant de sauvegarder.`);
-                console.error('❌ Tentative de sauvegarde avec champs vides:', champsVides);
-                return;
-            }
-            
-            console.log('✅ Tous les champs obligatoires sont remplis');
             
             // D'abord afficher le résumé pour vérification
             afficherResume();
@@ -2062,19 +2256,14 @@
         
         // Fonction de diagnostic pour vérifier les permissions et connexion
         // Initialisation
-        document.addEventListener('DOMContentLoaded', async function() {
+        document.addEventListener('DOMContentLoaded', function() {
             initMap();
             afficherInfoCache();
             document.getElementById('date-update').textContent = new Date().toLocaleDateString('fr-FR');
             mettreAJourSites();
             
-            // Initialiser les selects géographiques - ATTENDRE LA COMPLETION
-            try {
-                await initialiserSelectsGeographiques();
-                console.log('✅ Sélecteurs géographiques prêts');
-            } catch (error) {
-                console.error('❌ Erreur initialisation sélecteurs:', error);
-            }
+            // Initialiser les selects géographiques
+            initialiserSelectsGeographiques();
             
             // Vérifier le statut PWA
             if (window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches) {
@@ -2082,185 +2271,6 @@
                 showAlert('success', '📱 Application PWA chargée!');
             }
         });
-        
-        /**
-         * ============================================
-         * GESTION DES SELECTS GÉOGRAPHIQUES EN CASCADE
-         * ============================================
-         */
-        
-        /**
-         * 🗺️ DONNÉES GÉOGRAPHIQUES DU SÉNÉGAL
-         * ====================================================
-         * Structure complète: 14 Régions • 45 Départements • 500+ Communes
-         */
-        
-        // Cache pour les données géographiques
-        const SENEGAL_REGIONS = {
-            regions: [],
-            departementsByRegion: {},
-            communesByDepartement: {},
-            isLoaded: false,
-            
-            async chargerDonnees() {
-                if (this.isLoaded) return;
-                
-                try {
-                    console.log('📡 Chargement des données géographiques...');
-                    
-                    // Charger les régions
-                    const regionsResp = await fetch('/api/regions');
-                    const regionsData = await regionsResp.json();
-                    
-                    if (regionsData.success) {
-                        this.regions = regionsData.data.map(r => ({
-                            id: r.id,
-                            nom: `${r.emoji} ${r.nom}`,
-                            code: r.code,
-                            region_db_id: r.id
-                        }));
-                        console.log(`✅ ${this.regions.length} régions chargées`);
-                    }
-                    
-                    this.isLoaded = true;
-                } catch (error) {
-                    console.error('❌ Erreur chargement régions:', error);
-                    this.isLoaded = false;
-                }
-            },
-            
-            getRegions: function() {
-                return this.regions;
-            },
-            
-            async getDepartements(regionId) {
-                try {
-                    if (this.departementsByRegion[regionId]) {
-                        return this.departementsByRegion[regionId];
-                    }
-                    
-                    const response = await fetch(`/api/departements/${regionId}`);
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        this.departementsByRegion[regionId] = data.data.map(d => ({
-                            id: d.id,
-                            nom: d.nom,
-                            region_db_id: d.region_id
-                        }));
-                        return this.departementsByRegion[regionId];
-                    }
-                    return [];
-                } catch (error) {
-                    console.error(`❌ Erreur chargement départements (${regionId}):`, error);
-                    return [];
-                }
-            },
-            
-            async getCommunes(departementId) {
-                try {
-                    if (this.communesByDepartement[departementId]) {
-                        return this.communesByDepartement[departementId];
-                    }
-                    
-                    const response = await fetch(`/api/communes/${departementId}`);
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        this.communesByDepartement[departementId] = data.data.map(c => ({
-                            id: c.id,
-                            nom: c.nom
-                        }));
-                        return this.communesByDepartement[departementId];
-                    }
-                    return [];
-                } catch (error) {
-                    console.error(`❌ Erreur chargement communes (${departementId}):`, error);
-                    return [];
-                }
-            }
-        };
-        
-        async function initialiserSelectsGeographiques() {
-            try {
-                // Charger les données depuis l'API
-                await SENEGAL_REGIONS.chargerDonnees();
-                
-                // Remplir le select des régions
-                const regionSelect = document.getElementById('region');
-                regionSelect.innerHTML = '<option value="">-- Sélectionner une région --</option>';
-                
-                SENEGAL_REGIONS.getRegions().forEach(region => {
-                    const option = document.createElement('option');
-                    option.value = region.region_db_id;
-                    option.textContent = region.nom;
-                    regionSelect.appendChild(option);
-                });
-                
-                console.log('✅ Sélecteurs géographiques initialisés');
-            } catch (error) {
-                console.error('❌ Erreur initialisation sélecteurs:', error);
-                showAlert('error', '❌ Erreur lors du chargement des régions');
-            }
-        }
-        
-        async function mettreAJourDepartements() {
-            const regionSelect = document.getElementById('region');
-            const departementSelect = document.getElementById('departement');
-            const communeSelect = document.getElementById('commune');
-            
-            const regionId = regionSelect.value;
-            
-            // Réinitialiser les autres selects
-            departementSelect.innerHTML = '<option value="">-- Sélectionner un département --</option>';
-            communeSelect.innerHTML = '<option value="">-- Sélectionner une commune --</option>';
-            
-            if (!regionId) return;
-            
-            try {
-                // Récupérer et remplir les départements
-                const departements = await SENEGAL_REGIONS.getDepartements(regionId);
-                departements.forEach(dept => {
-                    const option = document.createElement('option');
-                    option.value = dept.id;
-                    option.textContent = dept.nom;
-                    departementSelect.appendChild(option);
-                });
-                
-                console.log(`✅ ${departements.length} départements chargés`);
-            } catch (error) {
-                console.error('❌ Erreur chargement départements:', error);
-                showAlert('error', '❌ Erreur lors du chargement des départements');
-            }
-        }
-        
-        async function mettreAJourCommunes() {
-            const departementSelect = document.getElementById('departement');
-            const communeSelect = document.getElementById('commune');
-            
-            const departementId = departementSelect.value;
-            
-            // Réinitialiser le select des communes
-            communeSelect.innerHTML = '<option value="">-- Sélectionner une commune --</option>';
-            
-            if (!departementId) return;
-            
-            try {
-                // Récupérer et remplir les communes
-                const communes = await SENEGAL_REGIONS.getCommunes(departementId);
-                communes.forEach(commune => {
-                    const option = document.createElement('option');
-                    option.value = commune.id;
-                    option.textContent = commune.nom;
-                    communeSelect.appendChild(option);
-                });
-                
-                console.log(`✅ ${communes.length} communes chargées`);
-            } catch (error) {
-                console.error('❌ Erreur chargement communes:', error);
-                showAlert('error', '❌ Erreur lors du chargement des communes');
-            }
-        }
     </script>
     
     <!-- Configuration d'environnement (doit être avant api-client.js) -->
