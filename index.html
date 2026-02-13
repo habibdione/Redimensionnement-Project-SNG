@@ -973,21 +973,26 @@
         }
         
         function mettreAJourDepartements() {
+            console.log('🔄 MISE À JOUR DES DÉPARTEMENTS');
             const regionSelect = document.getElementById('region');
             const departementSelect = document.getElementById('departement');
             const communeSelect = document.getElementById('commune');
             
             const regionId = regionSelect.value;
+            console.log(`   Région sélectionnée: "${regionId}"`);
             
             // Réinitialiser les autres selects
             departementSelect.innerHTML = '<option value="">-- Sélectionner un département --</option>';
             communeSelect.innerHTML = '<option value="">-- Sélectionner une commune --</option>';
             
-            if (!regionId) return;
+            if (!regionId) {
+                console.warn('   ⚠️ Aucune région sélectionnée');
+                return;
+            }
             
             // Récupérer et remplir les départements
             const departements = SENEGAL_REGIONS.getDepartements(regionId);
-            console.log(`✅ ${departements.length} départements pour ${regionId}`);
+            console.log(`   ✅ ${departements.length} départements trouvés`);
             
             departements.forEach(dept => {
                 const option = document.createElement('option');
@@ -998,6 +1003,7 @@
         }
         
         function mettreAJourCommunes() {
+            console.log('🔄 MISE À JOUR DES COMMUNES');
             const regionSelect = document.getElementById('region');
             const departementSelect = document.getElementById('departement');
             const communeSelect = document.getElementById('commune');
@@ -1005,14 +1011,19 @@
             const regionId = regionSelect.value;
             const departementId = departementSelect.value;
             
+            console.log(`   Région: "${regionId}", Département: "${departementId}"`);
+            
             // Réinitialiser le select des communes
             communeSelect.innerHTML = '<option value="">-- Sélectionner une commune --</option>';
             
-            if (!regionId || !departementId) return;
+            if (!regionId || !departementId) {
+                console.warn('   ⚠️ Région ou département manquant');
+                return;
+            }
             
             // Récupérer et remplir les communes
             const communes = SENEGAL_REGIONS.getCommunes(regionId, departementId);
-            console.log(`✅ ${communes.length} communes pour ${departementId}`);
+            console.log(`   ✅ ${communes.length} communes trouvées`);
             
             communes.forEach(commune => {
                 const option = document.createElement('option');
@@ -1488,7 +1499,7 @@
                 console.log(`   ✓ departement: ${departement_elem ? '✅ TROUVÉ' : '❌ MANQUANT'}`);
                 console.log(`   ✓ commune: ${commune_elem ? '✅ TROUVÉ' : '❌ MANQUANT'}`);
                 
-                // Récupérer les valeurs
+                // Récupérer les valeurs avec détails
                 console.log('\n2️⃣ Lecture des valeurs:');
                 
                 donnees.partenaire = partenaire_elem ? partenaire_elem.value.trim() : '';
@@ -1496,10 +1507,28 @@
                 donnees.departement = departement_elem ? departement_elem.value.trim() : '';
                 donnees.commune = commune_elem ? commune_elem.value.trim() : '';
                 
+                // AIDE POUR RÉGION - récupérer aussi le texte affiché
+                let regionText = '';
+                if (region_elem && region_elem.selectedIndex >= 0) {
+                    regionText = region_elem.options[region_elem.selectedIndex].text;
+                }
+                
+                // AIDE POUR DÉPARTEMENT - récupérer aussi le texte affiché
+                let departementText = '';
+                if (departement_elem && departement_elem.selectedIndex >= 0) {
+                    departementText = departement_elem.options[departement_elem.selectedIndex].text;
+                }
+                
+                // AIDE POUR COMMUNE - récupérer aussi le texte affiché
+                let communeText = '';
+                if (commune_elem && commune_elem.selectedIndex >= 0) {
+                    communeText = commune_elem.options[commune_elem.selectedIndex].text;
+                }
+                
                 console.log(`   partenaire = "${donnees.partenaire}"`);
-                console.log(`   region = "${donnees.region}"`);
-                console.log(`   departement = "${donnees.departement}"`);
-                console.log(`   commune = "${donnees.commune}"`);
+                console.log(`   region = "${donnees.region}" | text="${regionText}"`);
+                console.log(`   departement = "${donnees.departement}" | text="${departementText}"`);
+                console.log(`   commune = "${donnees.commune}" | text="${communeText}"`);
                 
                 // Récupérer tous les types d'activité sélectionnés
                 const typeActiviteSelect = document.getElementById('typeActivite');
@@ -1531,6 +1560,18 @@
                 donnees.coordonneeY = coordYElem ? coordYElem.value : '';
                 
                 console.log('\n3️⃣ OBJET donnees FINAL:', donnees);
+                
+                // ⚠️ ALERTE SI DONNÉES VIDES
+                if (!donnees.region) {
+                    console.warn('⚠️ ALERTE: Région est vide! Vérifiez que vous avez sélectionné une région dans le dropdown.');
+                }
+                if (!donnees.departement) {
+                    console.warn('⚠️ ALERTE: Département est vide! Vérifiez que vous avez sélectionné un département dans le dropdown.');
+                }
+                if (!donnees.commune) {
+                    console.warn('⚠️ ALERTE: Commune est vide! Vérifiez que vous avez sélectionné une commune dans le dropdown.');
+                }
+                
                 console.groupEnd();
                 
                 showAlert('success', '✅ Données collectées localement!');
@@ -1998,42 +2039,44 @@
             // Collecter les données du formulaire EN PREMIER
             sauvegarderDonnees();
             
-            // 🔴 LOG ULTRA-DÉTAILLÉ - Vérifier les éléments HTML
-            console.group('🔴 DIAGNOSTIC - AVANT ENVOI');
-            console.log('1️⃣ OBJET donnees APRÈS sauvegarderDonnees():', donnees);
+            // ✅ VALIDATION STRICTE - S'ASSURER QUE LES CHAMPS OBLIGATOIRES SONT REMPLIS
+            console.group('🔴 VALIDATION STRICTE');
             
-            // Vérifier chaque élément HTML individuellement
-            console.log('\n2️⃣ VÉRIFICATION DES ÉLÉMENTS HTML:');
-            const partenaire_elem = document.getElementById('partenaire');
-            const region_elem = document.getElementById('region');
-            const departement_elem = document.getElementById('departement');
-            const commune_elem = document.getElementById('commune');
+            const validations = {
+                'partenaire': donnees.partenaire,
+                'région': donnees.region,
+                'département': donnees.departement,
+                'commune': donnees.commune,
+                'adresse': donnees.adresse,
+                'superficie': donnees.superficie,
+                'personnel': donnees.besoinPersonnel
+            };
             
-            console.log('   partenaire:', {
-                existe: !!partenaire_elem,
-                type: partenaire_elem ? partenaire_elem.tagName : 'N/A',
-                value: partenaire_elem ? `"${partenaire_elem.value}"` : 'N/A',
-                donnees_value: `"${donnees.partenaire}"`
+            const champs_vides = [];
+            Object.entries(validations).forEach(([champ, valeur]) => {
+                if (!valeur || valeur.toString().trim() === '') {
+                    champs_vides.push(champ);
+                    console.error(`❌ ${champ} est VIDE`);
+                } else {
+                    console.log(`✅ ${champ}: "${valeur}"`);
+                }
             });
-            console.log('   region:', {
-                existe: !!region_elem,
-                type: region_elem ? region_elem.tagName : 'N/A',
-                value: region_elem ? `"${region_elem.value}"` : 'N/A',
-                donnees_value: `"${donnees.region}"`
-            });
-            console.log('   departement:', {
-                existe: !!departement_elem,
-                type: departement_elem ? departement_elem.tagName : 'N/A',
-                value: departement_elem ? `"${departement_elem.value}"` : 'N/A',
-                donnees_value: `"${donnees.departement}"`
-            });
-            console.log('   commune:', {
-                existe: !!commune_elem,
-                type: commune_elem ? commune_elem.tagName : 'N/A',
-                value: commune_elem ? `"${commune_elem.value}"` : 'N/A',
-                donnees_value: `"${donnees.commune}"`
-            });
+            
             console.groupEnd();
+            
+            // Si des champs obligatoires sont vides
+            if (champs_vides.length > 0) {
+                const message = `❌ Veuillez remplir les champs obligatoires:\n\n${champs_vides.map(c => '• ' + c).join('\n')}`;
+                alert(message);
+                showAlert('error', message);
+                return;
+            }
+            
+            // GPS obligatoire
+            if (!donnees.latitude || !donnees.longitude) {
+                showAlert('error', '📍 Les coordonnées GPS sont obligatoires. Veuillez capturer votre position.');
+                return;
+            }
             
             // D'abord afficher le résumé pour vérification
             afficherResume();
