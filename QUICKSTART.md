@@ -1,23 +1,47 @@
-🚀 DÉMARRAGE RAPIDE - PWA SENELEC
-====================================
+🚀 DÉMARRAGE RAPIDE - Sauvegarde en Base de Données
+=====================================================
 
-## ⚡ 30 secondes pour commencer
+> ✨ **NOUVEAU:** Les données sont maintenant sauvegardées directement en PostgreSQL!
 
-### 1️⃣ Installation locale (DEV)
+## ⚡ 5 minutes pour démarrer
 
-```bash
-# Ouvrir le terminal dans le répertoire du projet
-cd c:\DIMENSIONNEMENT\Redimensionnement-Project
+### Prérequis
+- Node.js 14+
+- PostgreSQL
+- npm
 
-# Option A: Serveur simple (requis si Node.js installé)
-npm install -g http-server
-http-server -c-1 -p 5000
+### Étapes
 
-# Option B: Python (si Python installé)
-python -m http.server 5000
+1. **Configuration** (1 min)
+   ```bash
+   cp .env.example .env
+   # Éditer .env avec vos identifiants PostgreSQL
+   npm install
+   ```
 
-# Option C: Accéder directement (sans serveur, limitations)
-- Ouvrir Dimensionnement.html dans le navigateur
+2. **Démarrer le serveur** (30 sec)
+   ```bash
+   npm start
+   # Port 3001 - http://localhost:3001
+   ```
+
+3. **Vérifier la configuration** (1 min)
+   ```bash
+   node check-system.js
+   # Doit afficher: ✅ TOUT EST OK!
+   ```
+
+4. **Tester l'API** (1 min)
+   ```bash
+   node test-api-complete.js
+   # Doit afficher: ✅ Tests terminés
+   ```
+
+5. **Utiliser l'application** (2 min)
+   - Accédez à http://localhost:8000 ou GitHub Pages
+   - Remplissez le formulaire
+   - Cliquez "💾 Sauvegarder les Données"
+   - ✅ Les données sont en base de données!
 - ⚠️ Service Worker ne fonctionnera pas sans HTTPS/localhost
 ```
 
