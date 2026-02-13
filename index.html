@@ -1892,29 +1892,57 @@
                 // Vérifier le type de contenu
                 const contentType = response.headers.get('content-type');
                 console.log('📡 Content-Type:', contentType);
+                console.log('📡 Headers complets:', response.headers);
                 
                 if (!response.ok) {
                     // Lire le texte de la réponse d'erreur
                     return response.text().then(text => {
-                        console.error('❌ Erreur serveur text:', text.substring(0, 500));
+                        console.error('❌ Erreur serveur - Status:', response.status);
+                        console.error('❌ Erreur serveur - Texte brut (premiers 1000 chars):', text.substring(0, 1000));
+                        console.error('❌ Erreur serveur - Longueur totale du texte:', text.length);
                         
                         // Essayer de parser comme JSON en cas d'erreur
                         try {
                             const errorJson = JSON.parse(text);
-                            throw new Error(`Serveur erreur ${response.status}: ${errorJson.message || text}`);
+                            console.error('❌ Erreur parsée JSON:', errorJson);
+                            throw new Error(`Serveur erreur ${response.status}: ${errorJson.message || JSON.stringify(errorJson)}`);
                         } catch (parseError) {
-                            throw new Error(`Erreur ${response.status}: Le serveur est indisponible ou n'a pas répondu correctement.`);
+                            if (!text.includes('<!DOCTYPE') && !text.includes('<html')) {
+                                console.error('📋 Réponse brute (pas HTML):', text);
+                                throw new Error(`Erreur ${response.status}: ${text.substring(0, 200)}`);
+                            }
+                            console.error('📋 Réponse HTML (page d\'erreur):', text.substring(0, 500));
+                            throw new Error(`Erreur ${response.status}: Le serveur a retourné une page d'erreur. Vérifiez la console du serveur.`);
                         }
                     });
                 }
                 
                 // Essayer de parser la réponse
                 const contentTypeText = contentType ? contentType.split(';')[0] : '';
+                console.log('📡 Content-Type détecté:', contentTypeText);
+                
                 if (contentTypeText.includes('application/json')) {
-                    return response.json();
+                    return response.json().then(json => {
+                        console.log('✅ JSON parsé:', json);
+                        return json;
+                    }).catch(parseErr => {
+                        console.error('❌ Erreur parsing JSON malgré le Content-Type:', parseErr);
+                        return response.text().then(text => {
+                            console.error('❌ Texte exact reçu:', text.substring(0, 1000));
+                            throw new Error(`Erreur parsing JSON: ${parseErr.message}\n\nTexte reçu: ${text.substring(0, 200)}`);
+                        });
+                    });
                 } else {
                     return response.text().then(text => {
                         console.warn('⚠️ Réponse non-JSON reçue:', text.substring(0, 200));
+                        console.warn('⚠️ Content-Type était:', contentTypeText);
+                        try {
+                            return JSON.parse(text);
+                        } catch {
+                            throw new Error(`Réponse non-JSON du serveur: ${contentTypeText || 'none'}`);
+                        }
+                    });
+                }
                         return { success: true, message: 'Données sauvegardées' };
                     });
                 }
