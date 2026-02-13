@@ -748,18 +748,18 @@
                 <h3 style="color: #667eea; margin-top: 20px;">📷 Capture d'Image</h3>
                 
                 <div class="button-group">
-                    <button onclick="demarrerCamera()">📹 Démarrer Caméra</button>
-                    <button class="danger" onclick="arreterCamera()">⏹️ Arrêter</button>
+                    <button onclick="demarrerCamera()" style="flex: 1;">📹 Démarrer Caméra</button>
+                    <button class="danger" onclick="arreterCamera()" style="flex: 1;">⏹️ Arrêter</button>
                 </div>
                 
-                <video id="video"></video>
-                <canvas id="canvas"></canvas>
+                <video id="video" style="width: 100%; border-radius: 8px; background: #000; margin: 15px 0; display: none;" playsinline></video>
+                <canvas id="canvas" style="width: 100%; border-radius: 8px; margin: 15px 0; display: none;"></canvas>
                 
-                <button onclick="capturerPhoto()">📸 Capturer Photo</button>
+                <button onclick="capturerPhoto()" style="width: 100%;">📸 Capturer Photo</button>
                 
                 <div id="image-preview" class="hidden">
-                    <img id="preview-img" src="" alt="Aperçu" style="width: 100%; border-radius: 5px; margin: 10px 0;">
-                    <button class="danger" onclick="effacerPhoto()">🗑️ Effacer Photo</button>
+                    <img id="preview-img" src="" alt="Aperçu" style="width: 100%; border-radius: 8px; margin: 10px 0; max-height: 300px;">
+                    <button class="danger" onclick="effacerPhoto()" style="width: 100%; margin-top: 10px;">🗑️ Effacer Photo</button>
                 </div>
             </div>
         </div>
@@ -1092,19 +1092,70 @@
             }
         }
         
-        // Caméra
+        // Caméra - Version améliorée
         function demarrerCamera() {
             const video = document.getElementById('video');
             
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+            // Vérifier les permissions HTTPS
+            if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+                showAlert('error', '❌ La caméra nécessite HTTPS (ou localhost pour test)');
+                return;
+            }
+            
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                showAlert('error', '❌ Votre navigateur ne supporte pas la caméra\n\n💡 Essayez avec Chrome, Firefox ou Edge');
+                return;
+            }
+            
+            showAlert('info', '📹 Demande d\'accès à la caméra...');
+            
+            // Essayer avec facingMode 'environment' d'abord (caméra arrière)
+            navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    facingMode: 'environment',
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                },
+                audio: false
+            })
                 .then(stream => {
                     videoStream = stream;
                     video.srcObject = stream;
-                    video.classList.add('active');
-                    showAlert('success', '✅ Caméra activée');
+                    video.play().catch(err => console.warn('Play warning:', err));
+                    video.style.display = 'block';
+                    showAlert('success', '✅ Caméra activée avec succès!');
+                    console.log('📹 Stream video actif');
                 })
                 .catch(err => {
-                    showAlert('error', '❌ Erreur caméra: ' + err.message);
+                    console.error('❌ Erreur caméra:', err);
+                    
+                    // Fallback: essayer sans facingMode
+                    navigator.mediaDevices.getUserMedia({ 
+                        video: { 
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        },
+                        audio: false
+                    })
+                        .then(stream => {
+                            videoStream = stream;
+                            video.srcObject = stream;
+                            video.play().catch(err => console.warn('Play warning:', err));
+                            video.style.display = 'block';
+                            showAlert('success', '✅ Caméra activée!');
+                        })
+                        .catch(err2 => {
+                            let message = '❌ Erreur caméra: ';
+                            if (err.name === 'NotAllowedError') {
+                                message += 'Permission refusée. Acceptez l\'accès à la caméra.';
+                            } else if (err.name === 'NotFoundError') {
+                                message += 'Aucune caméra détectée sur votre appareil.';
+                            } else {
+                                message += err.name + ': ' + err.message;
+                            }
+                            showAlert('error', message);
+                            console.error('Erreur caméra complète:', err2);
+                        });
                 });
         }
         
@@ -1112,8 +1163,9 @@
             const video = document.getElementById('video');
             if (videoStream) {
                 videoStream.getTracks().forEach(track => track.stop());
-                video.classList.remove('active');
+                video.style.display = 'none';
                 videoStream = null;
+                showAlert('info', '⏹️ Caméra arrêtée');
             }
         }
         
@@ -1147,7 +1199,7 @@
             
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, width, height);
-            canvas.classList.add('active');
+            canvas.style.display = 'block';
             
             // Compresser en JPEG basse qualité (0.7 = 70%)
             const imageData = canvas.toDataURL('image/jpeg', 0.7);
@@ -1170,10 +1222,15 @@
         }
         
         function effacerPhoto() {
-            document.getElementById('canvas').classList.remove('active');
-            document.getElementById('image-preview').classList.add('hidden');
-            document.getElementById('preview-img').src = '';
+            const canvas = document.getElementById('canvas');
+            const preview = document.getElementById('image-preview');
+            const previewImg = document.getElementById('preview-img');
+            
+            canvas.style.display = 'none';
+            preview.classList.add('hidden');
+            previewImg.src = '';
             donnees.photo = null;
+            showAlert('info', '🗑️ Photo supprimée');
         }
         
         // Formulaire
@@ -1670,6 +1727,17 @@
             
             // Collecter les données du formulaire
             sauvegarderDonnees();
+            
+            // Vérifier que les champs requis sont remplis
+            if (!donnees.partenaire || !donnees.region || !donnees.departement || !donnees.commune) {
+                const champsManquants = [];
+                if (!donnees.partenaire) champsManquants.push('Partenaire');
+                if (!donnees.region) champsManquants.push('Région');
+                if (!donnees.departement) champsManquants.push('Département');
+                if (!donnees.commune) champsManquants.push('Commune');
+                showAlert('error', '❌ ERREUR: Champs manquants!\n\n' + champsManquants.join(', ') + '\n\n✅ Veuillez remplir TOUS les champs obligatoires avant de sauvegarder.');
+                return;
+            }
             
             // Demander confirmation
             if (!confirm('✅ Êtes-vous sûr(e) de vouloir sauvegarder ces données en base de données ?')) {
