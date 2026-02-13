@@ -948,9 +948,17 @@
         let watchPositionId = null;
 
         function obtenirLocalisationGPS() {
-            // Vérification du protocole
-            if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-                showAlert('error', '⚠️ La géolocalisation nécessite HTTPS. Veuillez utiliser une connexion sécurisée ou localhost.');
+            // Vérification robuste du protocole
+            const isHTTPS = location.protocol === 'https:';
+            const isLocalhost = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname === '0.0.0.0';
+            
+            console.log('🔍 Vérification géolocalisation:');
+            console.log(`   - Protocol: ${location.protocol} (HTTPS: ${isHTTPS})`);
+            console.log(`   - Hostname: ${location.hostname} (Localhost: ${isLocalhost})`);
+            
+            // La géolocalisation n'est autorisée que sur HTTPS ou localhost
+            if (!isHTTPS && !isLocalhost) {
+                showAlert('error', '⚠️ La géolocalisation nécessite HTTPS ou localhost. Votre URL: ' + location.href);
                 return;
             }
             
@@ -960,6 +968,7 @@
             }
             
             showAlert('info', '📡 Demande de permission pour accéder à la localisation...');
+            console.log('📡 Demande de permission géolocalisation...');
             
             // Options pour haute précision
             const options = {
@@ -981,6 +990,8 @@
                     donnees.latitude = lat;
                     donnees.longitude = lon;
                     donnees.precision = accuracy;
+                    
+                    console.log('✅ GPS Position reçue:', {lat, lon, accuracy});
                     
                     // Afficher les coordonnées
                     document.getElementById('lat').textContent = lat.toFixed(6);
@@ -1028,20 +1039,39 @@
                     
                     switch(error.code) {
                         case error.PERMISSION_DENIED:
-                            errorMsg = 'Accès à la géolocalisation refusé. ';
-                            errorMsg += 'Veuillez vérifier les permissions de votre navigateur. ';
-                            errorMsg += 'Allez dans Paramètres > Permissions de site et autorisez l\'accès à votre localisation.';
+                            errorMsg = '❌ Permission refusée.\n\n';
+                            errorMsg += '📍 Sur Chrome/Edge:\n';
+                            errorMsg += '1. Cliquez sur le cadenas 🔒 dans la barre d\'URL\n';
+                            errorMsg += '2. Trouvez "Localisation"\n';
+                            errorMsg += '3. Changez en "Autoriser"\n\n';
+                            errorMsg += '📍 Sur Firefox:\n';
+                            errorMsg += '1. Paramètres > Confidentialité\n';
+                            errorMsg += '2. Permissions > Localisation\n';
+                            errorMsg += '3. Autorisez localhost:3001\n\n';
+                            errorMsg += '📍 Sur Safari:\n';
+                            errorMsg += '1. Préférences > Sécurité\n';
+                            errorMsg += '2. Autorisez l\'accès à la localisation';
                             break;
                         case error.POSITION_UNAVAILABLE:
-                            errorMsg = 'Position indisponible. Assurez-vous que le GPS est activé et que vous êtes en extérieur.';
+                            errorMsg = '❌ Position indisponible.\n\n';
+                            errorMsg += '✓ Assurez-vous que:\n';
+                            errorMsg += '• Le GPS est activé (Windows: Paramètres > Confidentialité > Localisation)\n';
+                            errorMsg += '• Vous êtes vous êtes en extérieur avec une bonne réception\n';
+                            errorMsg += '• Vous attendez 15-30 secondes pour la première localisation\n';
+                            errorMsg += '• Aucun VPN n\'interfère avec le GPS';
                             break;
                         case error.TIMEOUT:
-                            errorMsg = 'Délai dépassé (15s). Essayez dans un endroit avec meilleure réception GPS.';
+                            errorMsg = '❌ Délai dépassé (15s).\n\n';
+                            errorMsg += '✓ Essayez:\n';
+                            errorMsg += '• Un endroit avec meilleure réception GPS (près d\'une fenêtre)\n';
+                            errorMsg += '• Éteignez et rallumez le GPS\n';
+                            errorMsg += '• Attendez plus longtemps si c\'est la première tentative\n';
+                            errorMsg += '• Cliquez à nouveau sur "Obtenir ma position"';
                             break;
                         default:
-                            errorMsg = error.message || 'Erreur inconnue';
+                            errorMsg = '❌ Erreur inconnue: ' + error.message;
                     }
-                    showAlert('error', '❌ Erreur GPS: ' + errorMsg);
+                    showAlert('error', errorMsg);
                 },
                 options
             );
@@ -1760,42 +1790,56 @@
             // Collecter les données du formulaire EN PREMIER
             sauvegarderDonnees();
             
-            // 🔴 LOG ULTRA-DÉTAILLÉ - Vérifier les éléments HTML
-            console.group('🔴 DIAGNOSTIC - AVANT ENVOI');
-            console.log('1️⃣ OBJET donnees APRÈS sauvegarderDonnees():', donnees);
+            // 🔴 VALIDATION - Vérifier que tous les champs obligatoires sont remplis
+            console.group('🔍 VALIDATION DES CHAMPS OBLIGATOIRES');
             
-            // Vérifier chaque élément HTML individuellement
-            console.log('\n2️⃣ VÉRIFICATION DES ÉLÉMENTS HTML:');
-            const partenaire_elem = document.getElementById('partenaire');
-            const region_elem = document.getElementById('region');
-            const departement_elem = document.getElementById('departement');
-            const commune_elem = document.getElementById('commune');
+            const champsObligatoires = [
+                { id: 'partenaire', nom: 'Partenaire' },
+                { id: 'region', nom: 'Région' },
+                { id: 'departement', nom: 'Département' },
+                { id: 'commune', nom: 'Commune' },
+                { id: 'typeActivite', nom: 'Type d\'Activité' },
+                { id: 'adresse', nom: 'Adresse' },
+                { id: 'superficie', nom: 'Superficie' },
+                { id: 'besoinPersonnel', nom: 'Besoin Personnel' },
+                { id: 'dispositifDeploy', nom: 'Dispositif Déployé' },
+                { id: 'nombreRotation', nom: 'Nombre de Rotation' },
+                { id: 'infrastructureGestion', nom: 'Infrastructure de Gestion' },
+                { id: 'frequenceCollecte', nom: 'Fréquence de Collecte' }
+            ];
             
-            console.log('   partenaire:', {
-                existe: !!partenaire_elem,
-                type: partenaire_elem ? partenaire_elem.tagName : 'N/A',
-                value: partenaire_elem ? `"${partenaire_elem.value}"` : 'N/A',
-                donnees_value: `"${donnees.partenaire}"`
+            let champsVides = [];
+            champsObligatoires.forEach(champ => {
+                const elem = document.getElementById(champ.id);
+                let valeur = '';
+                
+                if (champ.id === 'typeActivite' || champ.id === 'dispositifDeploy') {
+                    // Pour les select multiples
+                    const options = elem.selectedOptions;
+                    valeur = Array.from(options).map(o => o.value).join(',');
+                } else {
+                    valeur = elem.value.trim();
+                }
+                
+                if (!valeur) {
+                    champsVides.push(champ.nom);
+                    console.log(`❌ ${champ.nom}: VIDE`);
+                } else {
+                    console.log(`✅ ${champ.nom}: OK`);
+                }
             });
-            console.log('   region:', {
-                existe: !!region_elem,
-                type: region_elem ? region_elem.tagName : 'N/A',
-                value: region_elem ? `"${region_elem.value}"` : 'N/A',
-                donnees_value: `"${donnees.region}"`
-            });
-            console.log('   departement:', {
-                existe: !!departement_elem,
-                type: departement_elem ? departement_elem.tagName : 'N/A',
-                value: departement_elem ? `"${departement_elem.value}"` : 'N/A',
-                donnees_value: `"${donnees.departement}"`
-            });
-            console.log('   commune:', {
-                existe: !!commune_elem,
-                type: commune_elem ? commune_elem.tagName : 'N/A',
-                value: commune_elem ? `"${commune_elem.value}"` : 'N/A',
-                donnees_value: `"${donnees.commune}"`
-            });
+            
             console.groupEnd();
+            
+            // Si des champs sont vides, afficher l'erreur et arrêter
+            if (champsVides.length > 0) {
+                const listeChamps = champsVides.map((c, i) => `${i+1}. ${c}`).join('\n');
+                showAlert('error', `❌ CHAMPS OBLIGATOIRES NON REMPLIS:\n\n${listeChamps}\n\nVeuillez compléter tous les champs avant de sauvegarder.`);
+                console.error('❌ Tentative de sauvegarde avec champs vides:', champsVides);
+                return;
+            }
+            
+            console.log('✅ Tous les champs obligatoires sont remplis');
             
             // D'abord afficher le résumé pour vérification
             afficherResume();

@@ -34,6 +34,15 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// 🌐 Ajouter les headers pour les permissions et sécurité
+app.use((req, res, next) => {
+    // Permettre la géolocalisation sur localhost et HTTPS
+    res.setHeader('Permissions-Policy', 'geolocation=(self "http://localhost:*" "https://*"), camera=(self), microphone=(self)');
+    // CORS pour les embeddings
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    next();
+});
+
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ limit: '25mb', extended: true }));
 
