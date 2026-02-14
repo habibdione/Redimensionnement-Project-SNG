@@ -688,9 +688,9 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="adresse">Adresse <span style="color: red;">*</span></label>
-                    <input type="text" id="adresse" placeholder="Adresse détaillée" required onchange="validerChamp('adresse');">
-                    <small class="error-msg" id="error-adresse" style="color: red; display: none;">⚠️ Adresse obligatoire</small>
+                    <label for="adresse">Sites Concernés <span style="color: red;">*</span></label>
+                    <input type="text" id="adresse" placeholder="Sites concernés" required onchange="validerChamp('adresse');">
+                    <small class="error-msg" id="error-adresse" style="color: red; display: none;">⚠️ Sites Concernés obligatoires</small>
                 </div>
                 
                 <div class="form-group">
@@ -1730,7 +1730,7 @@
                     <div class="data-value">${Array.isArray(donnees.typeActivite) ? donnees.typeActivite.join(', ') : donnees.typeActivite}</div>
                 </div>
                 <div class="data-item">
-                    <div class="data-label">Adresse:</div>
+                    <div class="data-label">Sites Concernés:</div>
                     <div class="data-value">${donnees.adresse}</div>
                 </div>
                 <div class="data-item">
@@ -1862,7 +1862,7 @@
                 ['Département', donnees.departement],
                 ['Commune', donnees.commune],
                 ['Type d\'Activité', donnees.typeActivite],
-                ['Adresse', donnees.adresse],
+                ['Sites Concernés', donnees.adresse],
                 ['Superficie (ha)', donnees.superficie],
                 ['Besoin en Personnel', donnees.besoinPersonnel],
                 ['Dispositif Déployé', Array.isArray(donnees.dispositifDeploy) ? donnees.dispositifDeploy.join(', ') : donnees.dispositifDeploy],
@@ -2074,7 +2074,7 @@
                         <div>Région: <strong>${regionLabel || region}</strong></div>
                         <div>Département: <strong>${departementLabel || departement}</strong></div>
                         <div>Commune: <strong>${commune}</strong></div>
-                        <div>Adresse: <strong>${adresse}</strong></div>
+                        <div>Sites Concernés: <strong>${adresse}</strong></div>
                     </div>
                 </div>
                 
