@@ -2418,7 +2418,8 @@
             })
             .then(result => {
                 console.log('✅ Réponse du serveur (SUCCESS):', result);
-                showAlert('success', '✅ Données sauvegardées avec succès dans la base de données!');
+                const serverURL = window.API_BASE_URL || 'serveur backend';
+                showAlert('success', `✅ Données sauvegardées avec succès dans le serveur backend!\n🗄️ URL: ${serverURL}\nID: ${result.id || 'N/A'}`);
                 
                 // Sauvegarder aussi localement
                 sauvegarderEnLocal(dataToSend);
@@ -2524,7 +2525,8 @@
                 // Sauvegarder quand même en local en cas d'échec
                 console.log('💾 Sauvegarde locale de secours...');
                 sauvegarderEnLocal(dataToSend);
-                showAlert('info', '💾 Données sauvegardées localement. Elles seront synchronisées quand le serveur sera disponible.');
+                const serverURL = window.API_BASE_URL || 'Serveur backend';
+                showAlert('info', `💾 Données sauvegardées localement. Elles seront synchronisées quand le serveur backend (${serverURL}) sera disponible.`);
             });
         }
         
