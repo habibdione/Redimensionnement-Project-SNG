@@ -21,15 +21,18 @@
   "author": "SENELEC",
   "license": "MIT",
   "scripts": {
-    "setup": "node setup-postgres.js",
     "start": "node server.js",
+    "start:debug": "node --inspect server.js",
+    "sync": "node sync-local-server.js",
+    "test": "node test-db.js && node test-save.js",
+    "test:db": "node test-db.js",
+    "test:save": "node test-save.js",
+    "test:sync": "node sync-local-server.js",
+    "health": "curl http://localhost:3001/api/health",
+    "setup": "node setup-postgres.js",
     "frontend": "http-server -c-1 -p 5000 --cors",
     "dev": "http-server -c-1 -p 3000",
-    "serve": "node server.js",
-    "test": "echo \"Tests manuels via checklist\" && exit 0",
-    "audit": "lighthouse http://localhost:5000 --chrome-flags=\"--headless --no-sandbox\"",
-    "validate:sw": "echo 'Service Worker validation manuelle recommandée'",
-    "build": "echo 'No build needed - fichiers statiques'"
+    "serve": "node server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
