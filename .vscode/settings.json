@@ -11,5 +11,6 @@
             "database": "dimentionnement_SNG",
             "password": "jtmmaman96"
         }
-    ]
+    ],
+    "markdown.validate.enabled": true
 }
