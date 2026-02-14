@@ -2424,45 +2424,48 @@
                 // Sauvegarder aussi localement
                 sauvegarderEnLocal(dataToSend);
                 
-                // Réinitialiser le formulaire après 2 secondes
+                // 🧹 VIDER LES CHAMPS IMMÉDIATEMENT
+                const form = document.getElementById('collecte-form');
+                if (form) {
+                    form.reset();
+                    console.log('🧹 Formulaire vidé immédiatement');
+                }
+                
+                // Réinitialiser les affichages IMMÉDIATEMENT
+                document.getElementById('resume-section').style.display = 'none';
+                document.getElementById('lat').textContent = '--';
+                document.getElementById('lon').textContent = '--';
+                document.getElementById('accuracy').textContent = '--';
+                document.getElementById('utm-easting').textContent = '--';
+                document.getElementById('utm-northing').textContent = '--';
+                document.getElementById('image-preview').classList.add('hidden');
+                document.getElementById('canvas').style.display = 'none';
+                
+                // Réinitialiser l'objet donnees global
+                donnees = {
+                    partenaire: '', region: '', departement: '', commune: '',
+                    typeActivite: [], adresse: '', superficie: '',
+                    besoinPersonnel: '', dispositifDeploy: [], nombreRotation: '',
+                    infrastructureGestion: '', frequenceCollecte: '',
+                    bacs240: '', caissePolybene: '', bacs660: '',
+                    accessibilite: '', observation: '',
+                    latitude: null, longitude: null, precision: null,
+                    coordonneeX: '', coordonneeY: '', photo: null,
+                    dateCollecte: new Date().toISOString()
+                };
+                
+                // Réinitialiser la map et le marqueur
+                if (map && marker) {
+                    map.removeLayer(marker);
+                    marker = null;
+                }
+                
+                console.log('✅ Formulaire, GPS et images complètement vidés');
+                
+                // Notification finale après 1 seconde
                 setTimeout(() => {
-                    // ✅ Réinitialiser le formulaire correctement
-                    const form = document.getElementById('collecte-form');
-                    if (form) {
-                        form.reset();
-                    }
-                    
-                    // ✅ Réinitialiser les affichages
-                    document.getElementById('resume-section').style.display = 'none';
-                    document.getElementById('lat').textContent = '--';
-                    document.getElementById('lon').textContent = '--';
-                    document.getElementById('accuracy').textContent = '--';
-                    document.getElementById('utm-easting').textContent = '--';
-                    document.getElementById('utm-northing').textContent = '--';
-                    document.getElementById('image-preview').classList.add('hidden');
-                    document.getElementById('canvas').style.display = 'none';
-                    
-                    // ✅ Réinitialiser l'objet donnees global
-                    donnees = {
-                        partenaire: '', region: '', departement: '', commune: '',
-                        typeActivite: [], adresse: '', superficie: '',
-                        besoinPersonnel: '', dispositifDeploy: [], nombreRotation: '',
-                        infrastructureGestion: '', frequenceCollecte: '',
-                        bacs240: '', caissePolybene: '', bacs660: '',
-                        accessibilite: '', observation: '',
-                        latitude: null, longitude: null, precision: null,
-                        coordonneeX: '', coordonneeY: '', photo: null,
-                        dateCollecte: new Date().toISOString()
-                    };
-                    
-                    // ✅ Réinitialiser la map et le marqueur
-                    if (map && marker) {
-                        map.removeLayer(marker);
-                        marker = null;
-                    }
-                    
-                    console.log('✅ Formulaire, GPS et images complètement réinitialisés');
-                }, 2000);
+                    showAlert('info', '🧹 Formulaire vidé. Prêt pour une nouvelle saisie!');
+                }, 1000);
             })
             .then(response => {
                 // ✅ Vérifier le Content-Type avant de parser
