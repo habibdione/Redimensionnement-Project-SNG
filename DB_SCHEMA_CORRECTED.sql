@@ -28,7 +28,7 @@ CREATE TABLE collectes_donnees (
     -- Type d'activité et site
     type_activite TEXT,
     site_concerne VARCHAR(500),
-    adresse VARCHAR(500),
+    sites_concernes VARCHAR(500),
     
     -- Données de dimensionnement
     superficie DECIMAL(10, 2),
@@ -36,7 +36,6 @@ CREATE TABLE collectes_donnees (
     dispositif_deploye TEXT,
     nombre_rotation INTEGER CHECK (nombre_rotation >= 0),
     infrastructure_gestion VARCHAR(50),
-    prn_pp VARCHAR(50),
     frequence_collecte VARCHAR(50),
     
     -- Équipements

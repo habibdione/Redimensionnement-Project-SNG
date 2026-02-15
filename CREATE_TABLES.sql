@@ -27,8 +27,7 @@ CREATE TABLE collectes_donnees (
     
     -- Type d'activité et site
     type_activite TEXT,
-    site_concerne VARCHAR(500),
-    adresse VARCHAR(500),
+    sites_concernes VARCHAR(500),
     
     -- Données de dimensionnement
     superficie DECIMAL(10, 2),
@@ -36,7 +35,6 @@ CREATE TABLE collectes_donnees (
     dispositif_deploye TEXT,
     nombre_rotation INTEGER CHECK (nombre_rotation >= 0),
     infrastructure_gestion VARCHAR(50),
-    prn_pp VARCHAR(50),
     frequence_collecte VARCHAR(50),
     
     -- Équipements
@@ -175,7 +173,7 @@ CREATE TRIGGER update_collectes_donnees_modification
 -- ============================================
 -- INSERT INTO collectes_donnees (
 --     partenaire, region, departement, commune, type_activite, 
---     site_concerne, adresse, statut, latitude, longitude, 
+--     sites_concernes, statut, latitude, longitude, 
 --     coordonnee_x, coordonnee_y, photo
 -- ) VALUES (
 --     'SONAGED', 
@@ -184,7 +182,7 @@ CREATE TRIGGER update_collectes_donnees_modification
 --     'Ziguinchor', 
 --     'Résidentiel', 
 --     'Site Test', 
---     '123 Rue Test', 
+--     '123 Rue de la Paix, Ziguinchor', 
 --     'brouillon',
 --     13.1939,
 --     -15.5277,
@@ -217,6 +215,8 @@ ORDER BY indexname;
 -- ✅ Colonne 'photo' (au lieu de 'image_1') - Correspond à server.js
 -- ✅ Colonnes 'coordonnee_x' et 'coordonnee_y' AJOUTÉES - Essentielles pour UTM
 -- ✅ Colonne 'partenaire' (au lieu de 'partenariat') - Correspond au code
+-- ✅ Colonne 'sites_concernes' - Remplace 'adresse' pour meilleure clarté
+-- ✅ Colonne 'prn_pp' SUPPRIMÉE - Plus utilisée
 -- ✅ BIGSERIAL pour meilleure scalabilité
 -- ✅ Indices optimisés pour requêtes fréquentes
 -- ✅ Triggers pour mise à jour automatique des timestamps

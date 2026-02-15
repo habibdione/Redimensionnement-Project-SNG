@@ -27,7 +27,7 @@ async function updateData() {
                 region = $2,
                 departement = $3,
                 commune = $4,
-                adresse = $5,
+                sites_concernes = $5,
                 date_modification = CURRENT_TIMESTAMP
             WHERE id = 17
             RETURNING *;

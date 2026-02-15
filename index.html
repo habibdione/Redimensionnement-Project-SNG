@@ -1245,7 +1245,7 @@
             departement: '',
             commune: '',
             typeActivite: [],
-            adresse: '',
+            sites_concernes: '',
             superficie: '',
             besoinPersonnel: '',
             dispositifDeploy: '',
@@ -1657,7 +1657,7 @@
                 const selectedTypes = typeActiviteSelect ? Array.from(typeActiviteSelect.selectedOptions).map(option => option.value) : [];
                 donnees.typeActivite = selectedTypes.length > 0 ? selectedTypes : [];
                 
-                donnees.adresse = document.getElementById('adresse') ? document.getElementById('adresse').value : '';
+                donnees.sites_concernes = document.getElementById('adresse') ? document.getElementById('adresse').value : '';
                 donnees.superficie = document.getElementById('superficie') ? document.getElementById('superficie').value : '';
                 donnees.besoinPersonnel = document.getElementById('besoinPersonnel') ? document.getElementById('besoinPersonnel').value : '';
                 
@@ -1731,7 +1731,7 @@
                 </div>
                 <div class="data-item">
                     <div class="data-label">Sites Concernés:</div>
-                    <div class="data-value">${donnees.adresse}</div>
+                    <div class="data-value">${donnees.sites_concernes}</div>
                 </div>
                 <div class="data-item">
                     <div class="data-label">Superficie:</div>
@@ -1862,7 +1862,7 @@
                 ['Département', donnees.departement],
                 ['Commune', donnees.commune],
                 ['Type d\'Activité', donnees.typeActivite],
-                ['Sites Concernés', donnees.adresse],
+                ['Sites Concernés', donnees.sites_concernes],
                 ['Superficie (ha)', donnees.superficie],
                 ['Besoin en Personnel', donnees.besoinPersonnel],
                 ['Dispositif Déployé', Array.isArray(donnees.dispositifDeploy) ? donnees.dispositifDeploy.join(', ') : donnees.dispositifDeploy],
@@ -2043,7 +2043,7 @@
             const commune = document.getElementById('commune').value;
             const typeActivite = Array.from(document.getElementById('typeActivite').selectedOptions).map(opt => opt.text).join(', ');
             const partenaire = document.getElementById('partenaire').value;
-            const adresse = document.getElementById('adresse').value;
+            const sites_concernes = document.getElementById('adresse').value;
             const superficie = document.getElementById('superficie').value;
             const besoinPersonnel = document.getElementById('besoinPersonnel').value;
             const dispositifDeploy = Array.from(document.getElementById('dispositifDeploy').selectedOptions).map(opt => opt.text).join(', ');
@@ -2185,7 +2185,7 @@
             
             const champsObligatoires = [
                 'region', 'departement', 'commune', 'typeActivite',
-                'partenaire', 'adresse', 'superficie', 'besoinPersonnel'
+                'partenaire', 'sites_concernes', 'superficie', 'besoinPersonnel'
             ];
             
             let tousValides = true;
@@ -2280,7 +2280,7 @@
             // Réinitialiser l'objet global donnees
             donnees = {
                 partenaire: '', region: '', departement: '', commune: '',
-                typeActivite: [], adresse: '', superficie: '',
+                typeActivite: [], sites_concernes: '', superficie: '',
                 besoinPersonnel: '', dispositifDeploy: [], nombreRotation: '',
                 infrastructureGestion: '', frequenceCollecte: '',
                 bacs240: '', caissePolybene: '', bacs660: '',
@@ -2320,7 +2320,7 @@
             const region = (document.getElementById('region')?.value || '').trim();
             const departement = (document.getElementById('departement')?.value || '').trim();
             const commune = (document.getElementById('commune')?.value || '').trim();
-            const adresse = (document.getElementById('adresse')?.value || '').trim();
+            const sites_concernes = (document.getElementById('adresse')?.value || '').trim();
             const superficie = (document.getElementById('superficie')?.value || '').trim();
             const besoinPersonnel = (document.getElementById('besoinPersonnel')?.value || '').trim();
             const observation = (document.getElementById('observation')?.value || '').trim();
@@ -2356,7 +2356,7 @@
             console.log('  Région:', region);
             console.log('  Département:', departement);
             console.log('  Commune:', commune);
-            console.log('  Adresse:', adresse);
+            console.log('  Sites Concernés:', sites_concernes);
             console.log('  Superficie:', superficie);
             console.log('  Personnel:', besoinPersonnel);
             console.log('  Latitude:', latitude);
@@ -2374,7 +2374,7 @@
             if (!region) champs_vides.push('Région');
             if (!departement) champs_vides.push('Département');
             if (!commune) champs_vides.push('Commune');
-            if (!adresse) champs_vides.push('Adresse');
+            if (!sites_concernes) champs_vides.push('Sites Concernés');
             if (!superficie) champs_vides.push('Superficie');
             if (!besoinPersonnel) champs_vides.push('Besoin en Personnel');
             
@@ -2418,7 +2418,7 @@
                 departement: departement,
                 commune: commune,
                 typeActivite: typeActivite.length > 0 ? typeActivite.join(',') : '',
-                adresse: adresse,
+                sites_concernes: sites_concernes,
                 superficie: superficie,
                 besoinPersonnel: besoinPersonnel,
                 dispositifDeploy: dispositifDeploy.length > 0 ? dispositifDeploy.join(',') : '',
@@ -2444,7 +2444,7 @@
             console.log('Région:', dataToSend.region);
             console.log('Département:', dataToSend.departement);
             console.log('Commune:', dataToSend.commune);
-            console.log('Adresse:', dataToSend.adresse);
+            console.log('Sites Concernés:', dataToSend.sites_concernes);
             console.log('Latitude:', dataToSend.latitude);
             console.log('Longitude:', dataToSend.longitude);
             console.log('Full dataToSend:', JSON.stringify(dataToSend, null, 2));

@@ -118,7 +118,7 @@ app.post('/api/collecte', async (req, res) => {
         console.log('   Région:', req.body.region || '(VIDE)');
         console.log('   Département:', req.body.departement || '(VIDE)');
         console.log('   Commune:', req.body.commune || '(VIDE)');
-        console.log('   Adresse:', req.body.adresse || '(VIDE)');
+        console.log('   Sites Concernés:', req.body.sites_concernes || '(VIDE)');
         console.log('   Latitude:', req.body.latitude);
         console.log('   Longitude:', req.body.longitude);
         
@@ -129,7 +129,7 @@ app.post('/api/collecte', async (req, res) => {
             departement,
             commune,
             typeActivite,
-            adresse,
+            sites_concernes,
             superficie,
             besoinPersonnel,
             dispositifDeploy,
@@ -155,14 +155,14 @@ app.post('/api/collecte', async (req, res) => {
         region = typeof region === 'string' ? region.trim() : region;
         departement = typeof departement === 'string' ? departement.trim() : departement;
         commune = typeof commune === 'string' ? commune.trim() : commune;
-        adresse = typeof adresse === 'string' ? adresse.trim() : adresse;
+        sites_concernes = typeof sites_concernes === 'string' ? sites_concernes.trim() : sites_concernes;
 
         console.log('\n✅ APRÈS TRIM - Valeurs finales:');
         console.log('   Partenaire:', partenaire || '❌ VIDE');
         console.log('   Région:', region || '❌ VIDE');
         console.log('   Département:', departement || '❌ VIDE');
         console.log('   Commune:', commune || '❌ VIDE');
-        console.log('   Adresse:', adresse || '❌ VIDE');
+        console.log('   Sites Concernés:', sites_concernes || '❌ VIDE');
 
         // ✅ VALIDATION GPS OBLIGATOIRE SEULEMENT
         if (!latitude || !longitude) {
@@ -206,7 +206,7 @@ app.post('/api/collecte', async (req, res) => {
         const query = `
             INSERT INTO collectes_donnees (
                 partenaire, region, departement, commune, type_activite,
-                adresse, superficie, besoin_personnel,
+                sites_concernes, superficie, besoin_personnel,
                 dispositif_deploye, nombre_rotation, infrastructure_gestion,
                 frequence_collecte, bacs_240l, caisse_polybene,
                 bacs_660l, accessibilite, latitude, longitude, precision,
@@ -225,7 +225,7 @@ app.post('/api/collecte', async (req, res) => {
             departement || '',
             commune || '',
             Array.isArray(typeActivite) ? typeActivite.join(', ') : (typeActivite || ''),
-            adresse || '',
+            sites_concernes || '',
             parseFloat(superficie) || 0,
             parseInt(besoinPersonnel) || 0,
             Array.isArray(dispositifDeploy) ? dispositifDeploy.join(', ') : (dispositifDeploy || ''),
@@ -253,7 +253,7 @@ app.post('/api/collecte', async (req, res) => {
         console.log('   $3 (departement):', values[2] || '❌ VIDE');
         console.log('   $4 (commune):', values[3] || '❌ VIDE');
         console.log('   $5 (type_activite):', values[4] || '(optionnel)');
-        console.log('   $6 (adresse):', values[5] || '❌ VIDE');
+        console.log('   $6 (sites_concernes):', values[5] || '❌ VIDE');
         console.log('   $7 (superficie):', values[6]);
         console.log('   $17 (latitude):', values[16]);
         console.log('   $18 (longitude):', values[17]);
@@ -411,13 +411,12 @@ app.put('/api/collecte/:id', async (req, res) => {
             commune,
             typeActivite,
             siteConcerne,
-            adresse,
+            sites_concernes,
             superficie,
             besoinPersonnel,
             dispositifDeploy,
             nombreRotation,
             infrastructureGestion,
-            prnPp,
             frequenceCollecte,
             bacs240,
             caissePolybene,
@@ -438,34 +437,33 @@ app.put('/api/collecte/:id', async (req, res) => {
                 commune = $4,
                 type_activite = $5,
                 site_concerne = $6,
-                adresse = $7,
+                sites_concernes = $7,
                 superficie = $8,
                 besoin_personnel = $9,
                 dispositif_deploye = $10,
                 nombre_rotation = $11,
                 infrastructure_gestion = $12,
-                prn_pp = $13,
-                frequence_collecte = $14,
-                bacs_240l = $15,
-                caisse_polybene = $16,
-                bacs_660l = $17,
-                accessibilite = $18,
-                latitude = $19,
-                longitude = $20,
-                precision = $21,
-                observation = $22,
-                image_1 = $23
-            WHERE id = $24
+                frequence_collecte = $13,
+                bacs_240l = $14,
+                caisse_polybene = $15,
+                bacs_660l = $16,
+                accessibilite = $17,
+                latitude = $18,
+                longitude = $19,
+                precision = $20,
+                observation = $21,
+                image_1 = $22
+            WHERE id = $23
             RETURNING *;
         `;
 
         const values = [
             partenaire, region, departement, commune,
             Array.isArray(typeActivite) ? typeActivite.join(', ') : typeActivite,
-            siteConcerne, adresse, parseFloat(superficie),
+            siteConcerne, sites_concernes, parseFloat(superficie),
             parseInt(besoinPersonnel),
             Array.isArray(dispositifDeploy) ? dispositifDeploy.join(', ') : dispositifDeploy,
-            parseInt(nombreRotation), infrastructureGestion, prnPp,
+            parseInt(nombreRotation), infrastructureGestion,
             frequenceCollecte, parseInt(bacs240), parseInt(caissePolybene),
             parseInt(bacs660), accessibilite, parseFloat(latitude),
             parseFloat(longitude), parseFloat(precision), observation,
