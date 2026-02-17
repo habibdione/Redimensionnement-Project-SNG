@@ -1411,27 +1411,34 @@
                     </div>
                 </div>
                 
-                <div style="animation: slideInRight 0.8s ease-out;">
-                    <!-- GALERIE D'IMAGES SONAGED PARTENAIRES & ÉQUIPES -->
+                <div style="animation: slideInRight 0.8s ease-out; display: flex; flex-direction: column; gap: 20px;">
+                    <!-- ACTUALITÉ CONVENTION HEADER -->
+                    <div style="background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%); padding: 15px; border-radius: 8px; border-left: 4px solid #ff6b6b; text-align: center;">
+                        <h3 style="font-size: 16px; font-weight: 700; color: #c92a2a; margin: 0; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <span style="font-size: 20px;">🔥</span>
+                            ACTUALITÉ CONVENTION
+                            <span style="font-size: 20px;">🔥</span>
+                        </h3>
+                        <p style="margin-top: 6px; color: #6d4e0d; font-size: 11px; margin-bottom: 0;">Conventions en cours - Événements importants</p>
+                    </div>
+                    
+                    <!-- ACTUALITÉ IMAGES -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div style="border-radius: 8px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.12); cursor: pointer; transform: transition 0.3s;">
-                            <img src="./src/assets/Image Convention avec SENELEC.jpeg" alt="Convention SENELEC" style="width: 100%; height: 150px; object-fit: cover;">
-                            <p style="padding: 12px; background: white; text-align: center; font-size: 12px; font-weight: 600; color: #2d5016; margin: 0;">Convention SENELEC</p>
+                        <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.15); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border: 2px solid #6db038;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.15)';">
+                            <div style="position: relative; overflow: hidden;">
+                                <img src="./src/assets/Image Directeur et Responsable SIG.jpeg" alt="Directeur et Responsable SIG" style="width: 100%; height: 140px; object-fit: cover;">
+                                <div style="position: absolute; top: 6px; right: 6px; background: #6db038; color: white; padding: 3px 8px; border-radius: 20px; font-size: 10px; font-weight: 700;">🔥 ACTUALITÉ</div>
+                            </div>
+                            <p style="padding: 12px; text-align: center; font-weight: 600; color: #2d5016; font-size: 12px; margin: 0;">Directeur & SIG</p>
                         </div>
-                        <div style="border-radius: 8px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.12); cursor: pointer;">
-                            <img src="./src/assets/Images 1 equipes Missions SONAGED.jpeg" alt="Équipes SONAGED" style="width: 100%; height: 150px; object-fit: cover;">
-                            <p style="padding: 12px; background: white; text-align: center; font-size: 12px; font-weight: 600; color: #2d5016; margin: 0;">Équipes Missions</p>
-                        </div>
-                        <div style="border-radius: 8px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.12); cursor: pointer;">
-                            <img src="./src/assets/Image Convention avec Mairie de ZIGUINCHIR.jpeg" alt="Convention Mairie Ziguinchor" style="width: 100%; height: 150px; object-fit: cover;">
-                            <p style="padding: 12px; background: white; text-align: center; font-size: 12px; font-weight: 600; color: #2d5016; margin: 0;">Mairie Ziguinchor</p>
-                        </div>
-                        <div style="border-radius: 8px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.12); cursor: pointer;">
-                            <img src="./src/assets/Resposables des OPERATIONS.jpeg" alt="Responsables Opérations" style="width: 100%; height: 150px; object-fit: cover;">
-                            <p style="padding: 12px; background: white; text-align: center; font-size: 12px; font-weight: 600; color: #2d5016; margin: 0;">Responsables Ops</p>
+                        <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.15); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border: 2px solid #6db038;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.15)';">
+                            <div style="position: relative; overflow: hidden;">
+                                <img src="./src/assets/Image du DG pour la Convention avec COJOJ.jpeg" alt="DG Convention COJOJ" style="width: 100%; height: 140px; object-fit: cover;">
+                                <div style="position: absolute; top: 6px; right: 6px; background: #6db038; color: white; padding: 3px 8px; border-radius: 20px; font-size: 10px; font-weight: 700;">🔥 ACTUALITÉ</div>
+                            </div>
+                            <p style="padding: 12px; text-align: center; font-weight: 600; color: #2d5016; font-size: 12px; margin: 0;">DG - Convention COJOJ</p>
                         </div>
                     </div>
-                    <p style="margin-top: 18px; color: #718096; font-size: 13px; font-weight: 500; text-align: center;">🤝 Partenaires et Équipes SONAGED</p>
                 </div>
             </div>
             
@@ -1468,19 +1475,35 @@
             
             <!-- SECTION PARTENAIRES & CONVENTIONS -->
             <div style="margin-top: 60px; padding: 40px; background: linear-gradient(135deg, #f0f8e6 0%, #e8f5df 100%); border-radius: 12px; border-left: 6px solid #6db038;">
-                <h2 style="font-size: 32px; font-weight: 800; color: #2d5016; text-align: center; margin-bottom: 40px;">🤝 Nos Partenaires & Conventions</h2>
+                <h2 style="font-size: 32px; font-weight: 800; color: #2d5016; text-align: center; margin-bottom: 30px;">🤝 Nos Partenaires & Conventions</h2>
+                
+                <!-- 🔥 ACTUALITÉS CONVENTIONS -->
+                <div style="background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%); padding: 20px; border-radius: 8px; border-left: 4px solid #ff6b6b; margin-bottom: 30px; text-align: center;">
+                    <h3 style="font-size: 18px; font-weight: 700; color: #c92a2a; margin: 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <span style="font-size: 24px;">🔥</span>
+                        ACTUALITÉ CONVENTION
+                        <span style="font-size: 24px;">🔥</span>
+                    </h3>
+                    <p style="margin-top: 8px; color: #6d4e0d; font-size: 12px; margin-bottom: 0;">Conventions en cours - Événements importants</p>
+                </div>
                 
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
-                    <!-- Image du DG pour la Convention avec COJOJ - ACTUALITÉ -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border: 3px solid #6db038;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image du DG pour la Convention avec COJOJ.jpeg" alt="DG Convention COJOJ" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">🆕 DG Convention COJOJ</p>
+                    <!-- ⭐ IMAGE DIRECTEUR ET RESPONSABLE SIG - ACTUALITÉ -->
+                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.15); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border: 2px solid #6db038;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.15)';">
+                        <div style="position: relative; overflow: hidden;">
+                            <img src="./src/assets/Image Directeur et Responsable SIG.jpeg" alt="Directeur et Responsable SIG" style="width: 100%; height: 180px; object-fit: cover;">
+                            <div style="position: absolute; top: 8px; right: 8px; background: #6db038; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;">🔥 ACTUALITÉ</div>
+                        </div>
+                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Directeur & SIG</p>
                     </div>
                     
-                    <!-- Image Directeur et Responsable SIG - ACTUALITÉ -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border: 3px solid #6db038;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image Directeur et Responsable SIG.jpeg" alt="Directeur et Responsable SIG" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">🆕 Direction SIG</p>
+                    <!-- ⭐ IMAGE DG CONVENTION COJOJ - ACTUALITÉ -->
+                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.15); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border: 2px solid #6db038;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.15)';">
+                        <div style="position: relative; overflow: hidden;">
+                            <img src="./src/assets/Image du DG pour la Convention avec COJOJ.jpeg" alt="DG Convention COJOJ" style="width: 100%; height: 180px; object-fit: cover;">
+                            <div style="position: absolute; top: 8px; right: 8px; background: #6db038; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;">🔥 ACTUALITÉ</div>
+                        </div>
+                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">DG - Convention COJOJ</p>
                     </div>
                     
                     <!-- Convention SENELEC 1 -->
@@ -2349,15 +2372,25 @@
         };
         
         // Initialiser la carte avec optimisations
+        let mapInitialized = false;
+        
         function initMap() {
+            if (mapInitialized) return; // Éviter re-initialisation
+            
+            const mapContainer = document.getElementById('map');
+            if (!mapContainer) return;
+            
+            mapInitialized = true;
             map = L.map('map').setView([13.1939, -15.5277], 13); // Coordonnées Ziguinchor
             
-            // Ajouter les tuiles OpenStreetMap
+            // Ajouter les tuiles OpenStreetMap avec optimisation
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors',
                 maxZoom: 19,
+                minZoom: 6,
                 crossOrigin: true,
-                className: 'leaflet-tiles-offline'
+                className: 'leaflet-tiles-offline',
+                errorTileUrl: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="256" height="256"%3E%3Crect fill="%23f0f0f0" width="256" height="256"/%3E%3C/svg%3E'
             }).addTo(map);
             
             // Ajouter un marqueur de départ
@@ -2370,6 +2403,8 @@
                 map.touchZoom.disable();
                 map.doubleClickZoom.disable();
             }
+            
+            console.log('✅ Carte de localisation initialisée');
         }
 
         // Informations sur le cache
@@ -2401,6 +2436,11 @@
         let watchPositionId = null;
 
         function obtenirLocalisationGPS() {
+            // Initialiser la carte si ce n'est pas encore fait
+            if (!mapInitialized) {
+                initMap();
+            }
+            
             // Vérification du protocole
             if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
                 showAlert('error', '⚠️ La géolocalisation nécessite HTTPS. Veuillez utiliser une connexion sécurisée ou localhost.');
@@ -4221,6 +4261,12 @@ Consultez les logs du serveur pour les détails complets.
                 landingSection.style.display = 'none';
                 formulaireSection.style.display = 'block';
                 
+                // Initialiser les cartes quand le formulaire devient visible
+                setTimeout(() => {
+                    initMap();
+                    initializeCollecteMap();
+                }, 100);
+                
                 if (scroll) {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
@@ -4250,10 +4296,11 @@ Consultez les logs du serveur pour les détails complets.
             }
         }
         
-        // Fonction de diagnostic pour vérifier les permissions et connexion
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
-            initMap();
+            // NE PAS initialiser les cartes immédiatement
+            // Elles seront initialisées de manière "lazy" quand nécessaire
+            
             afficherInfoCache();
             document.getElementById('date-update').textContent = new Date().toLocaleDateString('fr-FR');
             mettreAJourSites();
@@ -4700,19 +4747,26 @@ Consultez les logs du serveur pour les détails complets.
             { name: "Méguetane", lat: 14.5333, lng: -15.1333 }
         ];
         
+        let collecteMapInitialized = false;
+        
         // Initialiser la carte une fois que le DOM est prêt
         function initializeCollecteMap() {
+            if (collecteMapInitialized) return; // Éviter re-initialisation
+            
             const mapContainer = document.getElementById('collecte-map');
-            if (!mapContainer) return;
+            if (!mapContainer || !mapContainer.offsetHeight) return; // Vérifier que le conteneur est visible
+            
+            collecteMapInitialized = true;
             
             // Créer la carte centrée sur Ziguinchor
             const collecteMap = L.map('collecte-map').setView([12.9, -16.0], 9);
             
-            // Ajouter la couche de base OpenStreetMap
+            // Ajouter la couche de base OpenStreetMap avec optimisation
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors',
                 maxZoom: 19,
-                minZoom: 6
+                minZoom: 6,
+                errorTileUrl: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="256" height="256"%3E%3Crect fill="%23f0f0f0" width="256" height="256"/%3E%3C/svg%3E'
             }).addTo(collecteMap);
             
             // Ajouter les régions comme étiquettes
@@ -4804,10 +4858,6 @@ Consultez les logs du serveur pour les détails complets.
             legend.addTo(collecteMap);
         }
         
-        // Initialiser la carte quand le document est complètement chargé
-        window.addEventListener('load', function() {
-            setTimeout(initializeCollecteMap, 500);
-        });
     </script>
     
     
