@@ -640,6 +640,23 @@
             transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
         }
         
+        /* S'assurer que tous les boutons sont cliquables sur mobile */
+        button {
+            pointer-events: auto !important;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
         /* Désactiver les animations sur les médias réduits */
         @media (prefers-reduced-motion: reduce) {
             * {
@@ -702,6 +719,10 @@
         
         .success {
             background: linear-gradient(135deg, #6db038 0%, #4a7c27 100%) !important;
+            pointer-events: auto !important;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
         
         #map {
@@ -895,6 +916,30 @@
 
             .data-item {
                 grid-template-columns: 1fr;
+            }
+            
+            /* Responsive Landing Page */
+            #landing-section {
+                padding: 40px 20px !important;
+            }
+            
+            #landing-section > div:first-of-type {
+                grid-template-columns: 1fr !important;
+                gap: 30px !important;
+            }
+            
+            #landing-section h2 {
+                font-size: 32px !important;
+            }
+            
+            #features-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* Galerie partenaires responsive */
+            #landing-section > div > div > div {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 12px !important;
             }
         }
 
@@ -1270,6 +1315,10 @@
             box-shadow: 0 6px 16px rgba(0,0,0,0.3);
         }
 
+        .cta-button-primary:hover {
+            box-shadow: 0 6px 20px rgba(109, 176, 56, 0.5);
+        }
+
         .galerie-nav-button:active {
             transform: translateY(-50%) scale(0.95);
         }
@@ -1332,10 +1381,195 @@
             </div>
         </div>
         
+        <!-- 🏠 LANDING PAGE D'ACCUEIL -->
+        <div id="landing-section" class="content" style="display: flex; flex-direction: column; padding: 60px 40px; gap: 40px; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 1px solid #e5e7eb;">
+            
+            <!-- HERO SECTION -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
+                <div style="animation: slideInLeft 0.8s ease-out;">
+                    <h2 style="font-size: 48px; font-weight: 800; color: #2d5016; margin-bottom: 20px; line-height: 1.2;">
+                        🌍 Bienvenue à SONAGED
+                    </h2>
+                    <p style="font-size: 18px; color: #4a5568; margin-bottom: 20px; line-height: 1.7; font-weight: 600;">
+                        <strong>Société Nationale de Gestion de Déchets</strong>
+                    </p>
+                    <p style="font-size: 15px; color: #718096; margin-bottom: 15px; line-height: 1.8;">
+                        Application mobile intelligente pour la collecte de données géospatiales au niveau national au Sénégal permettant aux agents SONAGED de collecter des informations détaillées sur les sites d'infrastructures de gestion des déchets.
+                    </p>
+                    <div style="background: #f0f8e6; padding: 15px; border-radius: 8px; border-left: 4px solid #6db038; margin-bottom: 25px;">
+                        <p style="font-size: 13px; color: #2d5016; margin: 0;">
+                            ✅ <strong>14 Régions</strong> | ✅ <strong>45+ Départements</strong> | ✅ <strong>500+ Communes</strong>
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap;">
+                        <button onclick="allerAuFormulaire()" class="cta-button-primary" style="background: linear-gradient(135deg, #6db038 0%, #4a7c27 100%); color: white; padding: 16px 40px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(109, 176, 56, 0.3); transition: all 0.3s; pointer-events: auto;">
+                            📱 Accéder à la Collecte
+                        </button>
+                        <button onclick="scrollToFeatures()" style="background: white; color: #2d5016; padding: 16px 40px; border: 2px solid #6db038; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; pointer-events: auto;">
+                            📖 Découvrir nos Partenaires
+                        </button>
+                    </div>
+                </div>
+                
+                <div style="animation: slideInRight 0.8s ease-out;">
+                    <!-- GALERIE D'IMAGES SONAGED PARTENAIRES & ÉQUIPES -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div style="border-radius: 8px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.12); cursor: pointer; transform: transition 0.3s;">
+                            <img src="./src/assets/Image Convention avec SENELEC.jpeg" alt="Convention SENELEC" style="width: 100%; height: 150px; object-fit: cover;">
+                            <p style="padding: 12px; background: white; text-align: center; font-size: 12px; font-weight: 600; color: #2d5016; margin: 0;">Convention SENELEC</p>
+                        </div>
+                        <div style="border-radius: 8px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.12); cursor: pointer;">
+                            <img src="./src/assets/Images 1 equipes Missions SONAGED.jpeg" alt="Équipes SONAGED" style="width: 100%; height: 150px; object-fit: cover;">
+                            <p style="padding: 12px; background: white; text-align: center; font-size: 12px; font-weight: 600; color: #2d5016; margin: 0;">Équipes Missions</p>
+                        </div>
+                        <div style="border-radius: 8px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.12); cursor: pointer;">
+                            <img src="./src/assets/Image Convention avec Mairie de ZIGUINCHIR.jpeg" alt="Convention Mairie Ziguinchor" style="width: 100%; height: 150px; object-fit: cover;">
+                            <p style="padding: 12px; background: white; text-align: center; font-size: 12px; font-weight: 600; color: #2d5016; margin: 0;">Mairie Ziguinchor</p>
+                        </div>
+                        <div style="border-radius: 8px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.12); cursor: pointer;">
+                            <img src="./src/assets/Resposables des OPERATIONS.jpeg" alt="Responsables Opérations" style="width: 100%; height: 150px; object-fit: cover;">
+                            <p style="padding: 12px; background: white; text-align: center; font-size: 12px; font-weight: 600; color: #2d5016; margin: 0;">Responsables Ops</p>
+                        </div>
+                    </div>
+                    <p style="margin-top: 18px; color: #718096; font-size: 13px; font-weight: 500; text-align: center;">🤝 Partenaires et Équipes SONAGED</p>
+                </div>
+            </div>
+            
+            <!-- FEATURES SECTION -->
+            <div id="features-section" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-top: 40px;">
+                <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left: 4px solid #6db038; animation: fadeIn 0.8s ease-out;" class="feature-card">
+                    <h3 style="font-size: 20px; font-weight: 700; color: #2d5016; margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 28px;">🗺️</span> Géolocalisation Précise
+                    </h3>
+                    <p style="color: #4a5568; font-size: 14px; line-height: 1.6;">Capture automatique des coordonnées GPS avec précision en mètres de tous les points d'intérêt et sites de gestion des déchets.</p>
+                </div>
+                
+                <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left: 4px solid #3b82f6; animation: fadeIn 0.8s ease-out 0.1s backwards;" class="feature-card">
+                    <h3 style="font-size: 20px; font-weight: 700; color: #2d5016; margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 28px;">📷</span> Documentation Visuelle
+                    </h3>
+                    <p style="color: #4a5568; font-size: 14px; line-height: 1.6;">Capture de photos haute qualité avec compression automatique et métadonnées complètes des sites d'infrastructures.</p>
+                </div>
+                
+                <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left: 4px solid #6db038; animation: fadeIn 0.8s ease-out 0.2s backwards;" class="feature-card">
+                    <h3 style="font-size: 20px; font-weight: 700; color: #2d5016; margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 28px;">📏</span> Mesure des Superficies
+                    </h3>
+                    <p style="color: #4a5568; font-size: 14px; line-height: 1.6;">Calcul automatique des superficies en m² en marchant autour du site avec une précision géométrique fiable.</p>
+                </div>
+                
+                <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left: 4px solid #3b82f6; animation: fadeIn 0.8s ease-out 0.3s backwards;" class="feature-card">
+                    <h3 style="font-size: 20px; font-weight: 700; color: #2d5016; margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 28px;">💾</span> Synchronisation Intelligente
+                    </h3>
+                    <p style="color: #4a5568; font-size: 14px; line-height: 1.6;">Stockage local sécurisé avec synchronisation en temps réel vers la base de données PostgreSQL nationale.</p>
+                </div>
+            </div>
+            
+            <!-- SECTION PARTENAIRES & CONVENTIONS -->
+            <div style="margin-top: 60px; padding: 40px; background: linear-gradient(135deg, #f0f8e6 0%, #e8f5df 100%); border-radius: 12px; border-left: 6px solid #6db038;">
+                <h2 style="font-size: 32px; font-weight: 800; color: #2d5016; text-align: center; margin-bottom: 40px;">🤝 Nos Partenaires & Conventions</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+                    <!-- Convention SENELEC 1 -->
+                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
+                        <img src="./src/assets/Image Convention avec SENELEC.jpeg" alt="Convention SENELEC" style="width: 100%; height: 180px; object-fit: cover;">
+                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Convention SENELEC</p>
+                    </div>
+                    
+                    <!-- Convention SENELEC 2 -->
+                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
+                        <img src="./src/assets/Image 2 Convention avec SENELEC.jpeg" alt="Convention SENELEC 2" style="width: 100%; height: 180px; object-fit: cover;">
+                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Convention SENELEC 2</p>
+                    </div>
+                    
+                    <!-- Convention SENELEC 3 -->
+                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
+                        <img src="./src/assets/Image 3 Convention avec SENELEC.jpeg" alt="Convention SENELEC 3" style="width: 100%; height: 180px; object-fit: cover;">
+                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Convention SENELEC 3</p>
+                    </div>
+                    
+                    <!-- Convention Mairie Ziguinchor -->
+                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
+                        <img src="./src/assets/Image Convention avec Mairie de ZIGUINCHIR.jpeg" alt="Mairie Ziguinchor" style="width: 100%; height: 180px; object-fit: cover;">
+                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Mairie Ziguinchor</p>
+                    </div>
+                    
+                    <!-- Convention DAKAR DEM DIK -->
+                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
+                        <img src="./src/assets/Image Convention DAKAR DEM DIK.jpeg" alt="Convention Dakar Dem Dik" style="width: 100%; height: 180px; object-fit: cover;">
+                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Convention Dakar Dem Dik</p>
+                    </div>
+                    
+                    <!-- Convention Mairie MLOMP -->
+                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
+                        <img src="./src/assets/Image Convention en Partenariat avec Le Maire de MLOMP.jpeg" alt="Mairie MLOMP" style="width: 100%; height: 180px; object-fit: cover;">
+                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Mairie MLOMP</p>
+                    </div>
+                    
+                    <!-- Base Navale MLOMP -->
+                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
+                        <img src="./src/assets/Image en Partenanriat avec La Base Naval de MLOMP.jpeg" alt="Base Navale MLOMP" style="width: 100%; height: 180px; object-fit: cover;">
+                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Base Navale MLOMP</p>
+                    </div>
+                    
+                    <!-- Camp Militaire BIGNOA -->
+                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
+                        <img src="./src/assets/Image en Partenariat avec le Camp Militaire de BIGNOA.jpeg" alt="Camp Militaire BIGNOA" style="width: 100%; height: 180px; object-fit: cover;">
+                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Camp Militaire BIGNOA</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- COVERAGE STATS -->
+            <div style="background: linear-gradient(135deg, #2d5016 0%, #4a7c27 100%); padding: 50px; border-radius: 12px; color: white; text-align: center; animation: fadeIn 0.8s ease-out 0.4s backwards; margin-top: 60px;">
+                <h3 style="font-size: 32px; font-weight: 700; margin-bottom: 40px;">🌍 Couverture Nationale du Sénégal</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;">
+                    <div>
+                        <div style="font-size: 56px; font-weight: 800; color: #6db038; margin-bottom: 8px;">14</div>
+                        <p style="font-size: 16px; opacity: 0.95; font-weight: 600;">Régions Couverts</p>
+                        <p style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Collecte complète</p>
+                    </div>
+                    <div>
+                        <div style="font-size: 56px; font-weight: 800; color: #6db038; margin-bottom: 8px;">45+</div>
+                        <p style="font-size: 16px; opacity: 0.95; font-weight: 600;">Départements</p>
+                        <p style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Couverture étendue</p>
+                    </div>
+                    <div>
+                        <div style="font-size: 56px; font-weight: 800; color: #6db038; margin-bottom: 8px;">500+</div>
+                        <p style="font-size: 16px; opacity: 0.95; font-weight: 600;">Communes</p>
+                        <p style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Données précises</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ÉQUIPE MISSIONS & RESPONSABLES -->
+            <div style="margin-top: 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center;">
+                <div>
+                    <img src="./src/assets/Images 1 equipes Missions SONAGED.jpeg" alt="Équipes en Mission" style="width: 100%; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+                    <p style="text-align: center; font-size: 14px; font-weight: 600; color: #2d5016; margin-top: 15px;">✅ Équipes en Mission de Terrain</p>
+                </div>
+                <div>
+                    <img src="./src/assets/Resposables des OPERATIONS.jpeg" alt="Responsables Opérations" style="width: 100%; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+                    <p style="text-align: center; font-size: 14px; font-weight: 600; color: #2d5016; margin-top: 15px;">✅ Responsables des Opérations</p>
+                </div>
+            </div>
+            
+            <!-- CTA BUTTON FINALE -->
+            <div style="text-align: center; padding: 60px 0; margin-top: 40px;">
+                <h2 style="font-size: 32px; font-weight: 700; color: #2d5016; margin-bottom: 20px;">Prêt à Commencer?</h2>
+                <p style="font-size: 16px; color: #718096; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">Accédez à la plateforme de collecte de données géospatiales et commencez à documenter les sites d'infrastructures de gestion des déchets du Sénégal</p>
+                <button onclick="allerAuFormulaire()" style="background: linear-gradient(135deg, #6db038 0%, #4a7c27 100%); color: white; padding: 20px 60px; border: none; border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 25px rgba(109, 176, 56, 0.4); transition: all 0.3s; pointer-events: auto;letter-spacing: 0.5px;">
+                    🚀 ACCÉDER À LA COLLECTE DE DONNÉES
+                </button>
+                <p style="margin-top: 25px; color: #a0aec0; font-size: 12px;">Application mobile progressive | Fonctionnement hors ligne | Synchronisation automatique</p>
+            </div>
+        </div>
+        
+        <!-- 📝 FORMULAIRE DE COLLECTE (caché par défaut) -->
+        <div id="formulaire-section" style="display: none;">
+        
         <div class="content">
-            <!-- FORMULAIRE DE SAISIE -->
-            <form id="collecte-form" onsubmit="return false;" novalidate>
-            <div class="section">
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
                     <span style="background: linear-gradient(135deg, #2d5016 0%, #5ba837 100%); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px;">1</span>
                     <h2 style="margin: 0;">📝 Informations du Site</h2>
@@ -1514,7 +1748,7 @@
                 
                 <div class="button-group">
                     <button onclick="demarrerCamera()" style="flex: 1;">📹 Démarrer Caméra</button>
-                    <button class="danger" onclick="arreterCamera()" style="flex: 1;">⏹️ Arrêter</button>
+                    <button id="arreter-camera-btn" class="danger" onclick="arreterCamera()" style="flex: 1; display: none;">⏹️ Arrêter</button>
                 </div>
                 
                 <video id="video" style="width: 100%; border-radius: 8px; background: #000; margin: 15px 0; display: none;" playsinline></video>
@@ -1548,8 +1782,8 @@
                     <!-- BOUTONS D'ACTION - VOIR RÉSUMÉ ET SAUVEGARDER -->
                     <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); padding: 25px; border-radius: 12px; border-top: 3px solid #6db038; margin-top: 30px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
                         <div style="display: flex; gap: 15px; flex-direction: column;">
-                            <button class="success" onclick="afficherResume()" style="width: 100%; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); padding: 14px; font-size: 16px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); transition: all 0.3s; border: none; color: white; cursor: pointer;">👁️ Voir le Résumé</button>
-                            <button class="success" onclick="validerEtSauvegarder()" style="width: 100%; background: linear-gradient(135deg, #6db038 0%, #5ba837 100%); padding: 14px; font-size: 16px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(109, 176, 56, 0.3); transition: all 0.3s; border: none; color: white; cursor: pointer;">💾 Sauvegarder les Données</button>
+                            <button id="btn-voir-resume" class="success" onclick="afficherResume()" style="width: 100%; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); padding: 14px; font-size: 16px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); transition: all 0.3s; border: none; color: white; cursor: pointer;">👁️ Voir le Résumé</button>
+                            <button id="btn-sauvegarder" class="success" onclick="validerEtSauvegarder()" style="width: 100%; background: linear-gradient(135deg, #6db038 0%, #5ba837 100%); padding: 14px; font-size: 16px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(109, 176, 56, 0.3); transition: all 0.3s; border: none; color: white; cursor: pointer;">💾 Sauvegarder les Données</button>
                         </div>
                     </div>
                 </div>
@@ -1664,6 +1898,18 @@
                 <h3>📋 Résumé des Données Collectées</h3>
                 <div id="summary-content"></div>
             </div>
+        </div>
+        
+        </div>
+        </div>
+        
+        <!-- HEADER AVEC BOUTON RETOUR À L'ACCUEIL -->
+        <div style="padding: 15px 30px; background: linear-gradient(135deg, #2d5016 0%, #4a7c27 100%); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #5ba837;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 24px;">📱</span>
+                <span style="color: white; font-weight: 600;">Collecte de Données SONAGED</span>
+            </div>
+            <button onclick="retournerAuFormulaire()" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; border: 1px solid white; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; pointer-events: auto;">← Retour Accueil</button>
         </div>
         
         <footer>
@@ -2317,6 +2563,7 @@
                     video.srcObject = stream;
                     video.play().catch(err => console.warn('Play warning:', err));
                     video.style.display = 'block';
+                    document.getElementById('arreter-camera-btn').style.display = 'block';
                     showAlert('success', '✅ Caméra activée avec succès!');
                     console.log('📹 Stream video actif');
                 })
@@ -2336,6 +2583,7 @@
                             video.srcObject = stream;
                             video.play().catch(err => console.warn('Play warning:', err));
                             video.style.display = 'block';
+                            document.getElementById('arreter-camera-btn').style.display = 'block';
                             showAlert('success', '✅ Caméra activée!');
                         })
                         .catch(err2 => {
@@ -2358,6 +2606,7 @@
             if (videoStream) {
                 videoStream.getTracks().forEach(track => track.stop());
                 video.style.display = 'none';
+                document.getElementById('arreter-camera-btn').style.display = 'none';
                 videoStream = null;
                 showAlert('info', '⏹️ Caméra arrêtée');
             }
@@ -2536,7 +2785,96 @@
             }, 100);
             
             showAlert('success', `✅ Photo capturée et ajoutée à la galerie (${(dataSize/1024).toFixed(0)}KB)`);
+            
+            // 🗺️ Mettre à jour la carte des collectes avec le nouveau point GPS
+            setTimeout(() => {
+                ajouterCollecteGPS(communeName, siteName, donnees.latitude, donnees.longitude);
+            }, 500);
         }
+        
+        // 🗺️ Fonction pour ajouter une nouvelle collecte à la carte
+        function ajouterCollecteGPS(commune, site, lat, lon) {
+            if (isNaN(lat) || isNaN(lon) || lat === 0 || lon === 0) {
+                console.warn('⚠️ Coordonnées GPS invalides, carte non mise à jour');
+                return;
+            }
+            
+            // Créer un nouvel objet collecte
+            const nouvelleCollecte = {
+                id: Math.max(...collectesGPS.map(c => c.id), 0) + 1,
+                commune: commune,
+                partenaire: "SONAGED",
+                site: site,
+                lat: lat,
+                lng: lon,
+                photo: ""
+            };
+            
+            // Ajouter à la liste
+            collectesGPS.unshift(nouvelleCollecte);
+            
+            console.log(`✅ Nouvelle collecte GPS ajoutée: ${commune} - ${site}`);
+            
+            // Si la carte des collectes est visible, la mettre à jour
+            const collecteMapContainer = document.getElementById('collecte-map');
+            if (collecteMapContainer && collecteMapContainer._leaflet_map) {
+                ajouterMarqueurSurCollecteMap(nouvelleCollecte);
+            }
+        }
+        
+        // 🗺️ Ajouter marqueur sur la carte des collectes
+        function ajouterMarqueurSurCollecteMap(collecte) {
+            const collecteMapContainer = document.getElementById('collecte-map');
+            if (!collecteMapContainer || !collecteMapContainer._leaflet_map) return;
+            
+            const collecteMap = collecteMapContainer._leaflet_map;
+            
+            // Créer une icône personnalisée
+            const customIcon = L.divIcon({
+                className: 'custom-collecte-marker',
+                html: `<div style="
+                    background: linear-gradient(135deg, #6db038 0%, #5ba837 100%);
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-size: 18px;
+                    border: 3px solid white;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                ">📍</div>`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            });
+            
+            // Créer le contenu du popup
+            const popupContent = `
+                <div style="font-size: 12px;">
+                    <strong style="color: #6db038; font-size: 13px;">📌 ${collecte.commune}</strong><br>
+                    <small style="color: #666;">
+                        <strong>Site:</strong> ${collecte.site}<br>
+                        <strong>Partenaire:</strong> ${collecte.partenaire}<br>
+                        <strong>Coordonnées:</strong> ${collecte.lat.toFixed(4)}, ${collecte.lng.toFixed(4)}<br>
+                        <strong>ID:</strong> Collecte #${collecte.id}<br>
+                        <em style="color: #6db038;">✨ Récemment ajoutée</em>
+                    </small>
+                </div>
+            `;
+            
+            // Ajouter le marqueur à la carte
+            const marker = L.marker([collecte.lat, collecte.lng], { icon: customIcon })
+                .bindPopup(popupContent)
+                .bindTooltip(`${collecte.commune}`, { permanent: false, direction: 'top' })
+                .addTo(collecteMap);
+            
+            // Centrer et zoomer sur le nouveau marqueur
+            collecteMap.setView([collecte.lat, collecte.lng], 13);
+            
+            showAlert('success', `🗺️ Marqueur ajouté à la carte: ${collecte.commune}`);
+        }
+        
         
         // 📥 Fonction pour télécharger l'image (compatible mobile)
         function telechargerPhoto() {
@@ -2685,12 +3023,16 @@
                         // Mettre à jour les coordonnées affichées
                         const coordsDisplay = document.getElementById('coords-display');
                         if (coordsDisplay) {
+                            let markButton = '';
+                            if (window.innerWidth >= 768) {
+                                markButton = '<button onclick="addCurrentGPSPoint()" style="margin-top: 10px; background: #6db038; color: white; padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%;">📌 Marquer ce Point</button>';
+                            }
                             coordsDisplay.innerHTML = `
                                 <strong>📍 Position GPS actuelle:</strong><br>
                                 Latitude: <span id="lat">${coords.latitude.toFixed(6)}</span><br>
                                 Longitude: <span id="lon">${coords.longitude.toFixed(6)}</span><br>
                                 Précision: ${coords.accuracy.toFixed(0)} m<br>
-                                <button onclick="addCurrentGPSPoint()" style="margin-top: 10px; background: #6db038; color: white; padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%;">📌 Marquer ce Point</button>
+                                ` + markButton + `
                             `;
                         }
                     },
@@ -3345,7 +3687,7 @@
                         <div>Région: <strong>${regionLabel || region}</strong></div>
                         <div>Département: <strong>${departementLabel || departement}</strong></div>
                         <div>Commune: <strong>${commune}</strong></div>
-                        <div>Sites Concernés: <strong>${adresse}</strong></div>
+                        <div>Sites Concernés: <strong>${sites_concernes}</strong></div>
                     </div>
                 </div>
                 
@@ -3423,8 +3765,18 @@
             document.getElementById('resume-contenu').innerHTML = resumeHTML;
             document.getElementById('resume-section').style.display = 'block';
             
-            // Scroller vers le résumé
-            document.getElementById('resume-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Scroller vers le résumé (avec fallback pour mobile)
+            setTimeout(() => {
+                try {
+                    const resumeSection = document.getElementById('resume-section');
+                    if (resumeSection) {
+                        resumeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                } catch (e) {
+                    // Fallback pour navigateurs mobiles qui ne supportent pas scrollIntoView
+                    window.scrollTo({ top: document.getElementById('resume-section').offsetTop - 100, behavior: 'smooth' });
+                }
+            }, 100);
         }
         
         // ✅ FONCTION DE VALIDATION POUR UN SEUL CHAMP
@@ -3456,7 +3808,7 @@
             
             const champsObligatoires = [
                 'region', 'departement', 'commune', 'typeActivite',
-                'partenaire', 'sites_concernes', 'superficie', 'besoinPersonnel'
+                'partenaire', 'adresse', 'superficie', 'besoinPersonnel'
             ];
             
             let tousValides = true;
@@ -3847,6 +4199,45 @@ Consultez les logs du serveur pour les détails complets.
             }
         }
         
+        // ============ FONCTIONS DE NAVIGATION LANDING PAGE ============
+        
+        function allerAuFormulaire(scroll = true) {
+            const landingSection = document.getElementById('landing-section');
+            const formulaireSection = document.getElementById('formulaire-section');
+            
+            if (landingSection && formulaireSection) {
+                landingSection.style.display = 'none';
+                formulaireSection.style.display = 'block';
+                
+                if (scroll) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+                
+                console.log('✅ Navigation vers le formulaire');
+            } else {
+                console.error('❌ Sections non trouvées:', { landingSection, formulaireSection });
+            }
+        }
+        
+        function scrollToFeatures() {
+            const featuresSection = document.getElementById('features-section');
+            if (featuresSection) {
+                featuresSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        function retournerAuFormulaire() {
+            const landingSection = document.getElementById('landing-section');
+            const formulaireSection = document.getElementById('formulaire-section');
+            
+            if (landingSection && formulaireSection) {
+                formulaireSection.style.display = 'none';
+                landingSection.style.display = 'flex';
+                landingSection.style.flexDirection = 'column';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+        
         // Fonction de diagnostic pour vérifier les permissions et connexion
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
@@ -3863,6 +4254,50 @@ Consultez les logs du serveur pour les détails complets.
                 console.log('✅ Exécution en mode PWA');
                 showAlert('success', '📱 Application PWA chargée!');
             }
+            
+            // 📱 FIXER LES ÉVÉNEMENTS TACTILES POUR BOUTONS D'ACTION (compatible mobile)
+            setTimeout(function() {
+                // Boutons landing page
+                const landingButtons = document.querySelectorAll('#landing-section button, #landing-section [onclick*="allerAuFormulaire"], #landing-section [onclick*="scrollToFeatures"]');
+                landingButtons.forEach(btn => {
+                    if (btn) {
+                        btn.addEventListener('touchend', function(e) {
+                            e.preventDefault();
+                            this.click();
+                        }, { passive: false });
+                        btn.style.pointerEvents = 'auto';
+                        btn.style.touchAction = 'auto';
+                    }
+                });
+                
+                // Boutons formulaire
+                const btnResume = document.getElementById('btn-voir-resume');
+                const btnSauvegarder = document.getElementById('btn-sauvegarder');
+                
+                if (btnResume) {
+                    btnResume.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        afficherResume();
+                    }, false);
+                    btnResume.addEventListener('pointerdown', function(e) {
+                        e.preventDefault();
+                    }, false);
+                    btnResume.style.pointerEvents = 'auto';
+                    btnResume.style.touchAction = 'auto';
+                }
+                
+                if (btnSauvegarder) {
+                    btnSauvegarder.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        validerEtSauvegarder();
+                    }, false);
+                    btnSauvegarder.addEventListener('pointerdown', function(e) {
+                        e.preventDefault();
+                    }, false);
+                    btnSauvegarder.style.pointerEvents = 'auto';
+                    btnSauvegarder.style.touchAction = 'auto';
+                }
+            }, 500);
         });
     </script>
     
@@ -4227,7 +4662,7 @@ Consultez les logs du serveur pour les détails complets.
     <!-- FONCTIONS JAVASCRIPT POUR LA CARTE DES COLLECTES -->
     <script>
         // Données géographiques des 8 collectes
-        const collectesGPS = [
+        let collectesGPS = [
             { id: 12, commune: "Oussouye", partenaire: "SENELEC", site: "Bureau commercial Oussouye", lat: 12.49055100, lng: -16.54658500, photo: "./exports/export-2026-02-17T18-16-04/images/photo_12_1.jpg" },
             { id: 11, commune: "Diembéring", partenaire: "SENELEC", site: "District Cap-Skirring", lat: 12.37629500, lng: -16.72996200, photo: "./exports/export-2026-02-17T18-16-04/images/photo_11_2.jpg" },
             { id: 10, commune: "Ziguinchor", partenaire: "SENELEC", site: "Bureau commercial de Boutoute", lat: 12.56943000, lng: -16.27761800, photo: "./exports/export-2026-02-17T18-16-04/images/photo_10_3.jpg" },
