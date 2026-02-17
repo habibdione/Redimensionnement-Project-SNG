@@ -382,38 +382,7 @@
             .content {
                 grid-template-columns: 1fr;
             }
-            
-            /* Boutons d'action sticky sur mobile */
-            .sticky-action-buttons {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: linear-gradient(to top, white 0%, white 85%, rgba(255,255,255,0) 100%);
-                padding: 15px 20px 20px 20px;
-                z-index: 500;
-                box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
-                animation: slideInUp 0.3s ease-out;
-            }
-            
-            .sticky-action-buttons > div {
-                display: flex;
-                gap: 10px;
-                flex-direction: column;
-            }
-            
-            .sticky-action-buttons button {
-                padding: 12px;
-                font-size: 14px;
-                width: 100%;
-            }
-            
-            /* Ajouter du padding au contenu pour qu'il ne soit pas sous les boutons */
-            .content {
-                padding-bottom: 200px;
-            }
         }
-        
         
         .section {
             display: flex;
@@ -1558,14 +1527,6 @@
                     </div>
                 </div>
                 
-                <!-- BOUTONS D'ACTION - EN BAS DE TOUS LES CHAMPS -->
-                <div class="sticky-action-buttons" style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); padding: 25px; border-radius: 12px; border-top: 3px solid #6db038; margin-top: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                    <div style="display: flex; gap: 15px; flex-direction: column;">
-                        <button class="success" onclick="afficherResume()" style="width: 100%; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); padding: 14px; font-size: 16px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); transition: all 0.3s;">👁️ Voir le Résumé</button>
-                        <button class="success" onclick="validerEtSauvegarder()" style="width: 100%; background: linear-gradient(135deg, #6db038 0%, #5ba837 100%); padding: 14px; font-size: 16px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(109, 176, 56, 0.3); transition: all 0.3s;">💾 Sauvegarder les Données</button>
-                    </div>
-                </div>
-                
                 <!-- CARTE DU SÉNÉGAL AVEC POINTS COLLECTÉS -->
                 <div style="margin-top: 30px;">
                     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
@@ -1683,7 +1644,6 @@
             <div class="data-summary" id="summary" style="display: none;">
                 <h3>📋 Résumé des Données Collectées</h3>
                 <div id="summary-content"></div>
-                <button class="success" onclick="sauvegarderDonneesBD()" style="background: #10b981; width: 100%; margin-top: 15px;">💾 Sauvegarder</button>
             </div>
         </div>
         
@@ -2508,21 +2468,29 @@
                 statsNumber.textContent = galleriePhotos.length;
             }
             
-            // Afficher la preview avec animation
-            const previewDiv = document.getElementById('image-preview');
+            // ✅ AFFICHER LA PRÉVIEW (avec vérification complète)
             const previewImg = document.getElementById('preview-img');
+            if (previewImg) {
+                previewImg.src = imageData;
+                previewImg.style.display = 'block';
+                previewImg.style.maxWidth = '100%';
+                previewImg.style.height = 'auto';
+                previewImg.style.borderRadius = '8px';
+                previewImg.style.marginTop = '10px';
+            }
             
-            previewImg.src = imageData;
-            document.getElementById('photo-filename').textContent = filename;
+            // Update filename display
+            const filenameSpan = document.getElementById('photo-filename');
+            if (filenameSpan) {
+                filenameSpan.textContent = filename;
+            }
             
-            // S'assurer que la classe hidden est enlevée et que l'élément est visible
-            previewDiv.classList.remove('hidden');
-            previewDiv.style.display = 'block';
-            
-            // Scroller vers la preview pour la montrer à l'utilisateur
-            setTimeout(() => {
-                previewDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 100);
+            // Show the image preview container
+            const imagePreview = document.getElementById('image-preview');
+            if (imagePreview) {
+                imagePreview.classList.remove('hidden');
+                imagePreview.style.display = 'block';
+            }
             
             showAlert('success', `✅ Photo capturée et ajoutée à la galerie (${(dataSize/1024).toFixed(0)}KB)`);
         }
@@ -2538,32 +2506,35 @@
             const filename = window.currentPhotoFilename || 'photo.jpg';
             
             try {
-                // Convertir la data URL en blob
-                const binaryString = atob(imageData.split(',')[1]);
-                const bytes = new Uint8Array(binaryString.length);
-                for (let i = 0; i < binaryString.length; i++) {
-                    bytes[i] = binaryString.charCodeAt(i);
-                }
-                const blob = new Blob([bytes], { type: 'image/jpeg' });
-                
-                // Créer une URL blob
-                const blobUrl = URL.createObjectURL(blob);
-                
-                // Créer un lien de téléchargement
-                const link = document.createElement('a');
-                link.href = blobUrl;
-                link.download = filename;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                // Libérer la mémoire
-                setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
-                
-                showAlert('success', `✅ Image téléchargée: ${filename}`);
+                // Convertir data URL en Blob pour meilleure compatibilité mobile
+                fetch(imageData)
+                    .then(res => res.blob())
+                    .then(blob => {
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = filename;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        // Libérer la mémoire
+                        URL.revokeObjectURL(url);
+                        showAlert('success', `✅ Image téléchargée: ${filename}`);
+                    })
+                    .catch(err => {
+                        console.error('Erreur Blob:', err);
+                        // Fallback: utiliser la méthode directe
+                        const link = document.createElement('a');
+                        link.href = imageData;
+                        link.download = filename;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        showAlert('success', `✅ Image téléchargée: ${filename}`);
+                    });
             } catch (error) {
                 console.error('Erreur téléchargement:', error);
-                showAlert('error', `❌ Erreur lors du téléchargement: ${error.message}`);
+                showAlert('error', '❌ Erreur lors du téléchargement');
             }
         }
         
@@ -2797,6 +2768,203 @@
             
             summaryContent.innerHTML = html;
             summary.style.display = 'block';
+        }
+        
+        function exporterExcel(avecImage = true) {
+            const ExcelJS = window.ExcelJS;
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Collecte de Données');
+            
+            // Définir les largeurs de colonnes
+            worksheet.columns = [
+                { width: 40 },
+                { width: 50 }
+            ];
+            
+            let rowCount = 1;
+            
+            // Titre principal
+            const titleRow = worksheet.getRow(rowCount);
+            titleRow.values = ['DIMENSIONNEMENT SONAGED - COLLECTE DE DONNÉES'];
+            titleRow.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 14 };
+            titleRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF667EEA' } };
+            titleRow.alignment = { horizontal: 'center', vertical: 'center' };
+            worksheet.mergeCells(`A${rowCount}:B${rowCount}`);
+            rowCount++;
+            
+            worksheet.getRow(rowCount).height = 5;
+            rowCount++;
+            
+            // Section: Informations du Site
+            const sectionRow1 = worksheet.getRow(rowCount);
+            sectionRow1.values = ['INFORMATIONS DU SITE'];
+            sectionRow1.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 12 };
+            sectionRow1.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF667EEA' } };
+            worksheet.mergeCells(`A${rowCount}:B${rowCount}`);
+            rowCount++;
+            
+            // Données du site
+            const siteData = [
+                ['Région', donnees.region || 'Région de Ziguinchor'],
+                ['Département', donnees.departement],
+                ['Commune', donnees.commune],
+                ['Type d\'Activité', donnees.typeActivite],
+                ['Sites Concernés', donnees.sites_concernes],
+                ['Superficie (ha)', donnees.superficie],
+                ['Besoin en Personnel', donnees.besoinPersonnel],
+                ['Dispositif Déployé', Array.isArray(donnees.dispositifDeploy) ? donnees.dispositifDeploy.join(', ') : donnees.dispositifDeploy],
+                ['Nombre de Rotation', donnees.nombreRotation],
+                ['Infrastructure de Gestion', donnees.infrastructureGestion],
+                ['Fréquence de Collecte', donnees.frequenceCollecte],
+                ['Bacs 240L', donnees.bacs240],
+                ['Caisse Polybene', donnees.caissePolybene],
+                ['Bacs 660L', donnees.bacs660],
+                ['Accessibilité', donnees.accessibilite],
+                ['Observations', donnees.observation]
+            ];
+            
+            siteData.forEach(data => {
+                const row = worksheet.getRow(rowCount);
+                row.values = data;
+                row.font = { name: 'Calibri', size: 11 };
+                row.alignment = { horizontal: 'left', vertical: 'top', wrapText: true };
+                worksheet.getCell(`A${rowCount}`).font = { bold: true, color: { argb: 'FF667EEA' } };
+                worksheet.getCell(`A${rowCount}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF0F0F0' } };
+                rowCount++;
+            });
+            
+            worksheet.getRow(rowCount).height = 5;
+            rowCount++;
+            
+            // Section: Localisation GPS
+            const sectionRow2 = worksheet.getRow(rowCount);
+            sectionRow2.values = ['LOCALISATION GPS'];
+            sectionRow2.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 12 };
+            sectionRow2.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF667EEA' } };
+            worksheet.mergeCells(`A${rowCount}:B${rowCount}`);
+            rowCount++;
+            
+            const gpsData = [
+                ['Latitude', donnees.latitude ? donnees.latitude.toFixed(6) : '--'],
+                ['Longitude', donnees.longitude ? donnees.longitude.toFixed(6) : '--'],
+                ['Précision (m)', donnees.precision || '--']
+            ];
+            
+            gpsData.forEach(data => {
+                const row = worksheet.getRow(rowCount);
+                row.values = data;
+                row.font = { name: 'Calibri', size: 11 };
+                row.alignment = { horizontal: 'left', vertical: 'center' };
+                worksheet.getCell(`A${rowCount}`).font = { bold: true, color: { argb: 'FF667EEA' } };
+                worksheet.getCell(`A${rowCount}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF0F0F0' } };
+                rowCount++;
+            });
+            
+            worksheet.getRow(rowCount).height = 5;
+            rowCount++;
+            
+            // Section: Localisation UTM
+            const sectionRow3 = worksheet.getRow(rowCount);
+            sectionRow3.values = ['LOCALISATION DU SITE (UTM)'];
+            sectionRow3.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 12 };
+            sectionRow3.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFF69B4' } };
+            worksheet.mergeCells(`A${rowCount}:B${rowCount}`);
+            rowCount++;
+            
+            const utmData = [
+                ['Coordonnées X (Easting)', donnees.coordonneeX],
+                ['Coordonnées Y (Northing)', donnees.coordonneeY]
+            ];
+            
+            utmData.forEach(data => {
+                const row = worksheet.getRow(rowCount);
+                row.values = data;
+                row.font = { name: 'Calibri', size: 11 };
+                row.alignment = { horizontal: 'left', vertical: 'center' };
+                worksheet.getCell(`A${rowCount}`).font = { bold: true, color: { argb: 'FF667EEA' } };
+                worksheet.getCell(`A${rowCount}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF0F0F0' } };
+                rowCount++;
+            });
+            
+            worksheet.getRow(rowCount).height = 5;
+            rowCount++;
+            
+            // Section: Photo
+            if (donnees.photo) {
+                const sectionRow4 = worksheet.getRow(rowCount);
+                sectionRow4.values = ['PHOTO CAPTURÉE'];
+                sectionRow4.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 12 };
+                sectionRow4.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF10B981' } };
+                worksheet.mergeCells(`A${rowCount}:B${rowCount}`);
+                rowCount++;
+                
+                // Convertir le canvas/data URL en image et l'ajouter
+                const imageBase64 = donnees.photo.split('data:image/jpeg;base64,')[1] || donnees.photo;
+                const imageId = workbook.addImage({
+                    base64: imageBase64,
+                    extension: 'jpeg'
+                });
+                
+                // Ajouter l'image à la feuille
+                worksheet.addImage(imageId, {
+                    tl: { col: 0, row: rowCount - 1 },
+                    ext: { width: 400, height: 400 }
+                });
+                
+                rowCount += 15;
+            }
+            
+            // Section: Informations de collecte
+            worksheet.getRow(rowCount).height = 5;
+            rowCount++;
+            
+            const sectionRow5 = worksheet.getRow(rowCount);
+            sectionRow5.values = ['INFORMATIONS DE COLLECTE'];
+            sectionRow5.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 12 };
+            sectionRow5.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF667EEA' } };
+            worksheet.mergeCells(`A${rowCount}:B${rowCount}`);
+            rowCount++;
+            
+            const collecteData = [
+                ['Date de Collecte', new Date(donnees.dateCollecte).toLocaleString('fr-FR')],
+                ['Photo Capturée', donnees.photo ? 'Oui' : 'Non']
+            ];
+            
+            collecteData.forEach(data => {
+                const row = worksheet.getRow(rowCount);
+                row.values = data;
+                row.font = { name: 'Calibri', size: 11 };
+                row.alignment = { horizontal: 'left', vertical: 'center' };
+                worksheet.getCell(`A${rowCount}`).font = { bold: true, color: { argb: 'FF667EEA' } };
+                worksheet.getCell(`A${rowCount}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF0F0F0' } };
+                rowCount++;
+            });
+            
+            // Générer et télécharger le fichier
+            workbook.xlsx.writeBuffer().then(buffer => {
+                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `SONAGED_Collecte_${new Date().getTime()}.xlsx`;
+                link.click();
+                URL.revokeObjectURL(url);
+                showAlert('success', '✅ Fichier Excel exporté avec succès!');
+            });
+        }
+        
+        function exporterJSON() {
+            const dataStr = JSON.stringify(donnees, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `collecte_donnees_${new Date().getTime()}.json`;
+            link.click();
+        }
+        
+        function imprimerDonnees() {
+            window.print();
         }
         
         function showAlert(type, message) {
@@ -3382,9 +3550,9 @@ Consultez les logs du serveur pour les détails complets.
             <button class="galerie-nav-button galerie-nav-next" onclick="nextGalerieImage()">❯</button>
             <img class="galerie-modal-image" id="galerie-modal-image" src="" alt="">
             <div class="galerie-modal-counter" id="galerie-modal-counter"></div>
-            <div style="padding: 0 15px 10px 15px;">
-                <button onclick="telechargerGaleriePhoto()" style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s; margin-bottom: 8px;">⬇️ Enregistrer l'Image</button>
-                <button onclick="supprimerGaleriePhoto()" style="width: 100%; background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s;">🗑️ Supprimer l'Image</button>
+            <div style="padding: 0 15px 10px 15px; display: flex; gap: 10px; flex-direction: column;">
+                <button onclick="telechargerGaleriePhoto()" style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s;">⬇️ Enregistrer l'Image</button>
+                <button id="galerie-delete-btn" onclick="supprimerPhotoGalerie()" style="width: 100%; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s;">🗑️ Supprimer l'Image</button>
             </div>
             <div class="galerie-modal-info" id="galerie-modal-info"></div>
         </div>
@@ -3607,6 +3775,72 @@ Consultez les logs du serveur pour les détails complets.
             document.getElementById('galerie-modal').style.display = 'none';
         }
         
+        // 🗑️ Fonction pour supprimer une photo de la galerie
+        function supprimerPhotoGalerie() {
+            const photo = galleriePhotos[currentGalerieIndex];
+            if (!photo) {
+                showAlert('error', '❌ Aucune photo à supprimer');
+                return;
+            }
+            
+            // Confirmation avant suppression
+            if (!confirm(`⚠️ Êtes-vous sûr de vouloir supprimer cette photo de ${photo.commune}?\n\nCette action est irréversible.`)) {
+                return;
+            }
+            
+            try {
+                // 1. Supprimer du tableau galleriePhotos
+                const indexInArray = galleriePhotos.findIndex(p => p.id === photo.id);
+                if (indexInArray !== -1) {
+                    galleriePhotos.splice(indexInArray, 1);
+                }
+                
+                // 2. Retirer l'élément HTML du DOM
+                const galerieScroll = document.querySelector('.galerie-scroll');
+                if (galerieScroll) {
+                    const items = galerieScroll.querySelectorAll('[data-photo-id]');
+                    items.forEach(item => {
+                        if (item.dataset.photoId == photo.id) {
+                            item.remove();
+                        }
+                    });
+                }
+                
+                // 3. Retirer aussi par classe galerie-item si pas encore supprimé
+                const galerieItems = document.querySelectorAll('.galerie-item');
+                for (let i = 0; i < galerieItems.length; i++) {
+                    const text = galerieItems[i].textContent;
+                    if (text.includes(photo.commune)) {
+                        const itemSrc = galerieItems[i].querySelector('img')?.src;
+                        if (itemSrc === photo.src || itemSrc?.includes(photo.site)) {
+                            galerieItems[i].remove();
+                            break;
+                        }
+                    }
+                }
+                
+                // 4. Mettre à jour le compteur
+                const statsNumber = document.querySelector('.galerie-stat-item .galerie-stat-number');
+                if (statsNumber) {
+                    statsNumber.textContent = galleriePhotos.length;
+                }
+                
+                // 5. Si des photos restent, afficher la suivante
+                if (galleriePhotos.length > 0) {
+                    currentGalerieIndex = Math.min(currentGalerieIndex, galleriePhotos.length - 1);
+                    openGalerieModal(currentGalerieIndex);
+                    showAlert('success', `✅ Photo de ${photo.commune} supprimée! (${galleriePhotos.length} restante)`);
+                } else {
+                    // Sinon, fermer le modal
+                    closeGalerieModal();
+                    showAlert('info', `🗑️ Dernière photo supprimée! Galerie vide.`);
+                }
+            } catch (error) {
+                console.error('Erreur suppression:', error);
+                showAlert('error', '❌ Erreur lors de la suppression');
+            }
+        }
+        
         // 📥 Fonction pour télécharger une image de la galerie
         function telechargerGaleriePhoto() {
             const photo = galleriePhotos[currentGalerieIndex];
@@ -3626,84 +3860,15 @@ Consultez les logs du serveur pour les détails complets.
             
             const filename = `photo_${comuneName}_${siteName}_${dateStr}_${timeStr}.jpg`;
             
-            try {
-                // Convertir la data URL en blob
-                const imageData = photo.src;
-                const binaryString = atob(imageData.split(',')[1]);
-                const bytes = new Uint8Array(binaryString.length);
-                for (let i = 0; i < binaryString.length; i++) {
-                    bytes[i] = binaryString.charCodeAt(i);
-                }
-                const blob = new Blob([bytes], { type: 'image/jpeg' });
-                
-                // Créer une URL blob
-                const blobUrl = URL.createObjectURL(blob);
-                
-                // Télécharger l'image
-                const link = document.createElement('a');
-                link.href = blobUrl;
-                link.download = filename;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                // Libérer la mémoire
-                setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
-                
-                console.log(`✅ Image téléchargée: ${filename}`);
-                showAlert('success', `✅ Image téléchargée: ${filename}`);
-            } catch (error) {
-                console.error('Erreur téléchargement:', error);
-                showAlert('error', `❌ Erreur lors du téléchargement: ${error.message}`);
-            }
-        }
-        
-        // 🗑️ Fonction pour supprimer une photo de la galerie
-        function supprimerGaleriePhoto() {
-            const photo = galleriePhotos[currentGalerieIndex];
-            if (!photo) {
-                showAlert('error', '❌ Aucune photo à supprimer');
-                return;
-            }
+            // Télécharger l'image
+            const link = document.createElement('a');
+            link.href = photo.src;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
             
-            // Demander confirmation
-            if (!confirm(`❓ Êtes-vous sûr de vouloir supprimer la photo de ${photo.commune} (${photo.site}) ?`)) {
-                return;
-            }
-            
-            try {
-                // Supprimer de la galerie scroll (élément HTML)
-                const galerieScroll = document.querySelector('.galerie-scroll');
-                if (galerieScroll) {
-                    const items = galerieScroll.querySelectorAll('.galerie-item');
-                    items.forEach((item, idx) => {
-                        // Créer une copie pour comparer les photos
-                        if (galleriePhotos[idx] && galleriePhotos[idx].id === photo.id) {
-                            item.remove();
-                        }
-                    });
-                }
-                
-                // Supprimer du tableau galleriePhotos
-                galleriePhotos.splice(currentGalerieIndex, 1);
-                
-                // Mettre à jour le compteur de statistiques
-                const statsNumber = document.querySelector('.galerie-stat-item .galerie-stat-number');
-                if (statsNumber) {
-                    statsNumber.textContent = galleriePhotos.length;
-                }
-                
-                // Fermer le modal
-                closeGalerieModal();
-                
-                // Afficher le message de succès
-                showAlert('success', `✅ Photo de ${photo.commune} supprimée`);
-                
-                console.log(`🗑️ Photo supprimée: ${photo.commune} - ${photo.site}`);
-            } catch (error) {
-                console.error('Erreur suppression:', error);
-                showAlert('error', `❌ Erreur lors de la suppression: ${error.message}`);
-            }
+            console.log(`✅ Image téléchargée: ${filename}`);
         }
         
         function nextGalerieImage() {
