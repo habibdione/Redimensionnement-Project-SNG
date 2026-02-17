@@ -2942,16 +2942,144 @@ Consultez les logs du serveur pour les détails complets.
     
     <!-- FONCTIONS JAVASCRIPT POUR LA GALERIE PHOTOS -->
     <script>
-        // Données des 8 photos collectées
+        // Données complètes des 8 photos collectées
         const galleriePhotos = [
-            { commune: "Oussouye", partenaire: "SENELEC", site: "Bureau commercial Oussouye", dept: "oussouye-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_12_1.jpg" },
-            { commune: "Diembéring", partenaire: "SENELEC", site: "District Cap-Skirring", dept: "oussouye-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_11_2.jpg" },
-            { commune: "Ziguinchor", partenaire: "SENELEC", site: "Bureau commercial de Boutoute", dept: "ziguinchor-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_10_3.jpg" },
-            { commune: "Niaguis", partenaire: "SENELEC", site: "Centrale électrique de Boutoute", dept: "ziguinchor-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_9_4.jpg" },
-            { commune: "Ziguinchor", partenaire: "SENELEC", site: "Chambre de passage", dept: "ziguinchor-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_8_5.jpg" },
-            { commune: "Ziguinchor", partenaire: "SENELEC", site: "Agence principale", dept: "ziguinchor-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_7_6.jpg" },
-            { commune: "Ziguinchor", partenaire: "SENELEC", site: "Sous station Kankourang", dept: "ziguinchor-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_6_7.jpg" },
-            { commune: "Ziguinchor", partenaire: "SENELEC", site: "Parc à carburant", dept: "ziguinchor-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_5_8.jpg" }
+            { 
+                id: 12,
+                commune: "Oussouye", 
+                partenaire: "SENELEC", 
+                site: "Bureau commercial Oussouye",
+                dept: "Oussouye",
+                region: "Ziguinchor",
+                activites: "Desherbage, Collecte",
+                superficie: "0.00 ha",
+                personnel: "15",
+                dispositifs: "Benne tasseuse",
+                frequence: "F1",
+                accessibilite: "Facile",
+                lat: "12.4906°N",
+                lng: "16.5466°O",
+                src: "./exports/export-2026-02-17T18-16-04/images/photo_12_1.jpg" 
+            },
+            { 
+                id: 11,
+                commune: "Diembéring", 
+                partenaire: "SENELEC", 
+                site: "District Cap-Skirring",
+                dept: "Oussouye",
+                region: "Ziguinchor",
+                activites: "Desherbage, Collecte",
+                superficie: "0.00 ha",
+                personnel: "15",
+                dispositifs: "Benne tasseuse",
+                frequence: "F2",
+                accessibilite: "Facile",
+                lat: "12.3763°N",
+                lng: "16.7300°O",
+                src: "./exports/export-2026-02-17T18-16-04/images/photo_11_2.jpg" 
+            },
+            { 
+                id: 10,
+                commune: "Ziguinchor", 
+                partenaire: "SENELEC", 
+                site: "Bureau commercial de Boutoute",
+                dept: "Ziguinchor",
+                region: "Ziguinchor",
+                activites: "Collecte",
+                superficie: "0.00 ha",
+                personnel: "0",
+                dispositifs: "Benne tasseuse",
+                frequence: "F2",
+                accessibilite: "Facile",
+                lat: "12.5694°N",
+                lng: "16.2776°O",
+                src: "./exports/export-2026-02-17T18-16-04/images/photo_10_3.jpg" 
+            },
+            { 
+                id: 9,
+                commune: "Niaguis", 
+                partenaire: "SENELEC", 
+                site: "Centrale électrique de Boutoute",
+                dept: "Ziguinchor",
+                region: "Ziguinchor",
+                activites: "Levé des dechets vert, Desherbage, Mecanisation, Collecte",
+                superficie: "0.00 ha",
+                personnel: "150",
+                dispositifs: "Pelle Chargeur, Camion BTP, Benne tasseuse",
+                frequence: "F2",
+                accessibilite: "Facile",
+                lat: "12.5871°N",
+                lng: "16.2667°O",
+                src: "./exports/export-2026-02-17T18-16-04/images/photo_9_4.jpg" 
+            },
+            { 
+                id: 8,
+                commune: "Ziguinchor", 
+                partenaire: "SENELEC", 
+                site: "Chambre de passage",
+                dept: "Ziguinchor",
+                region: "Ziguinchor",
+                activites: "Collecte",
+                superficie: "0.00 ha",
+                personnel: "0",
+                dispositifs: "Benne tasseuse",
+                frequence: "F3",
+                accessibilite: "Facile",
+                lat: "12.5843°N",
+                lng: "16.2716°O",
+                src: "./exports/export-2026-02-17T18-16-04/images/photo_8_5.jpg" 
+            },
+            { 
+                id: 7,
+                commune: "Ziguinchor", 
+                partenaire: "SENELEC", 
+                site: "Agence principale",
+                dept: "Ziguinchor",
+                region: "Ziguinchor",
+                activites: "Collecte",
+                superficie: "0.00 ha",
+                personnel: "0",
+                dispositifs: "Benne tasseuse",
+                frequence: "F3",
+                accessibilite: "Facile",
+                lat: "12.5841°N",
+                lng: "16.2716°O",
+                src: "./exports/export-2026-02-17T18-16-04/images/photo_7_6.jpg" 
+            },
+            { 
+                id: 6,
+                commune: "Ziguinchor", 
+                partenaire: "SENELEC", 
+                site: "Sous station Kankourang",
+                dept: "Ziguinchor",
+                region: "Ziguinchor",
+                activites: "Desherbage, Collecte",
+                superficie: "0.00 ha",
+                personnel: "3",
+                dispositifs: "Benne tasseuse",
+                frequence: "F3",
+                accessibilite: "Facile",
+                lat: "12.5828°N",
+                lng: "16.2672°O",
+                src: "./exports/export-2026-02-17T18-16-04/images/photo_6_7.jpg" 
+            },
+            { 
+                id: 5,
+                commune: "Ziguinchor", 
+                partenaire: "SENELEC", 
+                site: "Parc à carburant",
+                dept: "Ziguinchor",
+                region: "Ziguinchor",
+                activites: "Levé des dechets vert, Desherbage",
+                superficie: "0.01 ha",
+                personnel: "30",
+                dispositifs: "Pelle Chargeur, Camion BTP",
+                frequence: "F1",
+                accessibilite: "Facile",
+                lat: "12.5868°N",
+                lng: "16.2649°O",
+                src: "./exports/export-2026-02-17T18-16-04/images/photo_5_8.jpg" 
+            }
         ];
         
         let currentGalerieIndex = 0;
@@ -2964,11 +3092,54 @@ Consultez les logs du serveur pour les détails complets.
             document.getElementById('galerie-modal-image').src = photo.src;
             document.getElementById('galerie-modal-counter').textContent = `${currentGalerieIndex + 1} / ${galleriePhotos.length}`;
             document.getElementById('galerie-modal-info').innerHTML = `
-                <strong style="color: #2d5016; font-size: 14px; display: block; margin-bottom: 8px;">📍 ${photo.commune}</strong>
-                <div style="font-size: 12px; color: #666;">
-                    <div><strong>Site:</strong> ${photo.site}</div>
-                    <div><strong>Partenaire:</strong> ${photo.partenaire}</div>
-                    <div><strong>Département:</strong> ${photo.dept}</div>
+                <div style="padding: 15px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
+                        <h3 style="margin: 0; color: #2d5016; font-size: 16px;">📍 ${photo.commune}</h3>
+                        <span style="background: #f0f8e6; color: #2d5016; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold;">🏷️ ID: ${photo.id}</span>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 12px; color: #333; line-height: 1.6;">
+                        <div>
+                            <strong style="color: #5ba837; display: block; margin-bottom: 4px;">📌 Site</strong>
+                            <span>${photo.site}</span>
+                        </div>
+                        <div>
+                            <strong style="color: #5ba837; display: block; margin-bottom: 4px;">🏢 Partenaire</strong>
+                            <span>${photo.partenaire}</span>
+                        </div>
+                        <div>
+                            <strong style="color: #5ba837; display: block; margin-bottom: 4px;">🗺️ Région/Département</strong>
+                            <span>${photo.region} / ${photo.dept}</span>
+                        </div>
+                        <div>
+                            <strong style="color: #5ba837; display: block; margin-bottom: 4px;">📍 Localisation</strong>
+                            <span>${photo.lat}, ${photo.lng}</span>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <strong style="color: #5ba837; display: block; margin-bottom: 4px;">🎯 Activités</strong>
+                            <span>${photo.activites}</span>
+                        </div>
+                        <div>
+                            <strong style="color: #667eea; display: block; margin-bottom: 4px;">📏 Superficie</strong>
+                            <span>${photo.superficie}</span>
+                        </div>
+                        <div>
+                            <strong style="color: #667eea; display: block; margin-bottom: 4px;">👥 Personnel</strong>
+                            <span>${photo.personnel} personnes</span>
+                        </div>
+                        <div>
+                            <strong style="color: #667eea; display: block; margin-bottom: 4px;">🚗 Dispositifs</strong>
+                            <span>${photo.dispositifs}</span>
+                        </div>
+                        <div>
+                            <strong style="color: #667eea; display: block; margin-bottom: 4px;">📅 Fréquence</strong>
+                            <span>${photo.frequence}</span>
+                        </div>
+                        <div>
+                            <strong style="color: #667eea; display: block; margin-bottom: 4px;">🛣️ Accessibilité</strong>
+                            <span>${photo.accessibilite}</span>
+                        </div>
+                    </div>
                 </div>
             `;
             modal.style.display = 'block';
