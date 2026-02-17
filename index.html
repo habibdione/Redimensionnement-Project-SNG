@@ -994,6 +994,19 @@
                         <button class="success" onclick="validerEtSauvegarder()" style="width: 100%; background: linear-gradient(135deg, #6db038 0%, #5ba837 100%); padding: 14px; font-size: 16px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(109, 176, 56, 0.3); transition: all 0.3s;">💾 Sauvegarder les Données</button>
                     </div>
                 </div>
+                
+                <!-- CARTE DU SÉNÉGAL AVEC POINTS COLLECTÉS -->
+                <div style="margin-top: 30px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                        <span style="background: linear-gradient(135deg, #2d5016 0%, #5ba837 100%); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px;">3</span>
+                        <h2 style="margin: 0;">🗺️ Localisation des Collectes</h2>
+                    </div>
+                    <div id="collecte-map" style="width: 100%; height: 400px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; border: 2px solid #e5e7eb;"></div>
+                    <div style="margin-top: 10px; padding: 12px; background: #f0f8e6; border-left: 4px solid #6db038; border-radius: 4px; font-size: 12px; color: #333;">
+                        <strong>ℹ️ Légende:</strong> Les marqueurs 📍 indiquent les sites collectés. 
+                        Vous pouvez zoomer/dézoomer et cliquer sur les marqueurs pour voir les détails.
+                    </div>
+                </div>
             </div>
             
             <!-- GALERIE PHOTOS COLLECTÉES -->
@@ -2869,6 +2882,145 @@ Consultez les logs du serveur pour les détails complets.
             <div class="galerie-modal-info" id="galerie-modal-info"></div>
         </div>
     </div>
+    
+    <!-- FONCTIONS JAVASCRIPT POUR LA CARTE DES COLLECTES -->
+    <script>
+        // Données géographiques des 8 collectes
+        const collectesGPS = [
+            { id: 12, commune: "Oussouye", partenaire: "SENELEC", site: "Bureau commercial Oussouye", lat: 12.49055100, lng: -16.54658500, photo: "./exports/export-2026-02-17T18-16-04/images/photo_12_1.jpg" },
+            { id: 11, commune: "Diembéring", partenaire: "SENELEC", site: "District Cap-Skirring", lat: 12.37629500, lng: -16.72996200, photo: "./exports/export-2026-02-17T18-16-04/images/photo_11_2.jpg" },
+            { id: 10, commune: "Ziguinchor", partenaire: "SENELEC", site: "Bureau commercial de Boutoute", lat: 12.56943000, lng: -16.27761800, photo: "./exports/export-2026-02-17T18-16-04/images/photo_10_3.jpg" },
+            { id: 9, commune: "Niaguis", partenaire: "SENELEC", site: "Centrale électrique de Boutoute", lat: 12.58711600, lng: -16.26668500, photo: "./exports/export-2026-02-17T18-16-04/images/photo_9_4.jpg" },
+            { id: 8, commune: "Ziguinchor", partenaire: "SENELEC", site: "Chambre de passage", lat: 12.58425300, lng: -16.27164800, photo: "./exports/export-2026-02-17T18-16-04/images/photo_8_5.jpg" },
+            { id: 7, commune: "Ziguinchor", partenaire: "SENELEC", site: "Agence principale", lat: 12.58413100, lng: -16.27159400, photo: "./exports/export-2026-02-17T18-16-04/images/photo_7_6.jpg" },
+            { id: 6, commune: "Ziguinchor", partenaire: "SENELEC", site: "Sous station Kankourang", lat: 12.58277100, lng: -16.26715500, photo: "./exports/export-2026-02-17T18-16-04/images/photo_6_7.jpg" },
+            { id: 5, commune: "Ziguinchor", partenaire: "SENELEC", site: "Parc à carburant", lat: 12.58679000, lng: -16.26486000, photo: "./exports/export-2026-02-17T18-16-04/images/photo_5_8.jpg" }
+        ];
+        
+        // Régions du Sénégal avec leurs coordonnées centrales et noms
+        const senegalRegions = [
+            { name: "Dakar", lat: 14.6928, lng: -17.0467 },
+            { name: "Saint-Louis", lat: 16.0255, lng: -16.4861 },
+            { name: "Tambacounda", lat: 13.7768, lng: -13.7707 },
+            { name: "Kaolack", lat: 13.1609, lng: -15.0277 },
+            { name: "Ziguinchor", lat: 13.1549, lng: -15.5828 },
+            { name: "Louga", lat: 15.6167, lng: -15.6167 },
+            { name: "Kolda", lat: 13.1662, lng: -14.9428 },
+            { name: "Diourbel", lat: 14.6667, lng: -16.2500 },
+            { name: "Thiès", lat: 14.7833, lng: -16.9333 },
+            { name: "Guédiawaye", lat: 14.6833, lng: -17.45 },
+            { name: "Méguetane", lat: 14.5333, lng: -15.1333 }
+        ];
+        
+        // Initialiser la carte une fois que le DOM est prêt
+        function initializeCollecteMap() {
+            const mapContainer = document.getElementById('collecte-map');
+            if (!mapContainer) return;
+            
+            // Créer la carte centrée sur Ziguinchor
+            const collecteMap = L.map('collecte-map').setView([12.9, -16.0], 9);
+            
+            // Ajouter la couche de base OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19,
+                minZoom: 6
+            }).addTo(collecteMap);
+            
+            // Ajouter les régions comme étiquettes
+            senegalRegions.forEach(region => {
+                L.circleMarker([region.lat, region.lng], {
+                    radius: 0,
+                    fillOpacity: 0,
+                    opacity: 0
+                })
+                .bindPopup(`<strong style="color: #667eea;">${region.name}</strong><br><small>Région du Sénégal</small>`)
+                .addTo(collecteMap);
+                
+                // Ajouter l'étiquette du nom de région
+                L.marker([region.lat, region.lng], {
+                    icon: L.divIcon({
+                        className: 'senegal-region-label',
+                        html: `<div style="color: #999; font-size: 10px; font-weight: bold; text-align: center; width: 60px; background: rgba(255,255,255,0.7); padding: 2px; border-radius: 3px; white-space: nowrap;">${region.name}</div>`,
+                        iconSize: [60, 20],
+                        iconAnchor: [30, 10]
+                    })
+                }).addTo(collecteMap);
+            });
+            
+            // Ajouter les marqueurs des collectes
+            collectesGPS.forEach((collecte, idx) => {
+                // Créer une icône personnalisée
+                const customIcon = L.divIcon({
+                    className: 'custom-collecte-marker',
+                    html: `<div style="
+                        background: linear-gradient(135deg, #6db038 0%, #5ba837 100%);
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: white;
+                        font-size: 18px;
+                        border: 3px solid white;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                    ">📍</div>`,
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 15]
+                });
+                
+                // Créer le contenu du popup
+                const popupContent = `
+                    <div style="font-size: 12px;">
+                        <strong style="color: #6db038; font-size: 13px;">📌 ${collecte.commune}</strong><br>
+                        <small style="color: #666;">
+                            <strong>Site:</strong> ${collecte.site}<br>
+                            <strong>Partenaire:</strong> ${collecte.partenaire}<br>
+                            <strong>Coordonnées:</strong> ${collecte.lat.toFixed(4)}, ${collecte.lng.toFixed(4)}<br>
+                            <strong>ID:</strong> Collecte #${collecte.id}<br>
+                            <a href="${collecte.photo}" target="_blank" style="color: #667eea; text-decoration: none;">📷 Voir Photo</a>
+                        </small>
+                    </div>
+                `;
+                
+                // Ajouter le marqueur à la carte
+                const marker = L.marker([collecte.lat, collecte.lng], { icon: customIcon })
+                    .bindPopup(popupContent)
+                    .bindTooltip(`${collecte.commune}`, { permanent: false, direction: 'top' })
+                    .addTo(collecteMap);
+            });
+            
+            // Ajouter une légende
+            const legend = L.control({ position: 'bottomright' });
+            legend.onAdd = function() {
+                const div = L.DomUtil.create('div', 'info');
+                div.style.background = 'white';
+                div.style.padding = '10px';
+                div.style.borderRadius = '5px';
+                div.style.boxShadow = '0 0 15px rgba(0,0,0,0.2)';
+                div.style.fontSize = '12px';
+                div.innerHTML = `
+                    <strong style="color: #333; display: block; margin-bottom: 8px;">📊 Statistiques</strong>
+                    <div style="color: #666;">
+                        <div><strong>📍 Sites:</strong> ${collectesGPS.length}</div>
+                        <div><strong>🗺️ Région:</strong> Ziguinchor</div>
+                        <div><strong>🏢 Partenaire:</strong> SENELEC</div>
+                        <div style="margin-top: 8px; color: #999; font-size: 11px;">
+                            💡 Cliquez sur les marqueurs<br>pour voir les détails
+                        </div>
+                    </div>
+                `;
+                return div;
+            };
+            legend.addTo(collecteMap);
+        }
+        
+        // Initialiser la carte quand le document est complètement chargé
+        window.addEventListener('load', function() {
+            setTimeout(initializeCollecteMap, 500);
+        });
+    </script>
     
     <!-- FONCTIONS JAVASCRIPT POUR LA GALERIE -->
     <script>
