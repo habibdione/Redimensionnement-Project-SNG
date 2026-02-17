@@ -22,9 +22,6 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Import du service de synchronisation Excel
-const syncService = require('./sync-service');
-
 dotenv.config();
 
 const app = express();
@@ -297,11 +294,6 @@ app.post('/api/collecte', async (req, res) => {
                 observation: values[21],
                 photo_path: null
             };
-            
-            // Appeler la synchronisation sans bloquer
-            syncService.onCollecteCreated(collecteData).catch(err => {
-                console.warn('⚠️  Erreur synchronisation Excel:', err.message);
-            });
         }
 
         res.status(201).json({
@@ -629,14 +621,6 @@ async function startServer() {
         // Initialiser la base de données
         await initDatabase();
         console.log('✅ Base de données initialisée');
-        
-        // Initialiser le service de synchronisation Excel
-        const excelEnabled = syncService.initializeSyncService();
-        if (excelEnabled) {
-            console.log('✅ Service de synchronisation Excel activé');
-            // Démarrer la synchronisation périodique (toutes les heures)
-            syncService.startPeriodicSync(3600000);
-        }
 
         const server = app.listen(PORT, () => {
             console.log(`
