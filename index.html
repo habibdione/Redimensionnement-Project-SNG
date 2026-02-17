@@ -133,6 +133,251 @@
             padding: 30px;
         }
         
+        /* ===== ANIMATIONS FLUIDES ===== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        /* Animations des sections */
+        .section {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .form-group {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .galerie-container {
+            animation: slideInRight 0.7s ease-out;
+        }
+        
+        /* Animations des boutons */
+        button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important;
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        /* Animation des inputs */
+        input, select, textarea {
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            transform: scale(1.01);
+            box-shadow: 0 0 0 3px rgba(109, 176, 56, 0.1) !important;
+        }
+        
+        /* Animation des cartes galerie */
+        .galerie-item {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .galerie-item img {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .galerie-item:hover img {
+            transform: scale(1.08);
+        }
+        
+        /* Animation du modal */
+        .galerie-modal {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .galerie-modal-content {
+            animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        /* Animation des alertes */
+        .alert {
+            animation: slideInRight 0.4s ease-out;
+        }
+        
+        /* Animation des marqueurs carte */
+        .leaflet-marker-icon {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        /* Animation smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Animation du compteur d'images */
+        .galerie-counter {
+            animation: fadeIn 0.5s ease-out 0.2s both;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 16px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Animation du bouton de téléchargement */
+        .telecharger-btn {
+            animation: fadeIn 0.5s ease-out 0.3s both;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .telecharger-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 24px rgba(109, 176, 56, 0.4);
+            background-color: #5aa332 !important;
+        }
+        
+        /* Animation des infos photo */
+        .galerie-info {
+            animation: slideInLeft 0.5s ease-out 0.2s both;
+        }
+        
+        .galerie-detail-item {
+            animation: fadeIn 0.4s ease-out;
+            transition: all 0.3s ease;
+            padding: 10px;
+            border-left: 3px solid transparent;
+        }
+        
+        .galerie-detail-item:hover {
+            border-left-color: #6db038;
+            background-color: rgba(109, 176, 56, 0.1);
+            transform: translateX(5px);
+        }
+        
+        /* Animation des boutons de navigation */
+        .galerie-nav-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .galerie-nav-button:hover {
+            transform: scale(1.15) translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .galerie-nav-button:active {
+            transform: scale(0.95);
+        }
+        
+        /* Animation de l'en-tête */
+        .header {
+            animation: slideInDown 0.7s ease-out;
+        }
+        
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Animation du logo */
+        .header-logo-container img {
+            animation: fadeIn 0.8s ease-out, float 3s ease-in-out 0.8s infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Animation des cartes de stats */
+        .stats-card {
+            animation: scaleIn 0.5s ease-out;
+            transition: all 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+        }
+        
+        /* Animation des titres */
+        h1, h2, h3 {
+            transition: all 0.3s ease;
+        }
+        
+        h2:hover {
+            color: #6db038;
+            text-shadow: 0 4px 8px rgba(109, 176, 56, 0.3);
+        }
+        
+        /* Désactiver les animations sur les médias réduits */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+        
         @media (max-width: 900px) {
             .content {
                 grid-template-columns: 1fr;
@@ -188,6 +433,221 @@
         select[multiple] option {
             padding: 10px 5px;
             line-height: 1.6;
+        }
+        
+        /* ===== ANIMATIONS DE FORMULAIRE ===== */
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f8e6 100%);
+            border-color: #6db038 !important;
+            box-shadow: 0 0 0 4px rgba(109, 176, 56, 0.1) !important;
+            transform: translateY(-1px);
+        }
+        
+        /* Animation de la vidéo */
+        video, canvas {
+            transition: all 0.4s ease;
+        }
+        
+        video:not([style*="display: none"]),
+        canvas:not([style*="display: none"]) {
+            animation: slideInLeft 0.5s ease-out;
+        }
+        
+        /* Animation de la carte */
+        #map, #collecte-map {
+            transition: all 0.5s ease;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        /* Animation du preview image */
+        #image-preview {
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        #preview-img {
+            animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        /* ===== ANIMATIONS DES ALERTES ET MESSAGES ===== */
+        .alert-box {
+            animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
+        }
+        
+        .alert-box:hover {
+            transform: translateX(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        /* Animation du résumé */
+        #resume-section {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .data-summary {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .data-item {
+            animation: slideInLeft 0.4s ease-out;
+            transition: all 0.3s ease;
+        }
+        
+        .data-item:hover {
+            transform: translateX(4px);
+        }
+        
+        /* ===== ANIMATIONS DES STATISTIQUES ===== */
+        .galerie-stat-item {
+            animation: scaleIn 0.5s ease-out;
+            transition: all 0.3s ease;
+        }
+        
+        .galerie-stat-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .galerie-stat-number {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        /* ===== ANIMATIONS DES BOUTONS ===== */
+        .success, .danger, .info {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .success:hover, .danger:hover, .info:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .success:active, .danger:active, .info:active {
+            transform: translateY(-1px);
+        }
+        
+        /* Effet de ripple au clic */
+        .success::after, .danger::after, .info::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .success:active::after, .danger:active::after, .info:active::after {
+            width: 300px;
+            height: 300px;
+        }
+        
+        /* ===== ANIMATIONS SPÉCIALES ===== */
+        /* Animation de chargement */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        /* Animation de succès */
+        @keyframes checkmark {
+            0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: scale(1) rotate(0); opacity: 1; }
+        }
+        
+        /* Animation de l'en-tête */
+        .header {
+            animation: slideInDown 0.7s ease-out;
+        }
+        
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Animation du conteneur principal */
+        .container {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        /* Animation des cartes de stats */
+        .stats-card {
+            animation: scaleIn 0.5s ease-out;
+            transition: all 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+        }
+        
+        /* Animation du logo au chargement */
+        .header-logo-container img {
+            animation: fadeIn 0.8s ease-out, float 3s ease-in-out 0.8s infinite;
+        }
+        
+        /* Animation des titres */
+        h1, h2, h3 {
+            transition: all 0.3s ease;
+        }
+        
+        h2:hover {
+            color: #6db038;
+            text-shadow: 0 4px 8px rgba(109, 176, 56, 0.3);
+        }
+        
+        /* Animation des liens */
+        a {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        a:hover {
+            color: #6db038;
+        }
+        
+        /* Animation des icônes */
+        .icon {
+            transition: all 0.3s ease;
+        }
+        
+        .icon:hover {
+            transform: rotate(10deg) scale(1.1);
+        }
+        
+        /* Animation smooth pour les transitions */
+        * {
+            transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        /* Désactiver les animations sur les médias réduits */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
         }
         
         select[multiple] option:checked {
@@ -669,11 +1129,12 @@
             display: flex;
             flex-direction: column;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            animation: fadeIn 0.5s ease-out;
         }
 
         .galerie-item:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 20px rgba(45, 80, 22, 0.25);
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 12px 28px rgba(45, 80, 22, 0.25);
             border-color: #6db038;
         }
 
@@ -794,7 +1255,7 @@
             padding: 10px 15px;
             cursor: pointer;
             border-radius: 4px;
-            transition: background 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 2002;
             width: 45px;
             height: 45px;
@@ -805,6 +1266,12 @@
 
         .galerie-nav-button:hover {
             background: rgba(0,0,0,0.8);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        }
+
+        .galerie-nav-button:active {
+            transform: translateY(-50%) scale(0.95);
         }
 
         .galerie-nav-prev {
