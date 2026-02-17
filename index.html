@@ -1392,10 +1392,10 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="superficie">Superficie (ha) <span style="color: red;">*</span></label>
+                    <label for="superficie">Superficie (m²) <span style="color: red;">*</span></label>
                     <div style="display: flex; gap: 8px; align-items: end;">
                         <div style="flex: 1;">
-                            <input type="number" id="superficie" placeholder="ex: 2.81" step="0.01" required onchange="validerChamp('superficie');">
+                            <input type="number" id="superficie" placeholder="ex: 28100" step="0.01" required onchange="validerChamp('superficie');">
                             <small class="error-msg" id="error-superficie" style="color: red; display: none;">⚠️ Superficie obligatoire</small>
                         </div>
                         <button type="button" onclick="calculerSuperficie()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; white-space: nowrap; font-weight: 600; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);">📐 Calculer</button>
@@ -2450,7 +2450,7 @@
                 dept: deptName,
                 region: regionName,
                 activites: activites.join(", "),
-                superficie: document.getElementById('superficie')?.value || "0.00 ha",
+                superficie: document.getElementById('superficie')?.value || "0 m²",
                 personnel: document.getElementById('personnel')?.value || "0",
                 dispositifs: document.getElementById('dispositif')?.value || "N/A",
                 frequence: document.getElementById('frequence')?.value || "F1",
@@ -2734,12 +2734,31 @@
                             const marker = L.marker([coords.latitude, coords.longitude], {
                                 icon: L.divIcon({
                                     className: 'gps-point-marker',
-                                    html: `<div style="background: #6db038; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; border: 2px white solid; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">${gpsPointsForSurface.length}</div>`,
-                                    iconSize: [30, 30],
-                                    iconAnchor: [15, 15]
+                                    html: `<div style="background: #6db038; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; border: 3px white solid; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">${gpsPointsForSurface.length}</div>`,
+                                    iconSize: [35, 35],
+                                    iconAnchor: [17, 17]
                                 })
                             }).addTo(map);
                             gpsMarkers.push(marker);
+                            
+                            // 🔴 Dessiner le polygone progressivement
+                            if (gpsPointsForSurface.length >= 2) {
+                                // Si on a déjà au moins 2 points, tracer des lignes
+                                const latlngs = gpsPointsForSurface.map(p => [p.lat, p.lng]);
+                                
+                                // Supprimer l'ancien polyline
+                                if (gpsPolygon) {
+                                    map.removeLayer(gpsPolygon);
+                                }
+                                
+                                // Tracer une polyline (pas encore fermée)
+                                gpsPolygon = L.polyline(latlngs, {
+                                    color: '#6db038',
+                                    weight: 3,
+                                    opacity: 0.8,
+                                    dashArray: '5, 5'
+                                }).addTo(map);
+                            }
                         }
                         
                         showAlert('success', `✅ Point ${gpsPointsForSurface.length} enregistré (Précision: ${coords.accuracy.toFixed(0)}m)`);
@@ -2784,7 +2803,7 @@
             }
             
             // Calculer la superficie
-            const surfaceHa = calculatePolygonArea(gpsPointsForSurface);
+            const surfaceM2 = calculatePolygonArea(gpsPointsForSurface);
             
             // Afficher le polygone sur la carte (si disponible)
             if (map) {
@@ -2796,7 +2815,8 @@
                     color: '#6db038',
                     weight: 2,
                     opacity: 0.8,
-                    fillOpacity: 0.3
+                    fillOpacity: 0.3,
+                    fillColor: '#6db038'
                 }).addTo(map);
                 
                 // Adapter la vue à la map
@@ -2804,37 +2824,54 @@
                 map.fitBounds(group.getBounds());
             }
             
-            // Mettre à jour le champ Superficie
+            // Mettre à jour le champ Superficie (en m²)
             const surficieInput = document.getElementById('superficie');
-            surficieInput.value = surfaceHa.toFixed(2);
+            surficieInput.value = surfaceM2.toFixed(2);
             
-            showAlert('success', `✅ Superficie calculée: ${surfaceHa.toFixed(2)} ha (${gpsPointsForSurface.length} points)`);
+            showAlert('success', `✅ Superficie calculée: ${surfaceM2.toFixed(2)} m² (${gpsPointsForSurface.length} points)`);
         }
         
-        // Formule Shoelace pour calculer l'aire d'un polygone en coordonnées GPS
+        // Formule correcte pour calculer l'aire d'un polygone en coordonnées GPS (en m²)
         function calculatePolygonArea(points) {
             if (points.length < 3) return 0;
             
-            // Convertir en radians
-            const toRadian = (degree) => (degree * Math.PI) / 180;
+            // Utiliser la projection Mercator approximative pour de petites zones
+            const EARTH_RADIUS = 6371000; // Rayon terrain en mètres
             
-            // Calculer l'aire en km² en utilisant la formule Shoelace en coordonnées sphériques
-            let area = 0;
-            const R = 6371000; // Rayon de la Terre en mètres
-            
-            for (let i = 0; i < points.length; i++) {
-                const lat1 = toRadian(points[i].lat);
-                const lon1 = toRadian(points[i].lng);
-                const lat2 = toRadian(points[(i + 1) % points.length].lat);
-                const lon2 = toRadian(points[(i + 1) % points.length].lng);
+            // Convertir les coordonnées GPS en coordonnées relatives (x, y) en mètres
+            // Basées sur une projection équirectangulaire centrée en haut-centre de la zone
+            const convertToMeters = (point, refPoint) => {
+                const latDiff = (point.lat - refPoint.lat) * Math.PI / 180;
+                const lonDiff = (point.lng - refPoint.lng) * Math.PI / 180;
+                const avgLat = (point.lat + refPoint.lat) / 2 * Math.PI / 180;
                 
-                area += (lon2 - lon1) * (2 + Math.sin(lat1) + Math.sin(lat2));
+                const x = EARTH_RADIUS * lonDiff * Math.cos(avgLat);
+                const y = EARTH_RADIUS * latDiff;
+                
+                return { x, y };
+            };
+            
+            // Point de référence (premier point)
+            const refPoint = points[0];
+            
+            // Convertir tous les points en coordonnées cartésiennes
+            const xys = points.map(p => convertToMeters(p, refPoint));
+            
+            // Appliquer la formule Shoelace
+            let area = 0;
+            for (let i = 0; i < xys.length; i++) {
+                const x1 = xys[i].x;
+                const y1 = xys[i].y;
+                const x2 = xys[(i + 1) % xys.length].x;
+                const y2 = xys[(i + 1) % xys.length].y;
+                
+                area += x1 * y2 - x2 * y1;
             }
             
-            area = Math.abs(area * R * R / 2);
+            area = Math.abs(area) / 2;
             
-            // Convertir en hectares (1 ha = 10000 m²)
-            return area / 10000;
+            // Retourner en m²
+            return area;
         }
         
         // Formulaire
