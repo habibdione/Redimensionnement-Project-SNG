@@ -22,6 +22,9 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+// Import du service de synchronisation Excel
+const syncService = require('./sync-service');
+
 dotenv.config();
 
 const app = express();
@@ -266,6 +269,40 @@ app.post('/api/collecte', async (req, res) => {
         console.log('   ID enregistrement:', result.rows[0].id);
         console.log('   Date collecte:', result.rows[0].date_collecte);
         console.log('='.repeat(80) + '\n');
+
+        // 📊 Synchroniser automatiquement vers Excel en arrière-plan
+        if (excelEnabled !== undefined) {
+            const collecteData = {
+                id: result.rows[0].id,
+                region: values[1],
+                dept: values[2],
+                commune: values[3],
+                activites: values[4],
+                site: values[5],
+                superficie: values[6],
+                personnel: values[7],
+                dispositifs: values[8],
+                nombre_rotation: values[9],
+                infrastructure_gestion: values[10],
+                frequence: values[11],
+                bacs_240l: values[12],
+                caisse_polybene: values[13],
+                bacs_660l: values[14],
+                accessibilite: values[15],
+                latitude: values[16],
+                longitude: values[17],
+                precision: values[18],
+                coord_x: values[19],
+                coord_y: values[20],
+                observation: values[21],
+                photo_path: null
+            };
+            
+            // Appeler la synchronisation sans bloquer
+            syncService.onCollecteCreated(collecteData).catch(err => {
+                console.warn('⚠️  Erreur synchronisation Excel:', err.message);
+            });
+        }
 
         res.status(201).json({
             success: true,
@@ -592,6 +629,14 @@ async function startServer() {
         // Initialiser la base de données
         await initDatabase();
         console.log('✅ Base de données initialisée');
+        
+        // Initialiser le service de synchronisation Excel
+        const excelEnabled = syncService.initializeSyncService();
+        if (excelEnabled) {
+            console.log('✅ Service de synchronisation Excel activé');
+            // Démarrer la synchronisation périodique (toutes les heures)
+            syncService.startPeriodicSync(3600000);
+        }
 
         const server = app.listen(PORT, () => {
             console.log(`
