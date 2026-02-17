@@ -382,7 +382,38 @@
             .content {
                 grid-template-columns: 1fr;
             }
+            
+            /* Boutons d'action sticky sur mobile */
+            .sticky-action-buttons {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: linear-gradient(to top, white 0%, white 85%, rgba(255,255,255,0) 100%);
+                padding: 15px 20px 20px 20px;
+                z-index: 500;
+                box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+                animation: slideInUp 0.3s ease-out;
+            }
+            
+            .sticky-action-buttons > div {
+                display: flex;
+                gap: 10px;
+                flex-direction: column;
+            }
+            
+            .sticky-action-buttons button {
+                padding: 12px;
+                font-size: 14px;
+                width: 100%;
+            }
+            
+            /* Ajouter du padding au contenu pour qu'il ne soit pas sous les boutons */
+            .content {
+                padding-bottom: 200px;
+            }
         }
+        
         
         .section {
             display: flex;
@@ -1528,7 +1559,7 @@
                 </div>
                 
                 <!-- BOUTONS D'ACTION - EN BAS DE TOUS LES CHAMPS -->
-                <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); padding: 25px; border-radius: 12px; border-top: 3px solid #6db038; margin-top: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                <div class="sticky-action-buttons" style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); padding: 25px; border-radius: 12px; border-top: 3px solid #6db038; margin-top: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
                     <div style="display: flex; gap: 15px; flex-direction: column;">
                         <button class="success" onclick="afficherResume()" style="width: 100%; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); padding: 14px; font-size: 16px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); transition: all 0.3s;">👁️ Voir le Résumé</button>
                         <button class="success" onclick="validerEtSauvegarder()" style="width: 100%; background: linear-gradient(135deg, #6db038 0%, #5ba837 100%); padding: 14px; font-size: 16px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(109, 176, 56, 0.3); transition: all 0.3s;">💾 Sauvegarder les Données</button>
@@ -2477,14 +2508,26 @@
                 statsNumber.textContent = galleriePhotos.length;
             }
             
-            document.getElementById('preview-img').src = imageData;
+            // Afficher la preview avec animation
+            const previewDiv = document.getElementById('image-preview');
+            const previewImg = document.getElementById('preview-img');
+            
+            previewImg.src = imageData;
             document.getElementById('photo-filename').textContent = filename;
-            document.getElementById('image-preview').classList.remove('hidden');
+            
+            // S'assurer que la classe hidden est enlevée et que l'élément est visible
+            previewDiv.classList.remove('hidden');
+            previewDiv.style.display = 'block';
+            
+            // Scroller vers la preview pour la montrer à l'utilisateur
+            setTimeout(() => {
+                previewDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
             
             showAlert('success', `✅ Photo capturée et ajoutée à la galerie (${(dataSize/1024).toFixed(0)}KB)`);
         }
         
-        // 📥 Fonction pour télécharger l'image
+        // 📥 Fonction pour télécharger l'image (compatible mobile)
         function telechargerPhoto() {
             const imageData = donnees.photo;
             if (!imageData) {
@@ -2494,15 +2537,34 @@
             
             const filename = window.currentPhotoFilename || 'photo.jpg';
             
-            // Créer un lien de téléchargement
-            const link = document.createElement('a');
-            link.href = imageData;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            showAlert('success', `✅ Image téléchargée: ${filename}`);
+            try {
+                // Convertir la data URL en blob
+                const binaryString = atob(imageData.split(',')[1]);
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                const blob = new Blob([bytes], { type: 'image/jpeg' });
+                
+                // Créer une URL blob
+                const blobUrl = URL.createObjectURL(blob);
+                
+                // Créer un lien de téléchargement
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Libérer la mémoire
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+                
+                showAlert('success', `✅ Image téléchargée: ${filename}`);
+            } catch (error) {
+                console.error('Erreur téléchargement:', error);
+                showAlert('error', `❌ Erreur lors du téléchargement: ${error.message}`);
+            }
         }
         
         function effacerPhoto() {
@@ -3518,7 +3580,8 @@ Consultez les logs du serveur pour les détails complets.
             <img class="galerie-modal-image" id="galerie-modal-image" src="" alt="">
             <div class="galerie-modal-counter" id="galerie-modal-counter"></div>
             <div style="padding: 0 15px 10px 15px;">
-                <button onclick="telechargerGaleriePhoto()" style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s;">⬇️ Enregistrer l'Image</button>
+                <button onclick="telechargerGaleriePhoto()" style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s; margin-bottom: 8px;">⬇️ Enregistrer l'Image</button>
+                <button onclick="supprimerGaleriePhoto()" style="width: 100%; background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s;">🗑️ Supprimer l'Image</button>
             </div>
             <div class="galerie-modal-info" id="galerie-modal-info"></div>
         </div>
@@ -3760,15 +3823,84 @@ Consultez les logs du serveur pour les détails complets.
             
             const filename = `photo_${comuneName}_${siteName}_${dateStr}_${timeStr}.jpg`;
             
-            // Télécharger l'image
-            const link = document.createElement('a');
-            link.href = photo.src;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            try {
+                // Convertir la data URL en blob
+                const imageData = photo.src;
+                const binaryString = atob(imageData.split(',')[1]);
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                const blob = new Blob([bytes], { type: 'image/jpeg' });
+                
+                // Créer une URL blob
+                const blobUrl = URL.createObjectURL(blob);
+                
+                // Télécharger l'image
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Libérer la mémoire
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+                
+                console.log(`✅ Image téléchargée: ${filename}`);
+                showAlert('success', `✅ Image téléchargée: ${filename}`);
+            } catch (error) {
+                console.error('Erreur téléchargement:', error);
+                showAlert('error', `❌ Erreur lors du téléchargement: ${error.message}`);
+            }
+        }
+        
+        // 🗑️ Fonction pour supprimer une photo de la galerie
+        function supprimerGaleriePhoto() {
+            const photo = galleriePhotos[currentGalerieIndex];
+            if (!photo) {
+                showAlert('error', '❌ Aucune photo à supprimer');
+                return;
+            }
             
-            console.log(`✅ Image téléchargée: ${filename}`);
+            // Demander confirmation
+            if (!confirm(`❓ Êtes-vous sûr de vouloir supprimer la photo de ${photo.commune} (${photo.site}) ?`)) {
+                return;
+            }
+            
+            try {
+                // Supprimer de la galerie scroll (élément HTML)
+                const galerieScroll = document.querySelector('.galerie-scroll');
+                if (galerieScroll) {
+                    const items = galerieScroll.querySelectorAll('.galerie-item');
+                    items.forEach((item, idx) => {
+                        // Créer une copie pour comparer les photos
+                        if (galleriePhotos[idx] && galleriePhotos[idx].id === photo.id) {
+                            item.remove();
+                        }
+                    });
+                }
+                
+                // Supprimer du tableau galleriePhotos
+                galleriePhotos.splice(currentGalerieIndex, 1);
+                
+                // Mettre à jour le compteur de statistiques
+                const statsNumber = document.querySelector('.galerie-stat-item .galerie-stat-number');
+                if (statsNumber) {
+                    statsNumber.textContent = galleriePhotos.length;
+                }
+                
+                // Fermer le modal
+                closeGalerieModal();
+                
+                // Afficher le message de succès
+                showAlert('success', `✅ Photo de ${photo.commune} supprimée`);
+                
+                console.log(`🗑️ Photo supprimée: ${photo.commune} - ${photo.site}`);
+            } catch (error) {
+                console.error('Erreur suppression:', error);
+                showAlert('error', `❌ Erreur lors de la suppression: ${error.message}`);
+            }
         }
         
         function nextGalerieImage() {
