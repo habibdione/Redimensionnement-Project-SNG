@@ -2402,11 +2402,23 @@
             // 🔑 Récupérer le site et créer le nom du fichier
             const siteElement = document.getElementById('adresse');
             const communeElement = document.getElementById('commune');
+            const regionElement = document.getElementById('region');
+            const departementElement = document.getElementById('departement');
+            const activitesElement = document.getElementById('activites-group');
             
             let siteName = siteElement ? siteElement.value.trim() : 'site_inconnu';
             let communeName = communeElement ? communeElement.options[communeElement.selectedIndex]?.text : 'commune';
+            let regionName = regionElement ? regionElement.options[regionElement.selectedIndex]?.text : 'region';
+            let deptName = departementElement ? departementElement.options[departementElement.selectedIndex]?.text : 'dept';
             
-            // Nettoyer le nom du site (supprimer caractères spéciaux)
+            // Récupérer les activités sélectionnées
+            let activites = [];
+            if (activitesElement) {
+                const checkboxes = activitesElement.querySelectorAll('input[type="checkbox"]:checked');
+                activites = Array.from(checkboxes).map(cb => cb.labels[0].textContent.trim());
+            }
+            
+            // Nettoyer les noms (supprimer caractères spéciaux)
             siteName = siteName.replace(/[^a-zA-Z0-9-]/g, '_').substring(0, 30);
             communeName = communeName.replace(/[^a-zA-Z0-9-]/g, '_').substring(0, 20);
             
@@ -2419,11 +2431,57 @@
             // Stocker le filename pour le téléchargement
             window.currentPhotoFilename = filename;
             
+            // 📸 Créer un nouvel objet photo pour la galerie
+            const newPhoto = {
+                id: galleriePhotos.length + 1,
+                commune: communeName,
+                partenaire: "SONAGED",
+                site: siteName,
+                dept: deptName,
+                region: regionName,
+                activites: activites.join(", "),
+                superficie: document.getElementById('superficie')?.value || "0.00 ha",
+                personnel: document.getElementById('personnel')?.value || "0",
+                dispositifs: document.getElementById('dispositif')?.value || "N/A",
+                frequence: document.getElementById('frequence')?.value || "F1",
+                accessibilite: document.getElementById('accessibilite')?.value || "Facile",
+                lat: "0.0000°N",
+                lng: "0.0000°O",
+                src: imageData // Photo en base64
+            };
+            
+            // Ajouter la photo à la galerie
+            galleriePhotos.unshift(newPhoto); // Ajouter au début
+            
+            // Ajouter l'élément HTML à la galerie
+            const galerieScroll = document.querySelector('.galerie-scroll');
+            if (galerieScroll) {
+                const newItem = document.createElement('div');
+                newItem.className = 'galerie-item';
+                newItem.dataset.photoId = newPhoto.id; // Ajouter un data attribute pour identifier
+                newItem.onclick = () => openGalerieModalByPhotoId(newPhoto.id); // Chercher par ID
+                newItem.innerHTML = `
+                    <img class="galerie-item-image" src="${imageData}" alt="${siteName}">
+                    <div class="galerie-item-info">
+                        <div class="galerie-item-detail"><strong>Partenaire:</strong> SONAGED</div>
+                        <div class="galerie-item-commune">📍 ${communeName}</div>
+                        <div class="galerie-item-detail"><strong>Site:</strong> ${siteName}</div>
+                    </div>
+                `;
+                galerieScroll.insertBefore(newItem, galerieScroll.firstChild);
+            }
+            
+            // Mettre à jour les statistiques
+            const statsNumber = document.querySelector('.galerie-stat-item .galerie-stat-number');
+            if (statsNumber) {
+                statsNumber.textContent = galleriePhotos.length;
+            }
+            
             document.getElementById('preview-img').src = imageData;
             document.getElementById('photo-filename').textContent = filename;
             document.getElementById('image-preview').classList.remove('hidden');
             
-            showAlert('success', `✅ Photo capturée (${(dataSize/1024).toFixed(0)}KB)`);
+            showAlert('success', `✅ Photo capturée et ajoutée à la galerie (${(dataSize/1024).toFixed(0)}KB)`);
         }
         
         // 📥 Fonction pour télécharger l'image
@@ -3609,6 +3667,14 @@ Consultez les logs du serveur pour les détails complets.
         ];
         
         let currentGalerieIndex = 0;
+        
+        // Fonction helper pour trouver et ouvrir une photo par son ID
+        function openGalerieModalByPhotoId(photoId) {
+            const index = galleriePhotos.findIndex(photo => photo.id === photoId);
+            if (index !== -1) {
+                openGalerieModal(index);
+            }
+        }
         
         function openGalerieModal(index) {
             currentGalerieIndex = index;
