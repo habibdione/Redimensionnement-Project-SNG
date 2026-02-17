@@ -1393,8 +1393,14 @@
                 
                 <div class="form-group">
                     <label for="superficie">Superficie (ha) <span style="color: red;">*</span></label>
-                    <input type="number" id="superficie" placeholder="ex: 2.81" step="0.01" required onchange="validerChamp('superficie');">
-                    <small class="error-msg" id="error-superficie" style="color: red; display: none;">⚠️ Superficie obligatoire</small>
+                    <div style="display: flex; gap: 8px; align-items: end;">
+                        <div style="flex: 1;">
+                            <input type="number" id="superficie" placeholder="ex: 2.81" step="0.01" required onchange="validerChamp('superficie');">
+                            <small class="error-msg" id="error-superficie" style="color: red; display: none;">⚠️ Superficie obligatoire</small>
+                        </div>
+                        <button type="button" onclick="calculerSuperficie()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; white-space: nowrap; font-weight: 600; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);">📐 Calculer</button>
+                    </div>
+                    <small style="color: #6db038; margin-top: 8px; display: block; font-weight: 500;">🚶 <strong>Méthode GPS:</strong> Marchez autour du site, appuyez sur "Ajouter Point" pour enregistrer les coordonnées. Min 3 points.</small>
                 </div>
                 
                 <div class="form-group">
@@ -1549,8 +1555,13 @@
                 </div>
             </div>
             
-            <!-- GALERIE PHOTOS COLLECTÉES -->
-            <div class="galerie-container">
+            <!-- BOUTON POUR VOIR LA GALERIE -->
+            <div style="text-align: center; margin: 30px 0;">
+                <button id="toggle-galerie-btn" onclick="toggleGalerie()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 40px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); transition: all 0.3s;">📸 Voir la Galerie des Collectes</button>
+            </div>
+            
+            <!-- GALERIE PHOTOS COLLECTÉES (CACHÉE PAR DÉFAUT) -->
+            <div id="galerie-section" class="galerie-container" style="display: none;">
                 <div class="galerie-header">
                     <h3>📸 Galerie des Collectes</h3>
                     <p>Visualisez les sites photographiés</p>
@@ -2430,9 +2441,9 @@
             // Stocker le filename pour le téléchargement
             window.currentPhotoFilename = filename;
             
-            // 📸 Créer un nouvel objet photo pour la galerie
+            // 📸 Créer un nouvel objet photo pour la galerie (avec vérification des doublons)
             const newPhoto = {
-                id: galleriePhotos.length + 1,
+                id: Date.now(), // Utiliser timestamp pour ID unique
                 commune: communeName,
                 partenaire: "SONAGED",
                 site: siteName,
@@ -2446,11 +2457,28 @@
                 accessibilite: document.getElementById('accessibilite')?.value || "Facile",
                 lat: "0.0000°N",
                 lng: "0.0000°O",
-                src: imageData // Photo en base64
+                src: imageData, // Photo en base64
+                quality: 0.7, // Qualité de compression
+                size: dataSize // Taille en bytes
             };
             
-            // Ajouter la photo à la galerie
-            galleriePhotos.unshift(newPhoto); // Ajouter au début
+            // Vérifier les doublons: si même site/commune, garder la meilleure qualité
+            const existingPhotoIndex = galleriePhotos.findIndex(p => p.site === newPhoto.site && p.commune === newPhoto.commune);
+            if (existingPhotoIndex !== -1 && galleriePhotos[existingPhotoIndex].quality < newPhoto.quality) {
+                // Remplacer par meilleure qualité
+                const oldPhoto = galleriePhotos[existingPhotoIndex];
+                galleriePhotos[existingPhotoIndex] = newPhoto;
+                console.log(`♻️ Photo ${siteName} remplacée par meilleure qualité`);
+                showAlert('info', `♻️ Photo de ${communeName} remplacée par meilleure qualité`);
+            } else if (existingPhotoIndex === -1) {
+                // Nouvelle photo
+                galleriePhotos.unshift(newPhoto);
+            } else {
+                // Qualité plus basse, garder l'existante
+                console.log(`⏭️ Photo ${siteName} non remplacée (qualité inférieure)`);
+                showAlert('info', `⏭️ Photo non ajoutée (qualité inférieure à l'existante)`);
+                return;
+            }
             
             // Ajouter l'élément HTML à la galerie
             const galerieScroll = document.querySelector('.galerie-scroll');
@@ -2476,29 +2504,36 @@
                 statsNumber.textContent = galleriePhotos.length;
             }
             
-            // ✅ AFFICHER LA PRÉVIEW (avec vérification complète)
-            const previewImg = document.getElementById('preview-img');
-            if (previewImg) {
-                previewImg.src = imageData;
-                previewImg.style.display = 'block';
-                previewImg.style.maxWidth = '100%';
-                previewImg.style.height = 'auto';
-                previewImg.style.borderRadius = '8px';
-                previewImg.style.marginTop = '10px';
-            }
-            
-            // Update filename display
-            const filenameSpan = document.getElementById('photo-filename');
-            if (filenameSpan) {
-                filenameSpan.textContent = filename;
-            }
-            
-            // Show the image preview container
-            const imagePreview = document.getElementById('image-preview');
-            if (imagePreview) {
-                imagePreview.classList.remove('hidden');
-                imagePreview.style.display = 'block';
-            }
+            // ✅ AFFICHER LA PRÉVIEW (avec vérification complète + support mobile)
+            setTimeout(() => {
+                const previewImg = document.getElementById('preview-img');
+                if (previewImg) {
+                    previewImg.src = imageData;
+                    previewImg.style.display = 'block';
+                    previewImg.style.maxWidth = '100%';
+                    previewImg.style.height = 'auto';
+                    previewImg.style.borderRadius = '8px';
+                    previewImg.style.marginTop = '10px';
+                    previewImg.style.minHeight = '200px';
+                    previewImg.onload = () => {
+                        previewImg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    };
+                }
+                
+                // Update filename display
+                const filenameSpan = document.getElementById('photo-filename');
+                if (filenameSpan) {
+                    filenameSpan.textContent = filename;
+                }
+                
+                // Show the image preview container
+                const imagePreview = document.getElementById('image-preview');
+                if (imagePreview) {
+                    imagePreview.classList.remove('hidden');
+                    imagePreview.style.display = 'block';
+                    imagePreview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }, 100);
             
             showAlert('success', `✅ Photo capturée et ajoutée à la galerie (${(dataSize/1024).toFixed(0)}KB)`);
         }
@@ -2556,6 +2591,250 @@
             previewImg.src = '';
             donnees.photo = null;
             showAlert('info', '🗑️ Photo supprimée');
+        }
+        
+        // 📸 TOGGLE GALERIE - Afficher/Masquer la galerie
+        function toggleGalerie() {
+            const galerieSection = document.getElementById('galerie-section');
+            const toggleBtn = document.getElementById('toggle-galerie-btn');
+            
+            if (galerieSection.style.display === 'none') {
+                galerieSection.style.display = 'block';
+                toggleBtn.textContent = '📸 Fermer la Galerie';
+                toggleBtn.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+                toggleBtn.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
+                galerieSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                galerieSection.style.display = 'none';
+                toggleBtn.textContent = '📸 Voir la Galerie des Collectes';
+                toggleBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                toggleBtn.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.3)';
+            }
+        }
+        
+        // 📐 CALCULER SUPERFICIE - Méthode GPS (Marche autour du site)
+        let gpsPointsForSurface = [];
+        let isRecordingGPS = false;
+        let gpsMap = null;
+        let gpsPolygon = null;
+        let gpsMarkers = [];
+        let gpsWatchId = null;
+        
+        function calculerSuperficie() {
+            showAlert('info', '📐 Méthode GPS: Vous allez marquer les points en marchant autour du site');
+            
+            if (!isRecordingGPS) {
+                // Démarrer la capture
+                startGPSRecording();
+            } else {
+                // Arrêter et finir
+                finishGPSRecording();
+            }
+        }
+        
+        function startGPSRecording() {
+            gpsPointsForSurface = [];
+            gpsMarkers = [];
+            isRecordingGPS = true;
+            
+            if (!map) {
+                showAlert('error', '❌ La carte n\'est pas initialisée. Appuyez d\'abord sur "Obtenir Position GPS"');
+                isRecordingGPS = false;
+                return;
+            }
+            
+            const surficieInput = document.getElementById('superficie');
+            const calcBtn = document.querySelector('button[onclick="calculerSuperficie()"]');
+            if (calcBtn) {
+                calcBtn.textContent = '⏹️ Arrêter et Calculer';
+                calcBtn.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+            }
+            
+            showAlert('info', '🚶 Enregistrement lancé! Limitez le périmètre du site en appuyant sur les points...');
+            
+            // Créer une modal pour afficher les points enregistrés
+            const modal = document.createElement('div');
+            modal.id = 'gps-recording-modal';
+            modal.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: white;
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+                z-index: 10000;
+                max-width: 300px;
+                font-size: 14px;
+            `;
+            modal.innerHTML = `
+                <div style="margin-bottom: 10px; font-weight: 600; color: #667eea;">📍 Enregistrement GPS</div>
+                <div style="margin-bottom: 15px; padding: 10px; background: #f0f8e6; border-radius: 6px; border-left: 3px solid #6db038;">
+                    <strong>Points capturés:</strong> <span id="gps-point-count">0</span>
+                </div>
+                <button onclick="addCurrentGPSPoint()" style="width: 100%; background: #6db038; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-bottom: 8px;">📌 Ajouter Point Actuel</button>
+                <button onclick="finishGPSRecording()" style="width: 100%; background: #667eea; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">✅ Terminer & Calculer</button>
+            `;
+            document.body.appendChild(modal);
+            
+            // Obtenir la position GPS actuelle
+            if (navigator.geolocation) {
+                gpsWatchId = navigator.geolocation.watchPosition(
+                    (position) => {
+                        const coords = position.coords;
+                        // Mettre à jour les coordonnées affichées
+                        const coordsDisplay = document.getElementById('coords-display');
+                        if (coordsDisplay) {
+                            coordsDisplay.innerHTML = `
+                                <strong>📍 Position GPS actuelle:</strong><br>
+                                Latitude: <span id="lat">${coords.latitude.toFixed(6)}</span><br>
+                                Longitude: <span id="lon">${coords.longitude.toFixed(6)}</span><br>
+                                Précision: ${coords.accuracy.toFixed(0)} m<br>
+                                <button onclick="addCurrentGPSPoint()" style="margin-top: 10px; background: #6db038; color: white; padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%;">📌 Marquer ce Point</button>
+                            `;
+                        }
+                    },
+                    (error) => {
+                        console.error('Erreur GPS:', error);
+                        showAlert('error', `❌ Erreur GPS: ${error.message}`);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                showAlert('error', '❌ GPS non disponible sur ce navigateur');
+                isRecordingGPS = false;
+            }
+        }
+        
+        function addCurrentGPSPoint() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const coords = position.coords;
+                        const point = {
+                            lat: coords.latitude,
+                            lng: coords.longitude,
+                            accuracy: coords.accuracy
+                        };
+                        
+                        gpsPointsForSurface.push(point);
+                        
+                        // Mettre à jour le compteur
+                        const countSpan = document.getElementById('gps-point-count');
+                        if (countSpan) {
+                            countSpan.textContent = gpsPointsForSurface.length;
+                        }
+                        
+                        // Ajouter un marqueur sur la carte
+                        if (map) {
+                            const marker = L.marker([coords.latitude, coords.longitude], {
+                                icon: L.divIcon({
+                                    className: 'gps-point-marker',
+                                    html: `<div style="background: #6db038; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; border: 2px white solid; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">${gpsPointsForSurface.length}</div>`,
+                                    iconSize: [30, 30],
+                                    iconAnchor: [15, 15]
+                                })
+                            }).addTo(map);
+                            gpsMarkers.push(marker);
+                        }
+                        
+                        showAlert('success', `✅ Point ${gpsPointsForSurface.length} enregistré (Précision: ${coords.accuracy.toFixed(0)}m)`);
+                    },
+                    (error) => {
+                        showAlert('error', `❌ Erreur: ${error.message}`);
+                    }
+                );
+            }
+        }
+        
+        function finishGPSRecording() {
+            isRecordingGPS = false;
+            
+            // Arrêter de surveiller le GPS
+            if (gpsWatchId !== null) {
+                navigator.geolocation.clearWatch(gpsWatchId);
+                gpsWatchId = null;
+            }
+            
+            // Fermer la modal
+            const modal = document.getElementById('gps-recording-modal');
+            if (modal) {
+                modal.remove();
+            }
+            
+            // Réinitialiser le bouton
+            const calcBtn = document.querySelector('button[onclick="calculerSuperficie()"]');
+            if (calcBtn) {
+                calcBtn.textContent = '📐 Calculer';
+                calcBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }
+            
+            if (gpsPointsForSurface.length < 3) {
+                showAlert('error', `❌ Au moins 3 points sont nécessaires (vous en avez ${gpsPointsForSurface.length})`);
+                gpsPointsForSurface = [];
+                if (map) {
+                    gpsMarkers.forEach(m => map.removeLayer(m));
+                }
+                gpsMarkers = [];
+                return;
+            }
+            
+            // Calculer la superficie
+            const surfaceHa = calculatePolygonArea(gpsPointsForSurface);
+            
+            // Afficher le polygone sur la carte (si disponible)
+            if (map) {
+                const latlngs = gpsPointsForSurface.map(p => [p.lat, p.lng]);
+                if (gpsPolygon) {
+                    map.removeLayer(gpsPolygon);
+                }
+                gpsPolygon = L.polygon(latlngs, {
+                    color: '#6db038',
+                    weight: 2,
+                    opacity: 0.8,
+                    fillOpacity: 0.3
+                }).addTo(map);
+                
+                // Adapter la vue à la map
+                const group = new L.featureGroup(gpsMarkers.concat([gpsPolygon]));
+                map.fitBounds(group.getBounds());
+            }
+            
+            // Mettre à jour le champ Superficie
+            const surficieInput = document.getElementById('superficie');
+            surficieInput.value = surfaceHa.toFixed(2);
+            
+            showAlert('success', `✅ Superficie calculée: ${surfaceHa.toFixed(2)} ha (${gpsPointsForSurface.length} points)`);
+        }
+        
+        // Formule Shoelace pour calculer l'aire d'un polygone en coordonnées GPS
+        function calculatePolygonArea(points) {
+            if (points.length < 3) return 0;
+            
+            // Convertir en radians
+            const toRadian = (degree) => (degree * Math.PI) / 180;
+            
+            // Calculer l'aire en km² en utilisant la formule Shoelace en coordonnées sphériques
+            let area = 0;
+            const R = 6371000; // Rayon de la Terre en mètres
+            
+            for (let i = 0; i < points.length; i++) {
+                const lat1 = toRadian(points[i].lat);
+                const lon1 = toRadian(points[i].lng);
+                const lat2 = toRadian(points[(i + 1) % points.length].lat);
+                const lon2 = toRadian(points[(i + 1) % points.length].lng);
+                
+                area += (lon2 - lon1) * (2 + Math.sin(lat1) + Math.sin(lat2));
+            }
+            
+            area = Math.abs(area * R * R / 2);
+            
+            // Convertir en hectares (1 ha = 10000 m²)
+            return area / 10000;
         }
         
         // Formulaire
