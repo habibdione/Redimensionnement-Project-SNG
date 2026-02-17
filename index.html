@@ -650,52 +650,72 @@
         }
 
         .galerie-scroll {
-            overflow-y: auto;
             flex: 1;
-            padding: 15px;
+            padding: 20px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            align-content: start;
         }
 
         .galerie-item {
             background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
             overflow: hidden;
-            margin-bottom: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .galerie-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(45, 80, 22, 0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(45, 80, 22, 0.25);
+            border-color: #6db038;
         }
 
         .galerie-item-image {
             width: 100%;
-            height: 120px;
+            height: 140px;
             object-fit: cover;
             background: #f0f0f0;
         }
 
         .galerie-item-info {
-            padding: 10px;
+            padding: 12px;
             font-size: 12px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .galerie-item-commune {
             font-weight: bold;
             color: #2d5016;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            font-size: 13px;
         }
 
         .galerie-item-detail {
             color: #666;
-            margin-bottom: 2px;
+            margin-bottom: 3px;
             font-size: 11px;
+            flex: 1;
         }
 
         .galerie-item-detail strong {
             color: #5ba837;
+        }
+
+        @media (max-width: 600px) {
+            .galerie-scroll {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                padding: 10px;
+            }
         }
 
         /* Modal pour images */
@@ -714,16 +734,18 @@
             background-color: white;
             margin: auto;
             padding: 0;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 600px;
+            border-radius: 12px;
+            width: 95%;
+            max-width: 700px;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
 
         .galerie-modal-image {
@@ -746,19 +768,64 @@
             color: white;
             cursor: pointer;
             background: rgba(0,0,0,0.3);
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: background 0.3s;
             border: none;
-            z-index: 2001;
+            z-index: 2002;
         }
 
         .galerie-modal-close:hover {
             background: rgba(0,0,0,0.6);
+        }
+
+        .galerie-nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.4);
+            color: white;
+            border: none;
+            font-size: 30px;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s;
+            z-index: 2002;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .galerie-nav-button:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        .galerie-nav-prev {
+            left: 10px;
+        }
+
+        .galerie-nav-next {
+            right: 10px;
+        }
+
+        .galerie-modal-counter {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 2002;
         }
     </style>
 
@@ -1032,80 +1099,67 @@
                 </div>
                 
                 <div class="galerie-scroll">
-                    <!-- ZIGUINCHOR REGION -->
-                    <div style="margin-bottom: 15px;">
-                        <div style="font-weight: bold; color: #2d5016; padding: 10px; background: #f0f8e6; border-radius: 4px; margin-bottom: 10px;">🗺️ ZIGUINCHOR</div>
-                        
-                        <div class="galerie-item" onclick="openGalerieModal(this)">
-                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_12_1.jpg" alt="Oussouye">
-                            <div class="galerie-item-info">
-                                <div class="galerie-item-commune">📍 Oussouye</div>
-                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                                <div class="galerie-item-detail"><strong>Dept:</strong> oussouye-dept</div>
-                            </div>
+                    <div class="galerie-item" onclick="openGalerieModal(0)">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_12_1.jpg" alt="Oussouye">
+                        <div class="galerie-item-info">
+                            <div class="galerie-item-commune">📍 Oussouye</div>
+                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                         </div>
+                    </div>
 
-                        <div class="galerie-item" onclick="openGalerieModal(this)">
-                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_11_2.jpg" alt="Diembéring">
-                            <div class="galerie-item-info">
-                                <div class="galerie-item-commune">📍 Diembéring</div>
-                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                                <div class="galerie-item-detail"><strong>Dept:</strong> oussouye-dept</div>
-                            </div>
+                    <div class="galerie-item" onclick="openGalerieModal(1)">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_11_2.jpg" alt="Diembéring">
+                        <div class="galerie-item-info">
+                            <div class="galerie-item-commune">📍 Diembéring</div>
+                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                         </div>
+                    </div>
 
-                        <div class="galerie-item" onclick="openGalerieModal(this)">
-                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_10_3.jpg" alt="Ziguinchor">
-                            <div class="galerie-item-info">
-                                <div class="galerie-item-commune">📍 Ziguinchor</div>
-                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                                <div class="galerie-item-detail"><strong>Dept:</strong> ziguinchor-dept</div>
-                            </div>
+                    <div class="galerie-item" onclick="openGalerieModal(2)">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_10_3.jpg" alt="Ziguinchor">
+                        <div class="galerie-item-info">
+                            <div class="galerie-item-commune">📍 Ziguinchor</div>
+                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                         </div>
+                    </div>
 
-                        <div class="galerie-item" onclick="openGalerieModal(this)">
-                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_9_4.jpg" alt="Niaguis">
-                            <div class="galerie-item-info">
-                                <div class="galerie-item-commune">📍 Niaguis</div>
-                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                                <div class="galerie-item-detail"><strong>Dept:</strong> ziguinchor-dept</div>
-                            </div>
+                    <div class="galerie-item" onclick="openGalerieModal(3)">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_9_4.jpg" alt="Niaguis">
+                        <div class="galerie-item-info">
+                            <div class="galerie-item-commune">📍 Niaguis</div>
+                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                         </div>
+                    </div>
 
-                        <div class="galerie-item" onclick="openGalerieModal(this)">
-                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_8_5.jpg" alt="Ziguinchor">
-                            <div class="galerie-item-info">
-                                <div class="galerie-item-commune">📍 Ziguinchor</div>
-                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                                <div class="galerie-item-detail"><strong>Dept:</strong> ziguinchor-dept</div>
-                            </div>
+                    <div class="galerie-item" onclick="openGalerieModal(4)">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_8_5.jpg" alt="Ziguinchor">
+                        <div class="galerie-item-info">
+                            <div class="galerie-item-commune">📍 Ziguinchor</div>
+                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                         </div>
+                    </div>
 
-                        <div class="galerie-item" onclick="openGalerieModal(this)">
-                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_7_6.jpg" alt="Ziguinchor">
-                            <div class="galerie-item-info">
-                                <div class="galerie-item-commune">📍 Ziguinchor</div>
-                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                                <div class="galerie-item-detail"><strong>Dept:</strong> ziguinchor-dept</div>
-                            </div>
+                    <div class="galerie-item" onclick="openGalerieModal(5)">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_7_6.jpg" alt="Ziguinchor">
+                        <div class="galerie-item-info">
+                            <div class="galerie-item-commune">📍 Ziguinchor</div>
+                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                         </div>
+                    </div>
 
-                        <div class="galerie-item" onclick="openGalerieModal(this)">
-                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_6_7.jpg" alt="Ziguinchor">
-                            <div class="galerie-item-info">
-                                <div class="galerie-item-commune">📍 Ziguinchor</div>
-                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                                <div class="galerie-item-detail"><strong>Dept:</strong> ziguinchor-dept</div>
-                            </div>
+                    <div class="galerie-item" onclick="openGalerieModal(6)">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_6_7.jpg" alt="Ziguinchor">
+                        <div class="galerie-item-info">
+                            <div class="galerie-item-commune">📍 Ziguinchor</div>
+                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                         </div>
+                    </div>
 
-                        <div class="galerie-item" onclick="openGalerieModal(this)">
-                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_5_8.jpg" alt="Ziguinchor">
-                            <div class="galerie-item-info">
-                                <div class="galerie-item-commune">📍 Ziguinchor</div>
-                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                                <div class="galerie-item-detail"><strong>Dept:</strong> ziguinchor-dept</div>
-                            </div>
+                    <div class="galerie-item" onclick="openGalerieModal(7)">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_5_8.jpg" alt="Ziguinchor">
+                        <div class="galerie-item-info">
+                            <div class="galerie-item-commune">📍 Ziguinchor</div>
+                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                         </div>
                     </div>
                 </div>
@@ -2878,10 +2932,80 @@ Consultez les logs du serveur pour les détails complets.
     <div id="galerie-modal" class="galerie-modal">
         <div class="galerie-modal-content">
             <button class="galerie-modal-close" onclick="closeGalerieModal()">&times;</button>
+            <button class="galerie-nav-button galerie-nav-prev" onclick="prevGalerieImage()">❮</button>
+            <button class="galerie-nav-button galerie-nav-next" onclick="nextGalerieImage()">❯</button>
             <img class="galerie-modal-image" id="galerie-modal-image" src="" alt="">
+            <div class="galerie-modal-counter" id="galerie-modal-counter"></div>
             <div class="galerie-modal-info" id="galerie-modal-info"></div>
         </div>
     </div>
+    
+    <!-- FONCTIONS JAVASCRIPT POUR LA GALERIE PHOTOS -->
+    <script>
+        // Données des 8 photos collectées
+        const galleriePhotos = [
+            { commune: "Oussouye", partenaire: "SENELEC", site: "Bureau commercial Oussouye", dept: "oussouye-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_12_1.jpg" },
+            { commune: "Diembéring", partenaire: "SENELEC", site: "District Cap-Skirring", dept: "oussouye-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_11_2.jpg" },
+            { commune: "Ziguinchor", partenaire: "SENELEC", site: "Bureau commercial de Boutoute", dept: "ziguinchor-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_10_3.jpg" },
+            { commune: "Niaguis", partenaire: "SENELEC", site: "Centrale électrique de Boutoute", dept: "ziguinchor-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_9_4.jpg" },
+            { commune: "Ziguinchor", partenaire: "SENELEC", site: "Chambre de passage", dept: "ziguinchor-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_8_5.jpg" },
+            { commune: "Ziguinchor", partenaire: "SENELEC", site: "Agence principale", dept: "ziguinchor-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_7_6.jpg" },
+            { commune: "Ziguinchor", partenaire: "SENELEC", site: "Sous station Kankourang", dept: "ziguinchor-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_6_7.jpg" },
+            { commune: "Ziguinchor", partenaire: "SENELEC", site: "Parc à carburant", dept: "ziguinchor-dept", src: "./exports/export-2026-02-17T18-16-04/images/photo_5_8.jpg" }
+        ];
+        
+        let currentGalerieIndex = 0;
+        
+        function openGalerieModal(index) {
+            currentGalerieIndex = index;
+            const modal = document.getElementById('galerie-modal');
+            const photo = galleriePhotos[currentGalerieIndex];
+            
+            document.getElementById('galerie-modal-image').src = photo.src;
+            document.getElementById('galerie-modal-counter').textContent = `${currentGalerieIndex + 1} / ${galleriePhotos.length}`;
+            document.getElementById('galerie-modal-info').innerHTML = `
+                <strong style="color: #2d5016; font-size: 14px; display: block; margin-bottom: 8px;">📍 ${photo.commune}</strong>
+                <div style="font-size: 12px; color: #666;">
+                    <div><strong>Site:</strong> ${photo.site}</div>
+                    <div><strong>Partenaire:</strong> ${photo.partenaire}</div>
+                    <div><strong>Département:</strong> ${photo.dept}</div>
+                </div>
+            `;
+            modal.style.display = 'block';
+        }
+        
+        function closeGalerieModal() {
+            document.getElementById('galerie-modal').style.display = 'none';
+        }
+        
+        function nextGalerieImage() {
+            currentGalerieIndex = (currentGalerieIndex + 1) % galleriePhotos.length;
+            openGalerieModal(currentGalerieIndex);
+        }
+        
+        function prevGalerieImage() {
+            currentGalerieIndex = (currentGalerieIndex - 1 + galleriePhotos.length) % galleriePhotos.length;
+            openGalerieModal(currentGalerieIndex);
+        }
+        
+        // Navigation au clavier
+        document.addEventListener('keydown', function(event) {
+            const modal = document.getElementById('galerie-modal');
+            if (modal && modal.style.display === 'block') {
+                if (event.key === 'ArrowRight') nextGalerieImage();
+                if (event.key === 'ArrowLeft') prevGalerieImage();
+                if (event.key === 'Escape') closeGalerieModal();
+            }
+        });
+        
+        // Clic en dehors ferme le modal
+        window.onclick = function(event) {
+            const modal = document.getElementById('galerie-modal');
+            if (event.target === modal) {
+                closeGalerieModal();
+            }
+        }
+    </script>
     
     <!-- FONCTIONS JAVASCRIPT POUR LA CARTE DES COLLECTES -->
     <script>
@@ -3022,38 +3146,8 @@ Consultez les logs du serveur pour les détails complets.
         });
     </script>
     
-    <!-- FONCTIONS JAVASCRIPT POUR LA GALERIE -->
-    <script>
-        function openGalerieModal(element) {
-            const modal = document.getElementById('galerie-modal');
-            const img = element.querySelector('.galerie-item-image');
-            if (!img) return;
-            
-            const modalImage = document.getElementById('galerie-modal-image');
-            const modalInfo = document.getElementById('galerie-modal-info');
-            
-            modalImage.src = img.src;
-            
-            const commune = element.querySelector('.galerie-item-commune')?.textContent || '';
-            const details = Array.from(element.querySelectorAll('.galerie-item-detail'))
-                .map(d => d.innerHTML).join('<br>');
-            
-            modalInfo.innerHTML = commune + '<br><br>' + details;
-            modal.style.display = 'block';
-        }
-        
-        function closeGalerieModal() {
-            document.getElementById('galerie-modal').style.display = 'none';
-        }
-        
-        window.onclick = function(event) {
-            const modal = document.getElementById('galerie-modal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        }
-    </script>
     
+
     <!-- Configuration d'environnement (doit être avant api-client.js) -->
     <script src="config.js"></script>
     <!-- Client API pour communication avec PostgreSQL backend -->
