@@ -596,6 +596,170 @@
             margin-bottom: 3px;
             color: #a4d65e;
         }
+
+        /* ===== STYLES GALERIE ===== */
+        .galerie-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .galerie-header {
+            background: linear-gradient(135deg, #2d5016 0%, #5ba837 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .galerie-header h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .galerie-header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .galerie-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 12px;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 12px;
+        }
+
+        .galerie-stat-item {
+            text-align: center;
+        }
+
+        .galerie-stat-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d5016;
+        }
+
+        .galerie-stat-label {
+            color: #666;
+            font-size: 11px;
+        }
+
+        .galerie-scroll {
+            overflow-y: auto;
+            flex: 1;
+            padding: 15px;
+        }
+
+        .galerie-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .galerie-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 80, 22, 0.15);
+        }
+
+        .galerie-item-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+
+        .galerie-item-info {
+            padding: 10px;
+            font-size: 12px;
+        }
+
+        .galerie-item-commune {
+            font-weight: bold;
+            color: #2d5016;
+            margin-bottom: 4px;
+        }
+
+        .galerie-item-detail {
+            color: #666;
+            margin-bottom: 2px;
+            font-size: 11px;
+        }
+
+        .galerie-item-detail strong {
+            color: #5ba837;
+        }
+
+        /* Modal pour images */
+        .galerie-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .galerie-modal-content {
+            background-color: white;
+            margin: auto;
+            padding: 0;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .galerie-modal-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .galerie-modal-info {
+            padding: 15px;
+            background: white;
+        }
+
+        .galerie-modal-close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            background: rgba(0,0,0,0.3);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+            border: none;
+            z-index: 2001;
+        }
+
+        .galerie-modal-close:hover {
+            background: rgba(0,0,0,0.6);
+        }
     </style>
 
 </head>
@@ -781,7 +945,7 @@
                     <div id="resume-contenu" style="font-size: 14px; line-height: 2; color: #333;"></div>
                 </div>
             </div>
-            </form>z
+            </form>
             
             <!-- LOCALISATION & IMAGES -->
             <div class="section">
@@ -828,6 +992,108 @@
                     <div style="display: flex; gap: 15px; flex-direction: column;">
                         <button class="success" onclick="afficherResume()" style="width: 100%; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); padding: 14px; font-size: 16px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); transition: all 0.3s;">👁️ Voir le Résumé</button>
                         <button class="success" onclick="validerEtSauvegarder()" style="width: 100%; background: linear-gradient(135deg, #6db038 0%, #5ba837 100%); padding: 14px; font-size: 16px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(109, 176, 56, 0.3); transition: all 0.3s;">💾 Sauvegarder les Données</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- GALERIE PHOTOS COLLECTÉES -->
+            <div class="galerie-container">
+                <div class="galerie-header">
+                    <h3>📸 Galerie des Collectes</h3>
+                    <p>Visualisez les sites photographiés</p>
+                </div>
+                
+                <div class="galerie-stats">
+                    <div class="galerie-stat-item">
+                        <div class="galerie-stat-number">8</div>
+                        <div class="galerie-stat-label">Collectes</div>
+                    </div>
+                    <div class="galerie-stat-item">
+                        <div class="galerie-stat-number">1</div>
+                        <div class="galerie-stat-label">Régions</div>
+                    </div>
+                    <div class="galerie-stat-item">
+                        <div class="galerie-stat-number">8</div>
+                        <div class="galerie-stat-label">Images</div>
+                    </div>
+                </div>
+                
+                <div class="galerie-scroll">
+                    <!-- ZIGUINCHOR REGION -->
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-weight: bold; color: #2d5016; padding: 10px; background: #f0f8e6; border-radius: 4px; margin-bottom: 10px;">🗺️ ZIGUINCHOR</div>
+                        
+                        <div class="galerie-item" onclick="openGalerieModal(this)">
+                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_12_1.jpg" alt="Oussouye">
+                            <div class="galerie-item-info">
+                                <div class="galerie-item-commune">📍 Oussouye</div>
+                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
+                                <div class="galerie-item-detail"><strong>Dept:</strong> oussouye-dept</div>
+                            </div>
+                        </div>
+
+                        <div class="galerie-item" onclick="openGalerieModal(this)">
+                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_11_2.jpg" alt="Diembéring">
+                            <div class="galerie-item-info">
+                                <div class="galerie-item-commune">📍 Diembéring</div>
+                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
+                                <div class="galerie-item-detail"><strong>Dept:</strong> oussouye-dept</div>
+                            </div>
+                        </div>
+
+                        <div class="galerie-item" onclick="openGalerieModal(this)">
+                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_10_3.jpg" alt="Ziguinchor">
+                            <div class="galerie-item-info">
+                                <div class="galerie-item-commune">📍 Ziguinchor</div>
+                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
+                                <div class="galerie-item-detail"><strong>Dept:</strong> ziguinchor-dept</div>
+                            </div>
+                        </div>
+
+                        <div class="galerie-item" onclick="openGalerieModal(this)">
+                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_9_4.jpg" alt="Niaguis">
+                            <div class="galerie-item-info">
+                                <div class="galerie-item-commune">📍 Niaguis</div>
+                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
+                                <div class="galerie-item-detail"><strong>Dept:</strong> ziguinchor-dept</div>
+                            </div>
+                        </div>
+
+                        <div class="galerie-item" onclick="openGalerieModal(this)">
+                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_8_5.jpg" alt="Ziguinchor">
+                            <div class="galerie-item-info">
+                                <div class="galerie-item-commune">📍 Ziguinchor</div>
+                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
+                                <div class="galerie-item-detail"><strong>Dept:</strong> ziguinchor-dept</div>
+                            </div>
+                        </div>
+
+                        <div class="galerie-item" onclick="openGalerieModal(this)">
+                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_7_6.jpg" alt="Ziguinchor">
+                            <div class="galerie-item-info">
+                                <div class="galerie-item-commune">📍 Ziguinchor</div>
+                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
+                                <div class="galerie-item-detail"><strong>Dept:</strong> ziguinchor-dept</div>
+                            </div>
+                        </div>
+
+                        <div class="galerie-item" onclick="openGalerieModal(this)">
+                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_6_7.jpg" alt="Ziguinchor">
+                            <div class="galerie-item-info">
+                                <div class="galerie-item-commune">📍 Ziguinchor</div>
+                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
+                                <div class="galerie-item-detail"><strong>Dept:</strong> ziguinchor-dept</div>
+                            </div>
+                        </div>
+
+                        <div class="galerie-item" onclick="openGalerieModal(this)">
+                            <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_5_8.jpg" alt="Ziguinchor">
+                            <div class="galerie-item-info">
+                                <div class="galerie-item-commune">📍 Ziguinchor</div>
+                                <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
+                                <div class="galerie-item-detail"><strong>Dept:</strong> ziguinchor-dept</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2593,6 +2859,47 @@ Consultez les logs du serveur pour les détails complets.
                 showAlert('success', '📱 Application PWA chargée!');
             }
         });
+    </script>
+    
+    <!-- MODAL GALERIE POUR IMAGES EN PLEIN ÉCRAN -->
+    <div id="galerie-modal" class="galerie-modal">
+        <div class="galerie-modal-content">
+            <button class="galerie-modal-close" onclick="closeGalerieModal()">&times;</button>
+            <img class="galerie-modal-image" id="galerie-modal-image" src="" alt="">
+            <div class="galerie-modal-info" id="galerie-modal-info"></div>
+        </div>
+    </div>
+    
+    <!-- FONCTIONS JAVASCRIPT POUR LA GALERIE -->
+    <script>
+        function openGalerieModal(element) {
+            const modal = document.getElementById('galerie-modal');
+            const img = element.querySelector('.galerie-item-image');
+            if (!img) return;
+            
+            const modalImage = document.getElementById('galerie-modal-image');
+            const modalInfo = document.getElementById('galerie-modal-info');
+            
+            modalImage.src = img.src;
+            
+            const commune = element.querySelector('.galerie-item-commune')?.textContent || '';
+            const details = Array.from(element.querySelectorAll('.galerie-item-detail'))
+                .map(d => d.innerHTML).join('<br>');
+            
+            modalInfo.innerHTML = commune + '<br><br>' + details;
+            modal.style.display = 'block';
+        }
+        
+        function closeGalerieModal() {
+            document.getElementById('galerie-modal').style.display = 'none';
+        }
+        
+        window.onclick = function(event) {
+            const modal = document.getElementById('galerie-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
     </script>
     
     <!-- Configuration d'environnement (doit être avant api-client.js) -->
