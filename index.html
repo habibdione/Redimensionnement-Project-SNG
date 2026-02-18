@@ -2860,7 +2860,7 @@
             let activites = [];
             if (activitesElement) {
                 const checkboxes = activitesElement.querySelectorAll('input[type="checkbox"]:checked');
-                activites = Array.from(checkboxes).map(cb => cb.labels[0].textContent.trim());
+                activites = Array.from(checkboxes).map(cb => cb.labels?.[0]?.textContent?.trim() || '').filter(a => a);
             }
             
             // Nettoyer les noms (supprimer caractères spéciaux)
@@ -3121,6 +3121,11 @@
         function toggleGalerie() {
             const galerieSection = document.getElementById('galerie-section');
             const toggleBtn = document.getElementById('toggle-galerie-btn');
+            
+            if (!galerieSection || !toggleBtn) {
+                console.warn('⚠️ Éléments de galerie non trouvés');
+                return;
+            }
             
             if (galerieSection.style.display === 'none') {
                 galerieSection.style.display = 'block';
@@ -3834,31 +3839,31 @@
         
         // Afficher le résumé des données avant sauvegarde
         function afficherResume() {
-            // Récupérer tous les champs du formulaire
-            const region = document.getElementById('region').value;
-            const regionLabel = document.getElementById('region').options[document.getElementById('region').selectedIndex]?.text;
-            const departement = document.getElementById('departement').value;
-            const departementLabel = document.getElementById('departement').options[document.getElementById('departement').selectedIndex]?.text;
-            const commune = document.getElementById('commune').value;
-            const typeActivite = Array.from(document.getElementById('typeActivite').selectedOptions).map(opt => opt.text).join(', ');
-            const partenaire = document.getElementById('partenaire').value;
-            const sites_concernes = document.getElementById('adresse').value;
-            const superficie = document.getElementById('superficie').value;
-            const besoinPersonnel = document.getElementById('besoinPersonnel').value;
-            const dispositifDeploy = Array.from(document.getElementById('dispositifDeploy').selectedOptions).map(opt => opt.text).join(', ');
-            const nombreRotation = document.getElementById('nombreRotation').value;
-            const infrastructureGestion = document.getElementById('infrastructureGestion').value;
-            const frequenceCollecte = document.getElementById('frequenceCollecte').value;
-            const bacs240 = document.getElementById('bacs240').value;
-            const caissePolybene = document.getElementById('caissePolybene').value;
-            const bacs660 = document.getElementById('bacs660').value;
-            const accessibilite = document.getElementById('accessibilite').value;
-            const observation = document.getElementById('observation').value;
-            const lat = document.getElementById('lat').textContent;
-            const lon = document.getElementById('lon').textContent;
-            const accuracy = document.getElementById('accuracy').textContent;
-            const utmEasting = document.getElementById('utm-easting').textContent;
-            const utmNorthing = document.getElementById('utm-northing').textContent;
+            // Récupérer tous les champs du formulaire avec vérifications null-safety
+            const region = document.getElementById('region')?.value || '';
+            const regionLabel = document.getElementById('region')?.options[document.getElementById('region')?.selectedIndex || 0]?.text || '';
+            const departement = document.getElementById('departement')?.value || '';
+            const departementLabel = document.getElementById('departement')?.options[document.getElementById('departement')?.selectedIndex || 0]?.text || '';
+            const commune = document.getElementById('commune')?.value || '';
+            const typeActivite = Array.from(document.getElementById('typeActivite')?.selectedOptions || []).map(opt => opt.text).join(', ');
+            const partenaire = document.getElementById('partenaire')?.value || '';
+            const sites_concernes = document.getElementById('adresse')?.value || '';
+            const superficie = document.getElementById('superficie')?.value || '';
+            const besoinPersonnel = document.getElementById('besoinPersonnel')?.value || '';
+            const dispositifDeploy = Array.from(document.getElementById('dispositifDeploy')?.selectedOptions || []).map(opt => opt.text).join(', ');
+            const nombreRotation = document.getElementById('nombreRotation')?.value || '';
+            const infrastructureGestion = document.getElementById('infrastructureGestion')?.value || '';
+            const frequenceCollecte = document.getElementById('frequenceCollecte')?.value || '';
+            const bacs240 = document.getElementById('bacs240')?.value || '';
+            const caissePolybene = document.getElementById('caissePolybene')?.value || '';
+            const bacs660 = document.getElementById('bacs660')?.value || '';
+            const accessibilite = document.getElementById('accessibilite')?.value || '';
+            const observation = document.getElementById('observation')?.value || '';
+            const lat = document.getElementById('lat')?.textContent || '--';
+            const lon = document.getElementById('lon')?.textContent || '--';
+            const accuracy = document.getElementById('accuracy')?.textContent || '--';
+            const utmEasting = document.getElementById('utm-easting')?.textContent || '--';
+            const utmNorthing = document.getElementById('utm-northing')?.textContent || '--';
             const photo = donnees.photo;
             
             if (!region || !departement || !commune) {
