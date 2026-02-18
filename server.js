@@ -29,6 +29,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+let excelEnabled = false; // Variable globale pour la synchronisation Excel
 
 // Middleware
 app.use(cors({
@@ -631,7 +632,7 @@ async function startServer() {
         console.log('✅ Base de données initialisée');
         
         // Initialiser le service de synchronisation Excel
-        const excelEnabled = syncService.initializeSyncService();
+        excelEnabled = syncService.initializeSyncService();
         if (excelEnabled) {
             console.log('✅ Service de synchronisation Excel activé');
             // Démarrer la synchronisation périodique (toutes les heures)
