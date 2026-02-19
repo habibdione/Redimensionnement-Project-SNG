@@ -7055,6 +7055,43 @@ Consultez les logs du serveur pour les détails complets.
                                     l.bringToFront();
                                 });
                                 l.on('mouseout', () => l.setStyle(style));
+                                
+                                // 🏷️ AJOUTER LABELS POUR LES RÉGIONS
+                                if (name === 'Region_3' && feature.geometry && props['Région']) {
+                                    try {
+                                        const centroid = turf.centroid(feature);
+                                        const regionName = props['Région'] || props['region'] || 'N/A';
+                                        
+                                        const labelIcon = L.divIcon({
+                                            className: 'region-label',
+                                            html: `<div style="
+                                                background: rgba(255, 255, 255, 0.95);
+                                                border: 2px solid rgba(45, 80, 22, 0.8);
+                                                border-radius: 6px;
+                                                padding: 4px 12px;
+                                                font-size: 13px;
+                                                font-weight: 700;
+                                                color: #2d5016;
+                                                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                                                text-align: center;
+                                                white-space: nowrap;
+                                                z-index: 1000;
+                                            ">${regionName}</div>`,
+                                            iconSize: [120, 35],
+                                            iconAnchor: [60, 17],
+                                            popupAnchor: [0, -10]
+                                        });
+                                        
+                                        L.marker(
+                                            [centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]],
+                                            { icon: labelIcon }
+                                        ).addTo(landingMap);
+                                        
+                                        console.log(`✅ Label ajouté: ${regionName}`);
+                                    } catch (err) {
+                                        console.warn(`⚠️ Erreur lors de l'ajout du label pour la région: ${err.message}`);
+                                    }
+                                }
                             }
                         });
                     }

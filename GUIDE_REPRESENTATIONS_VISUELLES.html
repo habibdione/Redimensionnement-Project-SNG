@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide Visuel - Réseau SONAGED</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        h1 { color: #2d5016; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; font-size: 32px; }
+        .subtitle { color: #666; margin-bottom: 30px; font-size: 16px; }
+        .guide-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .guide-card {
+            border-left: 5px solid;
+            padding: 20px;
+            border-radius: 8px;
+            background: #fafafa;
+            transition: transform 0.2s;
+        }
+        .guide-card:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .guide-card h2 { font-size: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        .guide-card p { font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 10px; }
+        .guide-card ul { font-size: 14px; margin-left: 20px; color: #555; }
+        .guide-card ul li { margin-bottom: 6px; }
+
+        /* Couleurs par catégorie */
+        .administratif { border-left-color: #a47158; background: rgba(164,113,88,0.08); }
+        .collecte { border-left-color: #c43c39; background: rgba(196,60,57,0.08); }
+        .balayage { border-left-color: #987bb7; background: rgba(152,125,183,0.08); }
+        .mobilier { border-left-color: #48cb51; background: rgba(72,203,81,0.08); }
+
+        .legend-item { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .legend-icon { width: 40px; height: 40px; border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .polygon-icon { border: 3px solid; opacity: 0.6; }
+        .line-icon { border-top: 3px solid; width: 100%; }
+        .point-icon { border-radius: 50%; }
+
+        #map { width: 100%; height: 600px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+        .comparison-table th { background: #2d5016; color: white; padding: 15px; text-align: left; font-weight: 600; }
+        .comparison-table td { padding: 15px; border-bottom: 1px solid #e0e0e0; }
+        .comparison-table tr:hover { background: #f9f9f9; }
+        .comparison-table tr:nth-child(even) { background: #fafafa; }
+
+        .info-banner { background: #e3f2fd; border-left: 4px solid #2196f3; padding: 18px; margin: 20px 0; border-radius: 4px; color: #1565c0; }
+        .success-banner { background: #c8e6c9; border-left: 4px solid #4caf50; padding: 18px; margin: 20px 0; border-radius: 4px; color: #2e7d32; }
+
+        .feature-showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+        .feature-showcase > div { padding: 20px; background: white; border-radius: 8px; border: 1px solid #e0e0e0; }
+        .feature-showcase h3 { color: #2d5016; margin-bottom: 15px; font-size: 16px; }
+        .mini-legend { font-size: 13px; color: #666; line-height: 1.8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗺️ Guide Visuel - Réseau National SONAGED</h1>
+        <p class="subtitle">Comprendre les représentations sur la carte géospatiale</p>
+
+        <div class="success-banner">
+            ✅ <strong>Intégration complète!</strong> Les 6 couches GeoJSON sont actives avec leurs représentations visuelles correctes.
+        </div>
+
+        <h2 style="color: #2d5016; margin: 30px 0 20px; font-size: 24px;">📊 Les 6 Couches de Données</h2>
+
+        <div class="guide-grid">
+            <!-- RÉGIONS -->
+            <div class="guide-card administratif">
+                <h2>🟤 Régions</h2>
+                <p><strong>Fichier:</strong> Region_3.js (1.6 MB)</p>
+                <p><strong>Type:</strong> Polygones (MultiPolygon)</p>
+                <p><strong>Couleur:</strong> Marron transparente</p>
+                <ul>
+                    <li>✅ Affichage: Remplis avec bordure</li>
+                    <li>✅ Labels: Noms des régions au centroïde</li>
+                    <li>✅ Interaction: Survol (poids border +1.5)</li>
+                    <li>✅ Popup: Détails administratifs</li>
+                </ul>
+            </div>
+
+            <!-- DÉPARTEMENTS -->
+            <div class="guide-card administratif">
+                <h2>🟣 Départements</h2>
+                <p><strong>Fichier:</strong> Departement_4.js (2.5 MB)</p>
+                <p><strong>Type:</strong> Polygones (MultiPolygon)</p>
+                <p><strong>Couleur:</strong> Magenta transparente</p>
+                <ul>
+                    <li>✅ Affichage: Remplis avec bordure</li>
+                    <li>✅ Hiérarchie: Second niveau admin</li>
+                    <li>✅ Interaction: Survol + poids border</li>
+                    <li>✅ Popup: Infos département</li>
+                </ul>
+            </div>
+
+            <!-- ARRONDISSEMENTS -->
+            <div class="guide-card administratif">
+                <h2>🟪 Arrondissements</h2>
+                <p><strong>Fichier:</strong> Arrondissement_5.js (3.6 MB)</p>
+                <p><strong>Type:</strong> Polygones (MultiPolygon)</p>
+                <p><strong>Couleur:</strong> Violet transparente</p>
+                <ul>
+                    <li>✅ Affichage: Remplis avec bordure noire</li>
+                    <li>✅ Hiérarchie: Niveau admin le plus fin</li>
+                    <li>✅ Interaction: Survol + poids border</li>
+                    <li>✅ Popup: Infos arrondissement</li>
+                </ul>
+            </div>
+
+            <!-- CIRCUITS COLLECTE -->
+            <div class="guide-card collecte">
+                <h2>🔴 Circuits Collecte</h2>
+                <p><strong>Fichier:</strong> CollecteNational_6.js (5.0 MB)</p>
+                <p><strong>Type:</strong> Lignes (MultiLineString)</p>
+                <p><strong>Couleur:</strong> Rouge</p>
+                <ul>
+                    <li>✅ Affichage: Lignes épaisses</li>
+                    <li>✅ Style: Cap carré, jointure bevel</li>
+                    <li>✅ Interaction: Survol (+poids)</li>
+                    <li>✅ Popup: Itinéraire, fréquence, rotation</li>
+                </ul>
+            </div>
+
+            <!-- CIRCUITS BALAYAGE -->
+            <div class="guide-card balayage">
+                <h2>🟣 Circuits Balayage</h2>
+                <p><strong>Fichier:</strong> BalayageNational_7.js (1.6 MB)</p>
+                <p><strong>Type:</strong> Lignes (MultiLineString)</p>
+                <p><strong>Couleur:</strong> Violet clair</p>
+                <ul>
+                    <li>✅ Affichage: Lignes épaisses</li>
+                    <li>✅ Style: Cap carré, jointure bevel</li>
+                    <li>✅ Interaction: Survol (+poids)</li>
+                    <li>✅ Popup: Itinéraire, fréquence, rotation</li>
+                </ul>
+            </div>
+
+            <!-- MOBILIER URBAIN -->
+            <div class="guide-card mobilier">
+                <h2>🟢 Mobilier Urbain</h2>
+                <p><strong>Fichier:</strong> MobilierUrbain_8.js (3.7 MB)</p>
+                <p><strong>Type:</strong> Points (Point)</p>
+                <p><strong>Couleur:</strong> Multicolore par type</p>
+                <ul>
+                    <li>✅ Bac de rue: Rose</li>
+                    <li>✅ Caisse Polybenne: Violet</li>
+                    <li>✅ PP: Vert</li>
+                    <li>✅ PRN: Cyan</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2 style="color: #2d5016; margin: 40px 0 20px; font-size: 24px;">🔍 Tableau Récapitulatif</h2>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Layer</th>
+                    <th>Type Géométrie</th>
+                    <th>Représentation</th>
+                    <th>Couleur</th>
+                    <th>Taille Fichier</th>
+                    <th>Interactions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>🟤 Régions</strong></td>
+                    <td>MultiPolygon</td>
+                    <td>Zones remplies</td>
+                    <td style="background: rgba(164,113,88,0.3);">Marron</td>
+                    <td>1.6 MB</td>
+                    <td>Survol, Labels, Popup</td>
+                </tr>
+                <tr>
+                    <td><strong>🟣 Départements</strong></td>
+                    <td>MultiPolygon</td>
+                    <td>Zones remplies</td>
+                    <td style="background: rgba(221,51,206,0.3);">Magenta</td>
+                    <td>2.5 MB</td>
+                    <td>Survol, Popup</td>
+                </tr>
+                <tr>
+                    <td><strong>🟪 Arrondissements</strong></td>
+                    <td>MultiPolygon</td>
+                    <td>Zones remplies</td>
+                    <td style="background: rgba(141,90,153,0.3);">Violet</td>
+                    <td>3.6 MB</td>
+                    <td>Survol, Popup</td>
+                </tr>
+                <tr>
+                    <td><strong>🔴 Collecte</strong></td>
+                    <td>MultiLineString</td>
+                    <td>Lignes épaisses</td>
+                    <td style="background: rgba(196,60,57,0.3);">Rouge</td>
+                    <td>5.0 MB</td>
+                    <td>Survol, Popup</td>
+                </tr>
+                <tr>
+                    <td><strong>🟣 Balayage</strong></td>
+                    <td>MultiLineString</td>
+                    <td>Lignes épaisses</td>
+                    <td style="background: rgba(152,125,183,0.3);">Violet clair</td>
+                    <td>1.6 MB</td>
+                    <td>Survol, Popup</td>
+                </tr>
+                <tr>
+                    <td><strong>🟢 Mobilier</strong></td>
+                    <td>Point</td>
+                    <td>Marqueurs circulaires</td>
+                    <td style="background: rgba(72,203,81,0.3);">Multicolore</td>
+                    <td>3.7 MB</td>
+                    <td>Survol, Popup par type</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div id="map"></div>
+
+        <h2 style="color: #2d5016; margin: 40px 0 20px; font-size: 24px;">📌 Fonctionnalités de la Carte</h2>
+
+        <div class="feature-showcase">
+            <div>
+                <h3>✨ Affichage des Régions</h3>
+                <div class="mini-legend">
+                    • <strong>Labels</strong>: Noms au centroïde<br>
+                    • <strong>Fond blanc</strong>: Améliore la lisibilité<br>
+                    • <strong>Border vert foncé</strong>: Cohérence SONAGED<br>
+                    • <strong>Survol</strong>: Border +1.5px<br>
+                    • <strong>Popup</strong>: Toutes les propriétés
+                </div>
+            </div>
+            <div>
+                <h3>🔴 Circuits Collecte</h3>
+                <div class="mini-legend">
+                    • <strong>Lignes rouges</strong>: Code couleur<br>
+                    • <strong>Style carrés</strong>: Terminaisons<br>
+                    • <strong>Poids: 1.0</strong>: Visibilité optimale<br>
+                    • <strong>Survol</strong>: Poids +1.5<br>
+                    • <strong>Détails</strong>: Fréquence, rotation
+                </div>
+            </div>
+            <div>
+                <h3>🟣 Circuits Balayage</h3>
+                <div class="mini-legend">
+                    • <strong>Lignes violettes</strong>: Distinction collecte<br>
+                    • <strong>Style identique</strong>: Cohérence<br>
+                    • <strong>fillOpacity: 0</strong>: Transparent<br>
+                    • <strong>Survol</strong>: Même effet<br>
+                    • <strong>1.6 MB</strong>: Moins de données
+                </div>
+            </div>
+            <div>
+                <h3>🟢 Mobilier Urbain</h3>
+                <div class="mini-legend">
+                    • <strong>Points circulaires</strong>: Radius 4px<br>
+                    • <strong>4 types</strong>: Couleurs distinctes<br>
+                    • <strong>Rose</strong>: Bac de rue<br>
+                    • <strong>Violet</strong>: Polybenne<br>
+                    • <strong>Vert</strong>: PP | <strong>Cyan</strong>: PRN
+                </div>
+            </div>
+        </div>
+
+        <div class="info-banner">
+            ℹ️ <strong>Conseil de navigation:</strong> Utilisez le contrôle des couches (☰) en haut à droite pour activer/désactiver les couches. Zoomez/dézoomez pour voir les détails. Cliquez sur les éléments pour voir les propriétés.
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        // Initialiser une mini-carte
+        const map = L.map('map').setView([14.5, -14.5], 6);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap',
+            maxZoom: 20
+        }).addTo(map);
+
+        // Charger et afficher toutes les couches
+        const layers = [
+            { name: 'Region_3', color: 'rgba(164,113,88,1.0)' },
+            { name: 'Departement_4', color: 'rgba(221,51,206,1.0)' },
+            { name: 'Arrondissement_5', color: 'rgba(141,90,153,1.0)' },
+            { name: 'CollecteNational_6', color: 'rgba(196,60,57,1.0)' },
+            { name: 'BalayageNational_7', color: 'rgba(152,125,183,1.0)' },
+            { name: 'MobilierUrbain_8', color: 'rgba(72,203,81,1.0)' }
+        ];
+
+        layers.forEach(layer => {
+            const script = document.createElement('script');
+            script.src = `./data/${layer.name}.js`;
+            script.onload = () => {
+                const data = window[`json_${layer.name}`];
+                if (data) {
+                    L.geoJSON(data, {
+                        style: { color: layer.color, weight: 1, opacity: 0.6, fillOpacity: 0.4 }
+                    }).addTo(map);
+                }
+            };
+            document.head.appendChild(script);
+        });
+    </script>
+</body>
+</html>
