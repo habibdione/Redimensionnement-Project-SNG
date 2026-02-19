@@ -6057,6 +6057,13 @@ Consultez les logs du serveur pour les détails complets.
                 case 'collecte':
                     if (collecteSection) collecteSection.style.display = 'block';
                     if (btnCollecte) btnCollecte.classList.add('active');
+                    // 🚀 INITIALISER LA CARTE IMMÉDIATEMENT après display:block
+                    setTimeout(() => {
+                        if (document.getElementById('collecte-map') && !collecteMapInitialized) {
+                            initializeCollecteMap();
+                            console.log('✅ Carte collecte initialisée après affichage du menu');
+                        }
+                    }, 50);
                     break;
             }
             
@@ -6554,6 +6561,9 @@ Consultez les logs du serveur pour les détails complets.
             
             collecteMapInitialized = true;
             
+            console.log('🗺️ DÉBUT INITIALISATION CARTE COLLECTE');
+            const startTime = performance.now();
+            
             // Créer la carte centrée sur Ziguinchor
             const collecteMap = L.map('collecte-map').setView([12.9, -16.0], 9);
             
@@ -6565,68 +6575,77 @@ Consultez les logs du serveur pour les détails complets.
                 errorTileUrl: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="256" height="256"%3E%3Crect fill="%23f0f0f0" width="256" height="256"/%3E%3C/svg%3E'
             }).addTo(collecteMap);
             
-            // Ajouter les régions comme étiquettes
-            senegalRegions.forEach(region => {
-                L.circleMarker([region.lat, region.lng], {
-                    radius: 0,
-                    fillOpacity: 0,
-                    opacity: 0
-                })
-                .bindPopup(`<strong style="color: #667eea;">${region.name}</strong><br><small>Région du Sénégal</small>`)
-                .addTo(collecteMap);
-                
-                // Ajouter l'étiquette du nom de région
-                L.marker([region.lat, region.lng], {
-                    icon: L.divIcon({
-                        className: 'senegal-region-label',
-                        html: `<div style="color: #999; font-size: 10px; font-weight: bold; text-align: center; width: 60px; background: rgba(255,255,255,0.7); padding: 2px; border-radius: 3px; white-space: nowrap;">${region.name}</div>`,
-                        iconSize: [60, 20],
-                        iconAnchor: [30, 10]
+            // ⚡ OPTIMISATION : Ajouter les régions avec délai progressif (au lieu de tout à la fois)
+            console.log('📍 Ajout des régions Sénégal...');
+            senegalRegions.forEach((region, idx) => {
+                setTimeout(() => {
+                    L.circleMarker([region.lat, region.lng], {
+                        radius: 0,
+                        fillOpacity: 0,
+                        opacity: 0
                     })
-                }).addTo(collecteMap);
+                    .bindPopup(`<strong style="color: #667eea;">${region.name}</strong><br><small>Région du Sénégal</small>`)
+                    .addTo(collecteMap);
+                    
+                    // Ajouter l'étiquette du nom de région
+                    L.marker([region.lat, region.lng], {
+                        icon: L.divIcon({
+                            className: 'senegal-region-label',
+                            html: `<div style="color: #999; font-size: 10px; font-weight: bold; text-align: center; width: 60px; background: rgba(255,255,255,0.7); padding: 2px; border-radius: 3px; white-space: nowrap;">${region.name}</div>`,
+                            iconSize: [60, 20],
+                            iconAnchor: [30, 10]
+                        })
+                    }).addTo(collecteMap);
+                }, idx * 10); // Délai de 10ms entre chaque région
             });
             
-            // Ajouter les marqueurs des collectes
-            collectesGPS.forEach((collecte, idx) => {
-                // Créer une icône personnalisée
-                const customIcon = L.divIcon({
-                    className: 'custom-collecte-marker',
-                    html: `<div style="
-                        background: linear-gradient(135deg, #6db038 0%, #5ba837 100%);
-                        width: 30px;
-                        height: 30px;
-                        border-radius: 50%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        color: white;
-                        font-size: 18px;
-                        border: 3px solid white;
-                        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-                    ">📍</div>`,
-                    iconSize: [30, 30],
-                    iconAnchor: [15, 15]
-                });
-                
-                // Créer le contenu du popup
-                const popupContent = `
-                    <div style="font-size: 12px;">
-                        <strong style="color: #6db038; font-size: 13px;">📌 ${collecte.commune}</strong><br>
-                        <small style="color: #666;">
-                            <strong>Site:</strong> ${collecte.site}<br>
-                            <strong>Partenaire:</strong> ${collecte.partenaire}<br>
-                            <strong>Coordonnées:</strong> ${collecte.lat.toFixed(4)}, ${collecte.lng.toFixed(4)}<br>
-                            <strong>ID:</strong> Collecte #${collecte.id}<br>
-                            <a href="${collecte.photo}" target="_blank" style="color: #667eea; text-decoration: none;">📷 Voir Photo</a>
-                        </small>
-                    </div>
-                `;
-                
-                // Ajouter le marqueur à la carte
-                const marker = L.marker([collecte.lat, collecte.lng], { icon: customIcon })
-                    .bindPopup(popupContent)
-                    .bindTooltip(`${collecte.commune}`, { permanent: false, direction: 'top' })
-                    .addTo(collecteMap);
+            // ⚡ OPTIMISATION : Charger les marqueurs des collectes GRADUELLEMENT
+            console.log(`🎯 Ajout de ${collectesGPS.length} marqueurs de collecte...`);
+            
+            // Limiter à 50 marqueurs initialement pour éviter surcharge
+            const maxMarkersInitial = 50;
+            const markersToLoad = collectesGPS.slice(0, maxMarkersInitial);
+            
+            // Ajouter les marqueurs avec délai échelonné
+            markersToLoad.forEach((collecte, idx) => {
+                setTimeout(() => {
+                    // Créer une icône personnalisée
+                    const customIcon = L.divIcon({
+                        className: 'custom-collecte-marker',
+                        html: `<div style="
+                            background: linear-gradient(135deg, #6db038 0%, #5ba837 100%);
+                            width: 30px;
+                            height: 30px;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: white;
+                            font-size: 18px;
+                            border: 3px solid white;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                        ">📍</div>`,
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15]
+                    });
+                    
+                    // Créer le contenu du popup (minimal pour rapidité)
+                    const popupContent = `
+                        <div style="font-size: 12px;">
+                            <strong style="color: #6db038; font-size: 13px;">📌 ${collecte.commune}</strong><br>
+                            <small style="color: #666;">
+                                <strong>Site:</strong> ${collecte.site}<br>
+                                <strong>Partenaire:</strong> ${collecte.partenaire}<br>
+                                <strong>Coordonnées:</strong> ${collecte.lat.toFixed(4)}, ${collecte.lng.toFixed(4)}
+                            </small>
+                        </div>
+                    `;
+                    
+                    // Ajouter le marqueur à la carte (sans tooltip pour plus de rapidité)
+                    L.marker([collecte.lat, collecte.lng], { icon: customIcon })
+                        .bindPopup(popupContent)
+                        .addTo(collecteMap);
+                }, idx * 5); // Délai de 5ms entre chaque marqueur
             });
             
             // Ajouter une légende
@@ -6641,9 +6660,9 @@ Consultez les logs du serveur pour les détails complets.
                 div.innerHTML = `
                     <strong style="color: #333; display: block; margin-bottom: 8px;">📊 Statistiques</strong>
                     <div style="color: #666;">
-                        <div><strong>📍 Sites:</strong> ${collectesGPS.length}</div>
+                        <div><strong>📍 Marqueurs:</strong> ${markersToLoad.length}/${collectesGPS.length}</div>
                         <div><strong>🗺️ Région:</strong> Ziguinchor</div>
-                        <div><strong>🏢 Partenaire:</strong> SENELEC</div>
+                        <div><strong>🏢 Partenaire:</strong> SONAGED</div>
                         <div style="margin-top: 8px; color: #999; font-size: 11px;">
                             💡 Cliquez sur les marqueurs<br>pour voir les détails
                         </div>
@@ -6652,6 +6671,11 @@ Consultez les logs du serveur pour les détails complets.
                 return div;
             };
             legend.addTo(collecteMap);
+            
+            // 📊 Afficher time de chargement en console
+            const endTime = performance.now();
+            console.log(`✅ CARTE INITIALISÉE EN ${(endTime - startTime).toFixed(0)}ms`);
+            console.log(`✅ ${markersToLoad.length}/${collectesGPS.length} marqueurs en cours de chargement...`);
         }
         
     </script>
