@@ -71,7 +71,15 @@ app.get('/api/image/:id', async (req, res) => {
             return res.status(404).json({ error: 'Image non trouvée' });
         }
         
-        const photo = result.rows[0].photo;
+        let photo = result.rows[0].photo;
+        
+        // 🔧 Si PostgreSQL retourne le bytea en HEX (chaîne), le convertir en Buffer binaire
+        if (typeof photo === 'string') {
+            // Retirer le préfixe \x si présent
+            const hexString = photo.startsWith('\\x') ? photo.slice(2) : photo;
+            photo = Buffer.from(hexString, 'hex');
+        }
+        
         res.set('Content-Type', 'image/jpeg');
         res.set('Cache-Control', 'public, max-age=31536000'); // 1 an de cache
         res.send(photo);
@@ -82,7 +90,7 @@ app.get('/api/image/:id', async (req, res) => {
     }
 });
 
-const PORT = process.env.API_PORT || 3003;
+const PORT = process.env.API_PORT || 3001;
 app.listen(PORT, () => {
     console.log(`✅ API Images en cours d'exécution sur le port ${PORT}`);
     console.log(`   GET /api/images - Récupérer tous les métadonnées`);

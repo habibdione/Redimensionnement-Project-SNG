@@ -6394,7 +6394,7 @@ Consultez les logs du serveur pour les détails complets.
                 
                 // 1️⃣ PRIORITÉ: Charger depuis l'API PostgreSQL
                 try {
-                    const apiResponse = await fetch('http://localhost:3003/api/images');
+                    const apiResponse = await fetch('http://localhost:3001/api/images');
                     if (apiResponse.ok) {
                         const apiData = await apiResponse.json();
                         if (apiData.images && apiData.images.length > 0) {
@@ -6409,15 +6409,15 @@ Consultez les logs du serveur pour les détails complets.
                                 date: img.date,
                                 lat: img.latitude ? `${img.latitude}°N` : 'N/A',
                                 lng: img.longitude ? `${img.longitude}°O` : 'N/A',
-                                src: `http://localhost:3003/api/image/${img.id}`,
-                                thumbnail: `http://localhost:3003/api/image/${img.id}`
+                                src: `http://localhost:3001/api/image/${img.id}`,
+                                thumbnail: `http://localhost:3001/api/image/${img.id}`
                             }));
                             gallerieSource = 'database-api';
                             console.log(`✅ ${gallerieData.length} images chargées depuis l'API PostgreSQL`);
                         }
                     }
                 } catch (err) {
-                    console.log('⚠️ API PostgreSQL indisponible (http://localhost:3003), fallback sur export local');
+                    console.log('⚠️ API PostgreSQL indisponible (http://localhost:3001), fallback sur export local');
                 }
                 
                 // 2️⃣ FALLBACK: Charger depuis le CSV du dernier export si pas de données DB
