@@ -992,69 +992,12 @@
             helpBox.addTo(landingMap);
         }
     </script>
+
+    <!-- 🗺️ Script d'amélioration de la carte Leaflet -->
+    <script src="./js/map-enhancements.js"></script>
+
 </body>
 </html>
-        
-        @keyframes spin {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(2deg); }
-            75% { transform: rotate(-2deg); }
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .header h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
-            font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            letter-spacing: 0.5px;
-        }
-        
-        .header p {
-            opacity: 0.95;
-            font-size: 15px;
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-        
-        .header-features {
-            font-size: 12px;
-            opacity: 0.88;
-            margin-top: 15px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .header-features span {
-            background: rgba(255,255,255,0.15);
-            padding: 6px 12px;
-            border-radius: 20px;
-        }
-        
-        .content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            padding: 30px;
-        }
-        
-        /* ===== ANIMATIONS FLUIDES ===== */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
         
         @keyframes slideInLeft {
             from {
