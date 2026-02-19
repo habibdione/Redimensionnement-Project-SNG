@@ -1265,6 +1265,214 @@
             }
         }
 
+        /* ===== OPTIMISATION CIRCUIT TRACKER POUR MOBILE ===== */
+        /* Desktop - Circuit Map 500px */
+        #circuit-map {
+            width: 100% !important;
+            height: 500px !important;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Styles pour les marqueurs du circuit */
+        .leaflet-marker-icon {
+            border-radius: 50%;
+        }
+        
+        /* Polyline du circuit - gradient visuel */
+        .leaflet-pane.leaflet-overlay-pane .leaflet-path {
+            transition: stroke-width 0.2s ease;
+        }
+
+        /* Tablette - Circuit Map 350px */
+        @media (max-width: 768px) {
+            #circuit-map {
+                height: 350px !important;
+            }
+            
+            /* Modal circuit en 2 colonnes */
+            #circuit-modal > div > div:nth-child(1) {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 15px !important;
+            }
+        }
+
+        /* Petit mobile - Circuit Map 200px */
+        @media (max-width: 480px) {
+            #circuit-map {
+                height: 200px !important;
+            }
+            
+            /* Modal circuit en 1 colonne */
+            #circuit-modal > div > div:nth-child(1) {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 12px !important;
+            }
+            
+            /* Panel contrôle passe sous la carte */
+            #circuit-modal > div > div:nth-child(2) {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+
+        /* Responsive - Tablette (768px) */
+        @media (max-width: 768px) {
+            #circuit-modal > div {
+                grid-template-columns: 1fr !important;
+            }
+            
+            #circuits-list {
+                max-height: 200px !important;
+            }
+        }
+        
+        /* Responsive - Small Mobile (480px) */
+        @media (max-width: 480px) {
+            #circuit-modal > div {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+            
+            #circuits-list {
+                max-height: 150px !important;
+            }
+        }
+
+        /* Écrans très courts en hauteur (paysage sur petit mobile) */
+        @media (max-height: 600px) {
+            #circuit-map {
+                height: 150px !important;
+            }
+            
+            #circuit-modal > div {
+                min-height: auto !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+            }
+        }
+
+        /* ===== OPTIMISATION TAILLE BOUTONS MOBILE ===== */
+        button {
+            min-height: 44px;
+            min-width: 44px;
+            padding: 12px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        @media (max-width: 480px) {
+            button {
+                padding: 14px 18px !important;
+                font-size: 14px !important;
+                min-height: 48px !important;
+            }
+        }
+
+        /* ===== OPTIMISATION INPUT MOBILE ===== */
+        input, select, textarea {
+            font-size: 16px; /* Évite auto-zoom iOS */
+            min-height: 44px;
+            padding: 10px 12px;
+        }
+
+        @media (max-width: 480px) {
+            input, select, textarea {
+                padding: 12px 14px !important;
+                font-size: 16px !important;
+            }
+        }
+
+        /* ===== GESTION ORIENTATION MOBILE ===== */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .container {
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .header {
+                padding: 10px 15px;
+            }
+
+            .header h1 {
+                font-size: 16px;
+            }
+
+            #map, #collecte-map, #circuit-map {
+                height: 300px !important;
+            }
+
+            body {
+                padding: 0;
+            }
+        }
+
+        /* ===== RESPONSIVE MODAL CIRCUIT ===== */
+        #circuit-modal > div {
+            width: 95% !important;
+            max-width: 100vw !important;
+            margin: 30px auto !important;
+            max-height: auto !important;
+        }
+
+        @media (max-width: 480px) {
+            #circuit-modal > div {
+                margin: 10px auto !important;
+                border-radius: 8px !important;
+            }
+            
+            #circuit-modal > div > div:first-child {
+                padding: 12px 15px !important;
+            }
+        }
+
+        /* ===== INDICATEUR QUALITÉ GPS - NOUVEAU ===== */
+        .gps-quality {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .gps-quality.good {
+            background: #6db038;
+            color: white;
+        }
+
+        .gps-quality.medium {
+            background: #ff9800;
+            color: white;
+        }
+
+        .gps-quality.poor {
+            background: #c92a2a;
+            color: white;
+        }
+
+        /* ===== SUPPORT NOTCH & SAFE AREA ===== */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(15px, env(safe-area-inset-left));
+                padding-right: max(15px, env(safe-area-inset-right));
+                padding-top: max(15px, env(safe-area-inset-top));
+                padding-bottom: max(15px, env(safe-area-inset-bottom));
+            }
+        }
+
+        video, canvas {
+                max-height: 200px !important;
+            }
+
         /* Desktop et écrans larges (1000px+) */
         @media (min-width: 1000px) {
             /* Optimiser les images pour les grands écrans */
@@ -1746,6 +1954,12 @@
         }
     </style>
 
+    <!-- 🗺️ TURF.JS pour géométries & buffer -->
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    
+    <!-- 📝 SHPWRITE pour export Shapefile client-side -->
+    <script src="https://cdn.jsdelivr.net/npm/shpwrite@0.3.2/dist/shpwrite.js"></script>
+
 </head>
 <body>
     <div id="alert-container" style="position: fixed; top: 10px; right: 10px; z-index: 1000; max-width: 300px;"></div>
@@ -1789,7 +2003,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
                 <div style="animation: slideInLeft 0.8s ease-out;">
                     <h2 style="font-size: 48px; font-weight: 800; color: #2d5016; margin-bottom: 20px; line-height: 1.2;">
-                        🌍 Bienvenue à SONAGED
+                        🌍 Bienvenue à l'application de Dimensionnement SONAGED
                     </h2>
                     <p style="font-size: 18px; color: #4a5568; margin-bottom: 20px; line-height: 1.7; font-weight: 600;">
                         <strong>Société Nationale de Gestion de Déchets</strong>
@@ -2290,22 +2504,22 @@
                 
                 <div class="galerie-stats">
                     <div class="galerie-stat-item">
-                        <div class="galerie-stat-number">8</div>
+                        <div class="galerie-stat-number" id="galerie-count-collectes">8</div>
                         <div class="galerie-stat-label">Collectes</div>
                     </div>
                     <div class="galerie-stat-item">
-                        <div class="galerie-stat-number">1</div>
+                        <div class="galerie-stat-number" id="galerie-count-regions">1</div>
                         <div class="galerie-stat-label">Régions</div>
                     </div>
                     <div class="galerie-stat-item">
-                        <div class="galerie-stat-number">8</div>
+                        <div class="galerie-stat-number" id="galerie-count-images">8</div>
                         <div class="galerie-stat-label">Images</div>
                     </div>
                 </div>
                 
                 <div class="galerie-scroll">
                     <div class="galerie-item" onclick="openGalerieModal(0)">
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_12_1.jpg" alt="Oussouye">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_12_1.jpg" alt="Oussouye">
                         <div class="galerie-item-info">
                             <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                             <div class="galerie-item-commune">📍 Oussouye</div>
@@ -2314,7 +2528,7 @@
                     </div>
 
                     <div class="galerie-item" onclick="openGalerieModal(1)">
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_11_2.jpg" alt="Diembéring">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_11_2.jpg" alt="Diembéring">
                         <div class="galerie-item-info">
                             <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                             <div class="galerie-item-commune">📍 Diembéring</div>
@@ -2323,7 +2537,7 @@
                     </div>
 
                     <div class="galerie-item" onclick="openGalerieModal(2)">
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_10_3.jpg" alt="Ziguinchor">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_10_3.jpg" alt="Ziguinchor">
                         <div class="galerie-item-info">
                             <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                             <div class="galerie-item-commune">📍 Ziguinchor</div>
@@ -2332,7 +2546,7 @@
                     </div>
 
                     <div class="galerie-item" onclick="openGalerieModal(3)">
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_9_4.jpg" alt="Niaguis">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_9_4.jpg" alt="Niaguis">
                         <div class="galerie-item-info">
                             <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                             <div class="galerie-item-commune">📍 Niaguis</div>
@@ -2341,7 +2555,7 @@
                     </div>
 
                     <div class="galerie-item" onclick="openGalerieModal(4)">
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_8_5.jpg" alt="Ziguinchor">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_8_5.jpg" alt="Ziguinchor">
                         <div class="galerie-item-info">
                             <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                             <div class="galerie-item-commune">📍 Ziguinchor</div>
@@ -2350,7 +2564,7 @@
                     </div>
 
                     <div class="galerie-item" onclick="openGalerieModal(5)">
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_7_6.jpg" alt="Ziguinchor">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_7_6.jpg" alt="Ziguinchor">
                         <div class="galerie-item-info">
                             <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                             <div class="galerie-item-commune">📍 Ziguinchor</div>
@@ -2359,7 +2573,7 @@
                     </div>
 
                     <div class="galerie-item" onclick="openGalerieModal(6)">
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_6_7.jpg" alt="Ziguinchor">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_6_7.jpg" alt="Ziguinchor">
                         <div class="galerie-item-info">
                             <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                             <div class="galerie-item-commune">📍 Ziguinchor</div>
@@ -2368,7 +2582,7 @@
                     </div>
 
                     <div class="galerie-item" onclick="openGalerieModal(7)">
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T18-16-04/images/photo_5_8.jpg" alt="Ziguinchor">
+                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_5_8.jpg" alt="Ziguinchor">
                         <div class="galerie-item-info">
                             <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
                             <div class="galerie-item-commune">📍 Ziguinchor</div>
@@ -2388,6 +2602,115 @@
         </div>
         
         </div>
+        </div>
+        
+        <!-- 🗺️ MODAL TRACEUR DE CIRCUIT DE COLLECTE/BALAYAGE (caché par défaut) -->
+        <div id="circuit-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; overflow: auto;">
+            <div style="background: white; margin: 15px auto; width: 95%; max-width: 1200px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); overflow: hidden;">
+                
+                <!-- En-tête Modal -->
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h2 style="margin: 0; font-size: 22px; font-weight: 700;">🗺️ Traceur de Circuit - <span id="circuit-type-label">Collecte</span></h2>
+                        <p style="margin: 5px 0 0 0; font-size: 13px; opacity: 0.9;">Tracez votre itinéraire de collecte en temps réel</p>
+                    </div>
+                    <button onclick="fermerModalCircuit()" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border: 1px solid white; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s;">✕ Fermer</button>
+                </div>
+                
+                <!-- Contenu Modal -->
+                <div style="display: grid; grid-template-columns: 280px 1fr 350px; gap: 15px; padding: 20px; min-height: 600px;">
+                    
+                    <!-- 📋 LISTE CIRCUITS (GAUCHE) -->
+                    <div style="display: flex; flex-direction: column; gap: 10px; background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; overflow-y: auto;">
+                        <h3 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 700; color: #2d5016; display: flex; align-items: center; gap: 8px;">
+                            <span>📍 Circuits</span>
+                            <span id="circuits-count" style="background: #6db038; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">0</span>
+                        </h3>
+                        <div id="circuits-list" style="display: flex; flex-direction: column; gap: 8px;">
+                            <div style="text-align: center; color: #999; padding: 20px 10px; font-size: 12px;">Aucun circuit sauvegardé</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Carte -->
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <!-- Basemap Selector -->
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; padding: 10px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="radio" name="basemap" value="osm" onchange="changerBasemap('osm')" checked> 🗺️ OSM Standard</label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="radio" name="basemap" value="satellite" onchange="changerBasemap('satellite')"> 🛰️ Satellite</label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="radio" name="basemap" value="topo" onchange="changerBasemap('topo')"> ⛰️ Relief</label>
+                        </div>
+                        
+                        <!-- Carte -->
+                        <div id="circuit-map" style="width: 100%; height: 500px; border-radius: 8px; border: 2px solid #e5e7eb; z-index: 100;"></div>
+                        
+                        <!-- Stats -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 12px; background: #f0f8e6; border-radius: 8px; border-left: 4px solid #6db038;">
+                            <div>
+                                <div style="font-size: 12px; color: #666;">Distance</div>
+                                <div style="font-size: 18px; font-weight: 700; color: #2d5016;"><span id="circuit-distance">0</span> km</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: #666;">Durée</div>
+                                <div style="font-size: 18px; font-weight: 700; color: #2d5016;"><span id="circuit-time">00:00</span></div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: #666;">Points GPS</div>
+                                <div style="font-size: 18px; font-weight: 700; color: #2d5016;"><span id="circuit-points">0</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Panneau Contrôle -->
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        
+                        <!-- Contrôles GPS -->
+                        <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                            <h3 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: #2d5016;">📡 Contrôles</h3>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <button id="btn-demarrer-circuit" onclick="demarrerTracking()" style="width: 100%; background: linear-gradient(135deg, #6db038 0%, #5ba837 100%); color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s;">▶️ Démarrer</button>
+                                <button id="btn-pause-circuit" onclick="pauseTracking()" style="width: 100%; background: #667eea; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: none; transition: all 0.2s;">⏸️ Pause</button>
+                                <button id="btn-ajouter-marker" onclick="ajouterMarqueurCircuit()" style="width: 100%; background: #667eea; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: none; transition: all 0.2s;">📌 +Repère</button>
+                                <button id="btn-terminer-circuit" onclick="terminerTracking()" style="width: 100%; background: #c92a2a; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: none; transition: all 0.2s;">✓ Terminer</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Info Position -->
+                        <div style="background: #f0f8e6; padding: 12px; border-radius: 8px; border-left: 4px solid #6db038; font-size: 12px; color: #2d5016;">
+                            <div><strong>Lat:</strong> <span id="circuit-lat">--</span></div>
+                            <div><strong>Lon:</strong> <span id="circuit-lon">--</span></div>
+                            <div style="margin-top: 8px;"><strong>Précision:</strong> <span id="circuit-accuracy" class="gps-quality good">-- m</span></div>
+                            <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #6db038;"><strong>Status:</strong> <span id="circuit-status" style="color: #c92a2a; font-weight: 600;">Arrêté</span></div>
+                        </div>
+                        
+                        <!-- Zone Résumé -->
+                        <div style="background: #fff3cd; padding: 12px; border-radius: 8px; border-left: 4px solid #ffc107; font-size: 12px; color: #333;">
+                            <strong style="display: block; margin-bottom: 8px;">ℹ️ Instructions</strong>
+                            <ul style="margin: 0; padding-left: 18px;">
+                                <li>Cliquez "Démarrage"</li>
+                                <li>Le GPS enregistre</li>
+                                <li>Terminez quand fini</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Export & Buffer -->
+                        <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                            <h3 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: #2d5016;">💾 Export</h3>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div>
+                                    <label style="font-size: 12px; font-weight: 600; color: #666; display: block; margin-bottom: 4px;">Nom du circuit</label>
+                                    <input type="text" id="circuit-name" placeholder="Circuit 1" style="width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px; font-size: 12px;">
+                                </div>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px;">
+                                    <input type="checkbox" id="circuit-buffer" checked>
+                                    <span>+ Buffer 100m (couverture bâti)</span>
+                                </label>
+                                <button onclick="exporterCircuitShapefile()" style="width: 100%; background: #6db038; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s;">📦 Shapefile</button>
+                                <button onclick="exporterCircuitGeoJSON()" style="width: 100%; background: #667eea; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s;">📄 GeoJSON</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- HEADER AVEC BOUTON RETOUR À L'ACCUEIL -->
@@ -4743,6 +5066,625 @@ Consultez les logs du serveur pour les détails complets.
             }
         }
         
+        // ============= 🗺️ CIRCUIT TRACKER ===============
+        let circuitMap = null;
+        let circuitTracking = false;
+        let circuitPoints = [];
+        let circuitPolyline = null;
+        let circuitMarkers = [];
+        let trackingStartTime = null;
+        let trackingWatchId = null;
+        let basemapLayers = {};
+        let startMarker = null;
+        let currentPositionMarker = null;
+        let accuracyCircle = null;
+        let circuitsHistory = [];
+        let selectedCircuitId = null;
+        
+        // Event listener pour déterminer "Collecte" ou "Balayage"
+        document.getElementById('typeActivite')?.addEventListener('change', function() {
+            const selectedTypes = Array.from(this.selectedOptions).map(o => o.value);
+            if (selectedTypes.includes('Collecte') || selectedTypes.includes('Balayage')) {
+                const typeLabel = selectedTypes.includes('Collecte') ? 'Collecte' : 'Balayage';
+                if (selectedTypes.includes('Collecte') && selectedTypes.includes('Balayage')) {
+                    ouvrirModalCircuit('Collecte/Balayage');
+                } else {
+                    ouvrirModalCircuit(typeLabel);
+                }
+            }
+        });
+        
+        function ouvrirModalCircuit(type) {
+            document.getElementById('circuit-modal').style.display = 'block';
+            document.getElementById('circuit-type-label').textContent = type;
+            document.body.style.overflow = 'hidden';
+            
+            // Initialiser la carte avec délai
+            setTimeout(initCircuitMap, 500);
+        }
+        
+        function fermerModalCircuit() {
+            document.getElementById('circuit-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            if (trackingWatchId) navigator.geolocation.clearWatch(trackingWatchId);
+            circuitTracking = false;
+        }
+        
+        function initCircuitMap() {
+            if (circuitMap) return;
+            
+            circuitMap = L.map('circuit-map').setView([13.1939, -15.5277], 13);
+            
+            // Basemap OSM Standard
+            basemapLayers.osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap',
+                maxZoom: 19
+            }).addTo(circuitMap);
+            
+            // Basemap Satellite (Esri)
+            basemapLayers.satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '© Esri',
+                maxZoom: 18
+            });
+            
+            // Basemap Topographique (OpenTopoMap)
+            basemapLayers.topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenTopoMap',
+                maxZoom: 17
+            });
+            
+            // Charger les circuits sauvegardés
+            chargerCircuits();
+            
+            // Ajouter les marqueurs actuels
+            circuitMarkers = [];
+            circuitPoints = [];
+            updateCircuitStats();
+        }
+        
+        function changerBasemap(type) {
+            if (!circuitMap) return;
+            
+            // Retirer tous les basemaps
+            Object.values(basemapLayers).forEach(layer => circuitMap.removeLayer(layer));
+            
+            // Ajouter le basemap sélectionné
+            basemapLayers[type].addTo(circuitMap);
+        }
+        
+        function demarrerTracking() {
+            circuitTracking = true;
+            trackingStartTime = new Date();
+            circuitPoints = [];
+            circuitPolyline = null;
+            circuitMarkers = [];
+            startMarker = null;
+            currentPositionMarker = null;
+            
+            document.getElementById('btn-demarrer-circuit').style.display = 'none';
+            document.getElementById('btn-pause-circuit').style.display = 'block';
+            document.getElementById('btn-ajouter-marker').style.display = 'block';
+            document.getElementById('btn-terminer-circuit').style.display = 'block';
+            document.getElementById('circuit-status').textContent = '🔴 ENREGISTREMENT...';
+            document.getElementById('circuit-status').style.color = '#c92a2a';
+            
+            // Démarrer le tracking GPS
+            if (navigator.geolocation) {
+                trackingWatchId = navigator.geolocation.watchPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        const accuracy = position.coords.accuracy;
+                        
+                        circuitPoints.push([lat, lon]);
+                        document.getElementById('circuit-lat').textContent = lat.toFixed(6);
+                        document.getElementById('circuit-lon').textContent = lon.toFixed(6);
+                        
+                        // Afficher précision avec code couleur
+                        const accuracySpan = document.getElementById('circuit-accuracy');
+                        accuracySpan.textContent = accuracy.toFixed(1) + ' m';
+                        
+                        // Colorier selon la précision (bonnes pratiques: < 10m = bon, < 20m = moyen)
+                        accuracySpan.className = 'gps-quality';
+                        if (accuracy < 10) {
+                            accuracySpan.classList.add('good');
+                            accuracySpan.textContent = '✓ ' + accuracy.toFixed(1) + ' m';
+                        } else if (accuracy < 20) {
+                            accuracySpan.classList.add('medium');
+                            accuracySpan.textContent = '⚠ ' + accuracy.toFixed(1) + ' m';
+                        } else {
+                            accuracySpan.classList.add('poor');
+                            accuracySpan.textContent = '✗ ' + accuracy.toFixed(1) + ' m';
+                        }
+                        
+                        // 🎯 SI C'EST LE PREMIER POINT - Ajouter marqueur de départ
+                        if (circuitPoints.length === 1) {
+                            startMarker = L.marker([lat, lon], {
+                                icon: L.icon({
+                                    iconUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%236db038"><rect width="24" height="24" fill="none"/><circle cx="12" cy="12" r="6" fill="%236db038"/><circle cx="12" cy="12" r="4" fill="white"/></svg>',
+                                    iconSize: [32, 32],
+                                    iconAnchor: [16, 16]
+                                })
+                            }).addTo(circuitMap);
+                            startMarker.bindPopup('🟢 Départ du circuit');
+                            circuitMap.setView([lat, lon], 16);
+                        }
+                        
+                        // 📍 METTRE À JOUR MARQUEUR DE POSITION ACTUELLE
+                        if (currentPositionMarker) {
+                            circuitMap.removeLayer(currentPositionMarker);
+                        }
+                        if (accuracyCircle) {
+                            circuitMap.removeLayer(accuracyCircle);
+                        }
+                        
+                        // Marqueur principal (position actuelle)
+                        currentPositionMarker = L.circleMarker([lat, lon], {
+                            radius: 8,
+                            fillColor: '#667eea',
+                            color: '#667eea',
+                            weight: 2,
+                            opacity: 1,
+                            fillOpacity: 0.8
+                        }).addTo(circuitMap);
+                        currentPositionMarker.bindPopup(`📍 Position actuelle<br>Lat: ${lat.toFixed(6)}<br>Lon: ${lon.toFixed(6)}<br>Précision: ±${accuracy.toFixed(1)}m`);
+                        
+                        // 🔵 CERCLE DE PRÉCISION (accuracy circle)
+                        accuracyCircle = L.circle([lat, lon], {
+                            radius: accuracy,
+                            fillColor: '#667eea',
+                            fillOpacity: 0.1,
+                            color: '#667eea',
+                            weight: 1,
+                            opacity: 0.5,
+                            dashArray: '5, 5'
+                        }).addTo(circuitMap);
+                        
+                        // Tracer la polyline en temps réel
+                        if (!circuitPolyline) {
+                            circuitPolyline = L.polyline(circuitPoints, {
+                                color: '#667eea',
+                                weight: 3,
+                                opacity: 0.8,
+                                lineCap: 'round',
+                                lineJoin: 'round'
+                            }).addTo(circuitMap);
+                        } else {
+                            circuitPolyline.setLatLngs(circuitPoints);
+                        }
+                        
+                        circuitMap.setView([lat, lon], 15);
+                        updateCircuitStats();
+                    },
+                    (error) => {
+                        console.log('GPS Error:', error);
+                        document.getElementById('circuit-status').textContent = '❌ Erreur GPS: ' + error.message;
+                        document.getElementById('circuit-status').style.color = '#c92a2a';
+                    },
+                    { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
+                );
+            }
+        }
+        
+        function pauseTracking() {
+            circuitTracking = false;
+            if (trackingWatchId) navigator.geolocation.clearWatch(trackingWatchId);
+            
+            document.getElementById('btn-pause-circuit').style.display = 'none';
+            document.getElementById('btn-demarrer-circuit').style.display = 'block';
+            document.getElementById('circuit-status').textContent = '⏸️ PAUSE';
+            document.getElementById('circuit-status').style.color = '#ff9800';
+            
+            // Garder le marqueur de position actuelle visible mais en pause
+            if (currentPositionMarker) {
+                // Changer la couleur du marqueur en pause
+                currentPositionMarker.setStyle({
+                    fillColor: '#ff9800',
+                    color: '#ff9800'
+                });
+            }
+            
+            // Réduire l'opacité du cercle de précision
+            if (accuracyCircle) {
+                accuracyCircle.setStyle({
+                    opacity: 0.2,
+                    fillOpacity: 0.05
+                });
+            }
+        }
+        
+        function ajouterMarqueurCircuit() {
+            if (circuitPoints.length > 0) {
+                const lastPoint = circuitPoints[circuitPoints.length - 1];
+                const marker = L.marker([lastPoint[0], lastPoint[1]], {
+                    icon: L.icon({
+                        iconUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red"><circle cx="12" cy="12" r="8"/></svg>',
+                        iconSize: [24, 24],
+                        iconAnchor: [12, 12]
+                    })
+                }).addTo(circuitMap).bindPopup(`📍 Repère ${circuitMarkers.length + 1}`);
+                circuitMarkers.push(marker);
+            }
+        }
+        
+        // ============= 💾 GESTION DES CIRCUITS ===============
+        function chargerCircuits() {
+            try {
+                const stored = localStorage.getItem('circuitsHistory');
+                circuitsHistory = stored ? JSON.parse(stored) : [];
+                afficherListeCircuits();
+            } catch (e) {
+                console.warn('⚠️ Erreur lors du chargement des circuits:', e);
+                circuitsHistory = [];
+            }
+        }
+        
+        function sauvegarderCircuit(nom) {
+            if (circuitPoints.length < 2) {
+                showAlert('error', '❌ Circuit trop court (minimum 2 points)');
+                return;
+            }
+            
+            const distance = turf.length({
+                type: 'Feature',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: circuitPoints.map(p => [p[1], p[0]])
+                }
+            });
+            
+            const circuit = {
+                id: Date.now(),
+                nom: nom || `Circuit ${new Date().toLocaleString('fr-FR')}`,
+                points: circuitPoints,
+                markers: circuitMarkers.map(m => m.getLatLng()),
+                distance: distance,
+                pointsCount: circuitPoints.length,
+                duree: document.getElementById('circuit-time').textContent,
+                dateCreation: new Date().toLocaleString('fr-FR'),
+                buffer: document.getElementById('circuit-buffer')?.checked || false
+            };
+            
+            circuitsHistory.push(circuit);
+            localStorage.setItem('circuitsHistory', JSON.stringify(circuitsHistory));
+            afficherListeCircuits();
+            showAlert('success', `✅ Circuit sauvegardé: ${circuit.nom}`);
+        }
+        
+        function afficherListeCircuits() {
+            const lista = document.getElementById('circuits-list');
+            const count = document.getElementById('circuits-count');
+            
+            if (circuitsHistory.length === 0) {
+                lista.innerHTML = '<div style="text-align: center; color: #999; padding: 20px 10px; font-size: 12px;">Aucun circuit sauvegardé</div>';
+                count.textContent = '0';
+                return;
+            }
+            
+            count.textContent = circuitsHistory.length;
+            lista.innerHTML = circuitsHistory.map(circuit => `
+                <div style="background: white; padding: 12px; border-radius: 6px; border: 2px solid ${selectedCircuitId === circuit.id ? '#667eea' : '#e5e7eb'}; cursor: pointer; transition: all 0.2s;" onclick="chargerCircuitSurCarte(${circuit.id})">
+                    <div style="font-size: 12px; font-weight: 700; color: #2d5016; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${circuit.nom}</div>
+                    <div style="font-size: 10px; color: #999; margin-top: 4px;">
+                        📏 ${circuit.distance.toFixed(2)} km
+                        <br>📍 ${circuit.pointsCount} points
+                        <br>⏱️ ${circuit.duree}
+                    </div>
+                    <div style="display: flex; gap: 4px; margin-top: 8px;">
+                        <button onclick="event.stopPropagation(); exporterGPX(${circuit.id})" style="flex: 1; padding: 4px 6px; font-size: 10px; background: #667eea; color: white; border: none; border-radius: 3px; cursor: pointer; font-weight: 600;">📍 GPX</button>
+                        <button onclick="event.stopPropagation(); modifierCircuit(${circuit.id})" style="flex: 1; padding: 4px 6px; font-size: 10px; background: #ff9800; color: white; border: none; border-radius: 3px; cursor: pointer; font-weight: 600;">✏️ Éditer</button>
+                        <button onclick="event.stopPropagation(); supprimerCircuit(${circuit.id})" style="flex: 1; padding: 4px 6px; font-size: 10px; background: #c92a2a; color: white; border: none; border-radius: 3px; cursor: pointer; font-weight: 600;">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function chargerCircuitSurCarte(circuitId) {
+            const circuit = circuitsHistory.find(c => c.id === circuitId);
+            if (!circuit) return;
+            
+            selectedCircuitId = circuitId;
+            
+            // Nettoyer la carte
+            if (circuitPolyline) circuitMap.removeLayer(circuitPolyline);
+            circuitMarkers.forEach(m => circuitMap.removeLayer(m));
+            if (startMarker) circuitMap.removeLayer(startMarker);
+            if (currentPositionMarker) circuitMap.removeLayer(currentPositionMarker);
+            if (accuracyCircle) circuitMap.removeLayer(accuracyCircle);
+            
+            circuitMarkers = [];
+            circuitPoints = circuit.points;
+            
+            // Afficher la polyline
+            circuitPolyline = L.polyline(circuit.points, {
+                color: '#667eea',
+                weight: 3,
+                opacity: 0.8,
+                lineCap: 'round',
+                lineJoin: 'round'
+            }).addTo(circuitMap);
+            
+            // Afficher les repères
+            circuit.markers.forEach((point, idx) => {
+                const marker = L.marker([point.lat, point.lng], {
+                    icon: L.icon({
+                        iconUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red"><circle cx="12" cy="12" r="8"/></svg>',
+                        iconSize: [24, 24],
+                        iconAnchor: [12, 12]
+                    })
+                }).addTo(circuitMap).bindPopup(`📍 Repère ${idx + 1}`);
+                circuitMarkers.push(marker);
+            });
+            
+            // Zoom sur le circuit
+            const bounds = L.latLngBounds(circuit.points);
+            circuitMap.fitBounds(bounds, { padding: [50, 50] });
+            
+            // Marqueur de départ
+            if (circuit.points.length > 0) {
+                const start = circuit.points[0];
+                startMarker = L.marker([start[0], start[1]], {
+                    icon: L.icon({
+                        iconUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%236db038"><rect width="24" height="24" fill="none"/><circle cx="12" cy="12" r="6" fill="%236db038"/><circle cx="12" cy="12" r="4" fill="white"/></svg>',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16]
+                    })
+                }).addTo(circuitMap);
+                startMarker.bindPopup('🟢 Départ du circuit');
+            }
+            
+            // Marqueur de fin
+            if (circuit.points.length > 1) {
+                const end = circuit.points[circuit.points.length - 1];
+                const endMarker = L.marker([end[0], end[1]], {
+                    icon: L.icon({
+                        iconUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23c92a2a"><rect width="24" height="24" fill="none"/><circle cx="12" cy="12" r="6" fill="%23c92a2a"/><circle cx="12" cy="12" r="4" fill="white"/></svg>',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16]
+                    })
+                }).addTo(circuitMap);
+                endMarker.bindPopup('🔴 Fin du circuit');
+            }
+            
+            afficherListeCircuits();
+        }
+        
+        function supprimerCircuit(circuitId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce circuit?')) {
+                circuitsHistory = circuitsHistory.filter(c => c.id !== circuitId);
+                localStorage.setItem('circuitsHistory', JSON.stringify(circuitsHistory));
+                if (selectedCircuitId === circuitId) {
+                    selectedCircuitId = null;
+                    if (circuitPolyline) circuitMap.removeLayer(circuitPolyline);
+                    circuitMarkers.forEach(m => circuitMap.removeLayer(m));
+                }
+                afficherListeCircuits();
+                showAlert('success', '✓ Circuit supprimé');
+            }
+        }
+        
+        function modifierCircuit(circuitId) {
+            const circuit = circuitsHistory.find(c => c.id === circuitId);
+            if (!circuit) return;
+            
+            const newNom = prompt('Nouveau nom du circuit:', circuit.nom);
+            if (newNom && newNom.trim()) {
+                circuit.nom = newNom.trim();
+                localStorage.setItem('circuitsHistory', JSON.stringify(circuitsHistory));
+                afficherListeCircuits();
+                showAlert('success', '✓ Circuit renommé');
+            }
+        }
+        
+        function exporterGPX(circuitId) {
+            const circuit = circuitsHistory.find(c => c.id === circuitId);
+            if (!circuit) return;
+            
+            // Créer un GPX de base
+            let gpxContent = `<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>${circuit.nom}</name>
+    <desc>Circuit de collecte - Distance: ${circuit.distance.toFixed(2)} km</desc>
+    <time>${new Date().toISOString()}</time>
+  </metadata>
+  <trk>
+    <name>${circuit.nom}</name>
+    <trkseg>`;
+            
+            circuit.points.forEach(point => {
+                gpxContent += `
+      <trkpt lat="${point[0]}" lon="${point[1]}">
+        <time>${new Date().toISOString()}</time>
+      </trkpt>`;
+            });
+            
+            gpxContent += `
+    </trkseg>
+  </trk>
+</gpx>`;
+            
+            const blob = new Blob([gpxContent], { type: 'application/gpx+xml' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `${circuit.nom}.gpx`;
+            a.click();
+            
+            showAlert('success', `✓ GPX exporté: ${circuit.nom}.gpx`);
+        }
+        
+        function terminerTracking() {
+            pauseTracking();
+            
+            document.getElementById('btn-demarrer-circuit').style.display = 'block';
+            document.getElementById('btn-pause-circuit').style.display = 'none';
+            document.getElementById('btn-ajouter-marker').style.display = 'none';
+            document.getElementById('btn-terminer-circuit').style.display = 'none';
+            document.getElementById('circuit-status').textContent = '✓ TERMINÉ';
+            document.getElementById('circuit-status').style.color = '#6db038';
+            
+            // 🎯 AJOUTER MARQUEUR DE FIN
+            if (circuitPoints.length > 1) {
+                const lastPoint = circuitPoints[circuitPoints.length - 1];
+                const endMarker = L.marker([lastPoint[0], lastPoint[1]], {
+                    icon: L.icon({
+                        iconUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23c92a2a"><rect width="24" height="24" fill="none"/><circle cx="12" cy="12" r="6" fill="%23c92a2a"/><circle cx="12" cy="12" r="4" fill="white"/></svg>',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16]
+                    })
+                }).addTo(circuitMap);
+                endMarker.bindPopup('🔴 Fin du circuit');
+            }
+            
+            // Supprimer le marqueur et le cercle de position actuelle
+            if (currentPositionMarker) {
+                circuitMap.removeLayer(currentPositionMarker);
+            }
+            if (accuracyCircle) {
+                circuitMap.removeLayer(accuracyCircle);
+            }
+            
+            // Afficher un résumé du circuit
+            const distance = (turf.length(circuitPolyline?.toGeoJSON() || { type: 'Feature', geometry: { type: 'LineString', coordinates: [] } }) || 0).toFixed(3);
+            const duration = document.getElementById('circuit-time').textContent;
+            const points = circuitPoints.length;
+            
+            // 💾 SAUVEGARDER LE CIRCUIT
+            sauvegarderCircuit(document.getElementById('circuit-name').value);
+            
+            showAlert('success', `✅ Circuit enregistré!\n📏 Distance: ${distance} km\n⏱️ Durée: ${duration}\n📍 Points GPS: ${points}`);
+        }
+        
+        function updateCircuitStats() {
+            if (circuitPoints.length > 0) {
+                const feature = {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: circuitPoints.map(p => [p[1], p[0]])
+                    }
+                };
+                const distance = turf.length(feature, { units: 'kilometers' });
+                document.getElementById('circuit-distance').textContent = distance.toFixed(2);
+            }
+            
+            const now = new Date();
+            const elapsed = trackingStartTime ? (now - trackingStartTime) / 1000 : 0;
+            const hours = Math.floor(elapsed / 3600);
+            const minutes = Math.floor((elapsed % 3600) / 60);
+            const seconds = Math.floor(elapsed % 60);
+            document.getElementById('circuit-time').textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            
+            document.getElementById('circuit-points').textContent = circuitPoints.length;
+        }
+        
+        function exporterCircuitGeoJSON() {
+            if (circuitPoints.length < 2) {
+                alert('❌ Au moins 2 points GPS requis pour exporter!');
+                return;
+            }
+            
+            const circuitName = document.getElementById('circuit-name').value || 'Circuit';
+            const hasBuffer = document.getElementById('circuit-buffer').checked;
+            
+            const geoJSON = {
+                type: 'FeatureCollection',
+                features: [{
+                    type: 'Feature',
+                    properties: {
+                        name: circuitName,
+                        timestamp: new Date().toISOString(),
+                        distance_km: (turf.length({ type: 'Feature', geometry: { type: 'LineString', coordinates: circuitPoints.map(p => [p[1], p[0]]) } }, { units: 'kilometers' })).toFixed(2),
+                        points_count: circuitPoints.length
+                    },
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: circuitPoints.map(p => [p[1], p[0]])
+                    }
+                }]
+            };
+            
+            if (hasBuffer) {
+                const line = turf.lineString(circuitPoints.map(p => [p[1], p[0]]));
+                const buffered = turf.buffer(line, 0.1, { units: 'kilometers' });
+                geoJSON.features.push({
+                    type: 'Feature',
+                    properties: { name: `${circuitName} - Buffer 100m` },
+                    geometry: buffered.geometry
+                });
+            }
+            
+            const blob = new Blob([JSON.stringify(geoJSON, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${circuitName}.geojson`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert('✅ GeoJSON exporté: ' + a.download);
+        }
+        
+        function exporterCircuitShapefile() {
+            if (circuitPoints.length < 2) {
+                alert('❌ Au moins 2 points GPS requis pour exporter!');
+                return;
+            }
+            
+            const circuitName = document.getElementById('circuit-name').value || 'Circuit';
+            const hasBuffer = document.getElementById('circuit-buffer').checked;
+            
+            const features = [{
+                type: 'Feature',
+                properties: {
+                    ID: 1,
+                    NAME: circuitName,
+                    DIST_KM: (turf.length({ type: 'Feature', geometry: { type: 'LineString', coordinates: circuitPoints.map(p => [p[1], p[0]]) } }, { units: 'kilometers' })).toFixed(2),
+                    NB_POINTS: circuitPoints.length,
+                    DATE: new Date().toISOString()
+                },
+                geometry: {
+                    type: 'LineString',
+                    coordinates: circuitPoints.map(p => [p[1], p[0]])
+                }
+            }];
+            
+            if (hasBuffer) {
+                const line = turf.lineString(circuitPoints.map(p => [p[1], p[0]]));
+                const buffered = turf.buffer(line, 0.1, { units: 'kilometers' });
+                features.push({
+                    type: 'Feature',
+                    properties: {
+                        ID: 2,
+                        NAME: `${circuitName}_Buffer`,
+                        DIST_KM: '--',
+                        NB_POINTS: '--',
+                        DATE: new Date().toISOString()
+                    },
+                    geometry: buffered.geometry
+                });
+            }
+            
+            try {
+                const fc = { type: 'FeatureCollection', features };
+                const shapeWriter = shpwrite || window.shpwrite;
+                if (shapeWriter && shapeWriter.download) {
+                    shapeWriter.download(fc, { fileName: circuitName });
+                    alert('✅ Shapefile exporté: ' + circuitName);
+                } else {
+                    alert('⚠️ Export Shapefile non disponible. Téléchargez le GeoJSON à la place.');
+                }
+            } catch (e) {
+                console.log('Shapefile export error:', e);
+                alert('⚠️ Export GeoJSON recommandé. Utilisez "📄 GeoJSON" pour télécharger.');
+            }
+        }
+        
+        // Timer pour mettre à jour les stats
+        setInterval(() => {
+            if (circuitTracking) updateCircuitStats();
+        }, 1000);
+        
         function retournerAuFormulaire() {
             const landingSection = document.getElementById('landing-section');
             const formulaireSection = document.getElementById('formulaire-section');
@@ -5347,6 +6289,171 @@ Consultez les logs du serveur pour les détails complets.
     <script src="config.js"></script>
     <!-- Client API pour communication avec PostgreSQL backend -->
     <script src="api-client.js"></script>
+
+    <!-- 🔧 SERVICE WORKER REGISTRATION - Mode Offline -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('✅ Service Worker enregistré:', registration);
+                        
+                        // Vérifier les mises à jour
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    console.log('🔄 Nouvelle version disponible');
+                                    showAlert('info', '🔄 Mise à jour disponible. Rechargez la page.');
+                                }
+                            });
+                        });
+                    })
+                    .catch((error) => {
+                        console.log('❌ Service Worker registration échoué:', error);
+                    });
+            });
+        } else {
+            console.log('⚠️ Service Workers non supportés');
+        }
+    </script>
+
+    <!-- 🔋 BATTERY API & WAKE LOCK - Optimisation Terrain -->
+    <script>
+        // Battery Status API
+        if ('getBattery' in navigator) {
+            navigator.getBattery().then((battery) => {
+                const updateBatteryStatus = () => {
+                    const level = Math.round(battery.level * 100);
+                    console.log(`🔋 Batterie: ${level}%`);
+                    
+                    // Avertir si batterie faible
+                    if (level < 20 && !sessionStorage.getItem('battery-warned')) {
+                        showAlert('warning', `⚠️ Batterie faible (${level}%). Branchez si possible.`);
+                        sessionStorage.setItem('battery-warned', '1');
+                    }
+                    
+                    // Pause automatique si critique
+                    if (level < 5 && window.circuitTracking) {
+                        pauseTracking();
+                        showAlert('error', '❌ Batterie critique. Tracking arrêté.');
+                    }
+                };
+                
+                updateBatteryStatus();
+                battery.addEventListener('levelchange', updateBatteryStatus);
+            });
+        }
+
+        // Screen Wake Lock API
+        let wakeLock = null;
+        async function requestWakeLock() {
+            try {
+                if ('wake_lock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    console.log('✅ Wake Lock actif - l\'écran restera allumé');
+                    
+                    wakeLock.addEventListener('release', () => {
+                        console.log('⏹️ Wake Lock libéré');
+                    });
+                }
+            } catch (err) {
+                console.log('⚠️ Wake Lock non disponible:', err.name, err.message);
+            }
+        }
+
+        async function releaseWakeLock() {
+            if (wakeLock !== null) {
+                await wakeLock.release();
+                wakeLock = null;
+            }
+        }
+
+        // Hook sur démarrage du traceur circuit
+        const origDemarrerTracking = window.demarrerTracking;
+        window.demarrerTracking = function() {
+            requestWakeLock();
+            return origDemarrerTracking.apply(this, arguments);
+        };
+
+        // Hook sur pause du traceur
+        const origPauseTracking = window.pauseTracking;
+        window.pauseTracking = function() {
+            releaseWakeLock();
+            return origPauseTracking.apply(this, arguments);
+        };
+
+        // 📸 CHARGE AUTOMATIQUE DU DERNIER EXPORT DANS LA GALERIE
+        async function chargerDernierExportEnGalerie() {
+            try {
+                // Récupérer la liste des exports
+                const response = await fetch('./get-latest-export.json');
+                if (!response.ok) {
+                    console.warn('⚠️ Impossible de charger le dernier export');
+                    return;
+                }
+                
+                const lastExport = await response.json();
+                if (!lastExport.path) {
+                    console.warn('⚠️ Pas de dernier export trouvé');
+                    return;
+                }
+                
+                // Charger les données du CSV
+                const csvResponse = await fetch(`${lastExport.path}/collectes_donnees.csv`);
+                const csvText = await csvResponse.text();
+                
+                // Parser le CSV
+                const lines = csvText.trim().split('\n');
+                const headers = lines[0].split(',').map(h => h.replace(/"/g, ''));
+                const rows = lines.slice(1).map(line => {
+                    const columns = line.split(',').map(c => c.replace(/"/g, ''));
+                    const obj = {};
+                    headers.forEach((header, index) => {
+                        obj[header] = columns[index];
+                    });
+                    return obj;
+                });
+                
+                // Mettre à jour les statistiques
+                const regions = new Set(rows.map(r => r.region));
+                document.getElementById('galerie-count-collectes').textContent = rows.length;
+                document.getElementById('galerie-count-regions').textContent = regions.size;
+                document.getElementById('galerie-count-images').textContent = rows.length;
+                
+                // Mettre à jour les items de la galerie
+                const galerieScroll = document.querySelector('.galerie-scroll');
+                if (!galerieScroll) return;
+                
+                // Créer les items de galerie dynamiquement
+                galerieScroll.innerHTML = '';
+                rows.forEach((row, index) => {
+                    const photoPath = row.photo.replace('./images/', `${lastExport.path}/images/`);
+                    const item = document.createElement('div');
+                    item.className = 'galerie-item';
+                    item.onclick = () => openGalerieModal(index);
+                    item.innerHTML = `
+                        <img class="galerie-item-image" src="${photoPath}" alt="${row.commune}">
+                        <div class="galerie-item-info">
+                            <div class="galerie-item-detail"><strong>Partenaire:</strong> ${row.partenaire}</div>
+                            <div class="galerie-item-commune">📍 ${row.commune}</div>
+                            <div class="galerie-item-detail"><strong>Site:</strong> ${row.sites_concernes}</div>
+                        </div>
+                    `;
+                    galerieScroll.appendChild(item);
+                });
+                
+                console.log('✅ Galerie mise à jour avec le dernier export');
+            } catch (error) {
+                console.warn('⚠️ Erreur lors du chargement du dernier export:', error.message);
+            }
+        }
+        
+        // Charger la galerie au démarrage
+        document.addEventListener('DOMContentLoaded', function() {
+            chargerDernierExportEnGalerie();
+        });
+    </script>
 
 </body>
 </html>
