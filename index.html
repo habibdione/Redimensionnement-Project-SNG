@@ -6457,17 +6457,3 @@ Consultez les logs du serveur pour les détails complets.
 
 </body>
 </html>
-// Initialisation
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // ✅ Initialiser la date de manière sécurisée
-    const dateElement = document.getElementById('date-update');
-    if (dateElement) {
-        dateElement.textContent = new Date().toLocaleDateString('fr-FR');
-    }
-    
-    // Initialiser les sélects géographiques
-    initialiserSelectsGeographiques();
-    
-    // ...existing code...
-});
