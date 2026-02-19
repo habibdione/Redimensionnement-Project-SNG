@@ -8294,8 +8294,6 @@ Consultez les logs du serveur pour les détails complets.
                     const fallbackSVG = `data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23e8f5e9%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2245%25%22 font-size=%2216%22 fill=%22%236db038%22 text-anchor=%22middle%22 font-weight=%22bold%22%3E${row.commune}%3C/text%3E%3Ctext x=%2250%25%22 y=%2260%25%22 font-size=%2212%22 fill=%22%23999%22 text-anchor=%22middle%22%3EImage indisponible%3C/text%3E%3C/svg%3E`;
                     
                     item.innerHTML = `
-                        <img class="galerie-item-image" src="${imagePath}" alt="${row.commune}" 
-                             onerror="this.src='${fallbackSVG}'; console.warn('❌ Image non trouvée: ${imagePath}');">
                         <div class="galerie-item-info">
                             <div class="galerie-item-detail"><strong>Partenaire:</strong> ${row.partenaire || 'N/A'}</div>
                             <div class="galerie-item-commune">📍 ${row.commune || 'N/A'}</div>
@@ -8303,6 +8301,16 @@ Consultez les logs du serveur pour les détails complets.
                             ${row.date ? `<div class="galerie-item-date">📅 ${row.date}</div>` : ''}
                         </div>
                     `;
+                    
+                    const img = document.createElement('img');
+                    img.className = 'galerie-item-image';
+                    img.src = imagePath;
+                    img.alt = row.commune;
+                    img.onerror = function() {
+                        this.src = fallbackSVG;
+                        console.warn(`❌ Image non trouvée: ${imagePath}`);
+                    };
+                    item.insertBefore(img, item.firstChild);
                     galerieScroll.appendChild(item);
                 });
                 
