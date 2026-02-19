@@ -6392,85 +6392,99 @@ Consultez les logs du serveur pour les détails complets.
                 let gallerieData = [];
                 let gallerieSource = 'export-local';
                 
-                // 1️⃣ PRIORITÉ: Charger depuis l'API PostgreSQL
+                // 1️⃣ PRIORITÉ: Charger depuis le CSV du dernier export local
                 try {
-                    const apiResponse = await fetch('http://localhost:3001/api/images');
-                    if (apiResponse.ok) {
-                        const apiData = await apiResponse.json();
-                        if (apiData.images && apiData.images.length > 0) {
-                            gallerieData = apiData.images.map((img, idx) => ({
-                                id: img.id,
-                                commune: img.commune,
-                                partenaire: img.partenaire,
-                                site: img.site,
-                                region: img.region,
-                                latitude: img.latitude,
-                                longitude: img.longitude,
-                                date: img.date,
-                                lat: img.latitude ? `${img.latitude}°N` : 'N/A',
-                                lng: img.longitude ? `${img.longitude}°O` : 'N/A',
-                                src: `http://localhost:3001/api/image/${img.id}`,
-                                thumbnail: `http://localhost:3001/api/image/${img.id}`
-                            }));
-                            gallerieSource = 'database-api';
-                            console.log(`✅ ${gallerieData.length} images chargées depuis l'API PostgreSQL`);
+                    const response = await fetch('./get-latest-export.json');
+                    if (response.ok) {
+                        const lastExport = await response.json();
+                        if (lastExport.path) {
+                            const csvResponse = await fetch(`${lastExport.path}/collectes_donnees.csv`);
+                            if (csvResponse.ok) {
+                                const csvText = await csvResponse.text();
+                                
+                                const lines = csvText.trim().split('\n');
+                                const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
+                                const rows = lines.slice(1).map(line => {
+                                    const columns = line.split(',').map(c => c.replace(/"/g, '').trim());
+                                    const obj = {};
+                                    headers.forEach((header, index) => {
+                                        obj[header] = columns[index];
+                                    });
+                                    return obj;
+                                });
+                                
+                                gallerieData = rows
+                                    .filter(row => row.commune && row.commune.trim())
+                                    .map(row => {
+                                        // Extraire le nom du fichier d'image depuis la colonne photo
+                                        let imagePath = row.photo || '';
+                                        if (imagePath.includes('photo_')) {
+                                            const match = imagePath.match(/photo_\d+_\d+\.jpg/);
+                                            if (match) {
+                                                imagePath = `${lastExport.path}/images/${match[0]}`;
+                                            }
+                                        } else if (!imagePath.startsWith('./') && !imagePath.startsWith('http')) {
+                                            imagePath = `${lastExport.path}/images/${imagePath}`;
+                                        }
+                                        
+                                        return {
+                                            id: parseInt(row.id) || 0,
+                                            commune: row.commune,
+                                            partenaire: row.partenaire || 'N/A',
+                                            site: row.sites_concernes || 'N/A',
+                                            region: row.region || 'N/A',
+                                            latitude: parseFloat(row.latitude) || 0,
+                                            longitude: parseFloat(row.longitude) || 0,
+                                            lat: row.latitude ? `${row.latitude}°N` : 'N/A',
+                                            lng: row.longitude ? `${row.longitude}°O` : 'N/A',
+                                            src: imagePath,
+                                            date: row.date_collecte || ''
+                                        };
+                                    });
+                                
+                                if (gallerieData.length > 0) {
+                                    gallerieSource = 'export-csv';
+                                    console.log(`✅ ${gallerieData.length} images chargées depuis l'export local (${lastExport.path})`);
+                                }
+                            }
                         }
                     }
                 } catch (err) {
-                    console.log('⚠️ API PostgreSQL indisponible (http://localhost:3001), fallback sur export local');
+                    console.log('⚠️ Erreur chargement export local:', err.message);
                 }
                 
-                // 2️⃣ FALLBACK: Charger depuis le CSV du dernier export si pas de données DB
+                // 2️⃣ FALLBACK: Utiliser les données statiques si pas de données du CSV
                 if (gallerieData.length === 0) {
-                    const response = await fetch('./get-latest-export.json');
-                    if (!response.ok) {
-                        console.warn('⚠️ Impossible de charger le dernier export');
-                        return;
-                    }
-                    
-                    const lastExport = await response.json();
-                    if (!lastExport.path) {
-                        console.warn('⚠️ Pas de dernier export trouvé');
-                        return;
-                    }
-                    
-                    const csvResponse = await fetch(`${lastExport.path}/collectes_donnees.csv`);
-                    const csvText = await csvResponse.text();
-                    
-                    const lines = csvText.trim().split('\n');
-                    const headers = lines[0].split(',').map(h => h.replace(/"/g, ''));
-                    const rows = lines.slice(1).map(line => {
-                        const columns = line.split(',').map(c => c.replace(/"/g, ''));
-                        const obj = {};
-                        headers.forEach((header, index) => {
-                            obj[header] = columns[index];
-                        });
-                        return obj;
-                    });
-                    
-                    gallerieData = rows.map(row => ({
-                        id: row.id || 0,
-                        commune: row.commune,
-                        partenaire: row.partenaire,
-                        site: row.sites_concernes,
-                        region: row.region,
-                        latitude: parseFloat(row.latitude) || 0,
-                        longitude: parseFloat(row.longitude) || 0,
-                        lat: row.latitude ? `${row.latitude}°N` : 'N/A',
-                        lng: row.longitude ? `${row.longitude}°O` : 'N/A',
-                        src: row.photo.replace('./images/', `${lastExport.path}/images/`)
-                    }));
+                    console.log('ℹ️ Utilisation des données statiques de galerie');
+                    gallerieSource = 'static-data';
+                    // galleriePhotos déjà initialisée avec les données statiques au début du script
+                    gallerieData = galleriePhotos;
                 }
                 
-                // 🔄 Mettre à jour la variable globale galleriePhotos
-                galleriePhotos = gallerieData;
+                // 🔄 Mettre à jour la variable globale galleriePhotos avec les données valides
+                if (gallerieData.length > 0) {
+                    galleriePhotos = gallerieData;
+                    console.log(`✅ Galerie initialisée avec ${gallerieData.length} photos (source: ${gallerieSource})`);
+                } else {
+                    console.warn('⚠️ Aucune donnée de galerie disponible');
+                    return;
+                }
                 
                 // 📊 Mettre à jour les statistiques
-                const regions = new Set(gallerieData.map(r => r.region));
-                const communes = new Set(gallerieData.map(c => c.commune));
-                document.getElementById('galerie-count-collectes').textContent = gallerieData.length;
-                document.getElementById('galerie-count-regions').textContent = regions.size;
-                document.getElementById('galerie-count-images').textContent = gallerieData.length;
+                const regions = new Set(gallerieData
+                    .filter(r => r.region && r.region !== 'N/A')
+                    .map(r => r.region));
+                const communes = new Set(gallerieData
+                    .filter(c => c.commune && c.commune !== 'N/A')
+                    .map(c => c.commune));
+                
+                const galerieCounts = document.getElementById('galerie-count-collectes');
+                const galerieRegions = document.getElementById('galerie-count-regions');
+                const galerieImages = document.getElementById('galerie-count-images');
+                
+                if (galerieCounts) galerieCounts.textContent = gallerieData.length;
+                if (galerieRegions) galerieRegions.textContent = regions.size;
+                if (galerieImages) galerieImages.textContent = gallerieData.length;
                 
                 // 🎨 Mettre à jour les items de la galerie
                 const galerieScroll = document.querySelector('.galerie-scroll');
@@ -6481,17 +6495,31 @@ Consultez les logs du serveur pour les détails complets.
                     const item = document.createElement('div');
                     item.className = 'galerie-item';
                     item.onclick = () => openGalerieModal(index);
+                    
+                    // Vérifier et corriger le chemin de l'image
+                    let imagePath = row.src || '';
+                    
+                    // Debug: Log le chemin d'image
+                    if (index === 0) {
+                        console.log(`🖼️ Première image - Chemin: ${imagePath}, Commune: ${row.commune}`);
+                    }
+                    
+                    // Créer un fallback SVG pour les images manquantes
+                    const fallbackSVG = `data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23e8f5e9%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2245%25%22 font-size=%2216%22 fill=%22%236db038%22 text-anchor=%22middle%22 font-weight=%22bold%22%3E${row.commune}%3C/text%3E%3Ctext x=%2250%25%22 y=%2260%25%22 font-size=%2212%22 fill=%22%23999%22 text-anchor=%22middle%22%3EImage indisponible%3C/text%3E%3C/svg%3E`;
+                    
                     item.innerHTML = `
-                        <img class="galerie-item-image" src="${row.src}" alt="${row.commune}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-size=%2214%22 fill=%22%23999%22 text-anchor=%22middle%22 dy=%22.3em%22%3EImage indisponible%3C/text%3E%3C/svg%3E'">
+                        <img class="galerie-item-image" src="${imagePath}" alt="${row.commune}" 
+                             onerror="this.src='${fallbackSVG}'; console.warn('❌ Image non trouvée: ${imagePath}');">
                         <div class="galerie-item-info">
-                            <div class="galerie-item-detail"><strong>Partenaire:</strong> ${row.partenaire}</div>
-                            <div class="galerie-item-commune">📍 ${row.commune}</div>
-                            <div class="galerie-item-detail"><strong>Site:</strong> ${row.site}</div>
+                            <div class="galerie-item-detail"><strong>Partenaire:</strong> ${row.partenaire || 'N/A'}</div>
+                            <div class="galerie-item-commune">📍 ${row.commune || 'N/A'}</div>
+                            <div class="galerie-item-detail"><strong>Site:</strong> ${row.site || 'N/A'}</div>
                             ${row.date ? `<div class="galerie-item-date">📅 ${row.date}</div>` : ''}
                         </div>
                     `;
                     galerieScroll.appendChild(item);
                 });
+                
                 
                 console.log(`✅ Galerie mise à jour (${gallerieData.length} images - Source: ${gallerieSource})`);
             } catch (error) {
