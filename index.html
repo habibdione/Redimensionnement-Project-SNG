@@ -3014,11 +3014,11 @@
                         <!-- Contrôles GPS -->
                         <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb;">
                             <h3 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: #2d5016;">📡 Contrôles</h3>
-                            <div style="display: flex; flex-direction: column; gap: 8px;">
-                                <button id="btn-demarrer-circuit-desktop" onclick="demarrerTracking()" style="width: 100%; background: linear-gradient(135deg, #6db038 0%, #5ba837 100%); color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s;">▶️ Démarrer</button>
-                                <button id="btn-pause-circuit-desktop" onclick="pauseTracking()" style="width: 100%; background: #667eea; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: none; transition: all 0.2s;">⏸️ Pause</button>
-                                <button id="btn-ajouter-marker-desktop" onclick="ajouterMarqueurCircuit()" style="width: 100%; background: #667eea; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: none; transition: all 0.2s;">📌 +Repère</button>
-                                <button id="btn-terminer-circuit-desktop" onclick="terminerTracking()" style="width: 100%; background: #c92a2a; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: none; transition: all 0.2s;">✓ Terminer</button>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: space-around;">
+                                <button id="btn-demarrer-circuit-desktop" onclick="demarrerTracking()" style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #6db038 0%, #5ba837 100%); color: white; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 4px 12px rgba(109, 176, 56, 0.3);" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">▶️</button>
+                                <button id="btn-pause-circuit-desktop" onclick="pauseTracking()" style="width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; cursor: pointer; font-size: 24px; display: none; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">⏸️</button>
+                                <button id="btn-ajouter-marker-desktop" onclick="ajouterMarqueurCircuit()" style="width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; cursor: pointer; font-size: 24px; display: none; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">📌</button>
+                                <button id="btn-terminer-circuit-desktop" onclick="terminerTracking()" style="width: 50px; height: 50px; border-radius: 50%; background: #c92a2a; color: white; border: none; cursor: pointer; font-size: 24px; display: none; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 4px 12px rgba(201, 42, 42, 0.3);" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">✓</button>
                             </div>
                         </div>
                         
@@ -3052,8 +3052,10 @@
                                     <input type="checkbox" id="circuit-buffer" checked>
                                     <span>+ Buffer 200m (100m de chaque côté)</span>
                                 </label>
-                                <button onclick="exporterCircuitShapefile()" style="width: 100%; background: #6db038; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s;">📦 Shapefile</button>
-                                <button onclick="exporterCircuitGeoJSON()" style="width: 100%; background: #667eea; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s;">📄 GeoJSON</button>
+                                <div style="display: flex; gap: 8px; justify-content: center; margin-top: 8px;">
+                                    <button onclick="exporterCircuitShapefile()" style="width: 50px; height: 50px; border-radius: 50%; background: #6db038; color: white; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 4px 12px rgba(109, 176, 56, 0.3);" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">📦</button>
+                                    <button onclick="exporterCircuitGeoJSON()" style="width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">📄</button>
+                                </div>
                             </div>
                         </div>
                     </div>
