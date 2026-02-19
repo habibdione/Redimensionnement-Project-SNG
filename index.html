@@ -2297,88 +2297,26 @@
         <!-- 🏠 MENU 1: ACCUEIL -->
         <div id="accueil-section" class="content" style="display: flex; flex-direction: column; padding: 60px 40px; gap: 40px; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 1px solid #e5e7eb;">
             
-            <!-- HERO SECTION -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
-                <div style="animation: slideInLeft 0.8s ease-out;">
-                    <h2 style="font-size: 48px; font-weight: 800; color: #2d5016; margin-bottom: 20px; line-height: 1.2;">
-                        🌍 Bienvenue à l'application de Dimensionnement SONAGED
-                    </h2>
-                    <p style="font-size: 18px; color: #4a5568; margin-bottom: 20px; line-height: 1.7; font-weight: 600;">
-                        <strong>Société Nationale de Gestion de Déchets</strong>
+            <!-- HERO SECTION - PRÉSENTATION SIMPLE -->
+            <div style="animation: slideInLeft 0.8s ease-out;">
+                <h2 style="font-size: 48px; font-weight: 800; color: #2d5016; margin-bottom: 20px; line-height: 1.2;">
+                    🌍 Bienvenue à l'application de Dimensionnement SONAGED
+                </h2>
+                <p style="font-size: 18px; color: #4a5568; margin-bottom: 20px; line-height: 1.7; font-weight: 600;">
+                    <strong>Société Nationale de Gestion de Déchets</strong>
+                </p>
+                <p style="font-size: 15px; color: #718096; margin-bottom: 15px; line-height: 1.8;">
+                    Application mobile intelligente pour la collecte de données géospatiales au niveau national au Sénégal permettant aux agents SONAGED de collecter des informations détaillées sur les sites d'infrastructures de gestion des déchets.
+                </p>
+                <div style="background: #f0f8e6; padding: 15px; border-radius: 8px; border-left: 4px solid #6db038; margin-bottom: 25px;">
+                    <p style="font-size: 13px; color: #2d5016; margin: 0;">
+                        ✅ <strong>14 Régions</strong> | ✅ <strong>45+ Départements</strong> | ✅ <strong>500+ Communes</strong>
                     </p>
-                    <p style="font-size: 15px; color: #718096; margin-bottom: 15px; line-height: 1.8;">
-                        Application mobile intelligente pour la collecte de données géospatiales au niveau national au Sénégal permettant aux agents SONAGED de collecter des informations détaillées sur les sites d'infrastructures de gestion des déchets.
-                    </p>
-                    <div style="background: #f0f8e6; padding: 15px; border-radius: 8px; border-left: 4px solid #6db038; margin-bottom: 25px;">
-                        <p style="font-size: 13px; color: #2d5016; margin: 0;">
-                            ✅ <strong>14 Régions</strong> | ✅ <strong>45+ Départements</strong> | ✅ <strong>500+ Communes</strong>
-                        </p>
-                    </div>
-                    <div style="display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap;">
-                        <button onclick="allerAuFormulaire()" class="cta-button-primary" style="background: linear-gradient(135deg, #6db038 0%, #4a7c27 100%); color: white; padding: 16px 40px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(109, 176, 56, 0.3); transition: all 0.3s; pointer-events: auto;">
-                            📱 Accéder à la Collecte
-                        </button>
-                        <button onclick="scrollToFeatures()" style="background: white; color: #2d5016; padding: 16px 40px; border: 2px solid #6db038; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; pointer-events: auto;">
-                            📖 Découvrir nos Partenaires
-                        </button>
-                    </div>
                 </div>
-                
-                <div style="animation: slideInRight 0.8s ease-out; display: flex; flex-direction: column; gap: 20px;">
-                    <!-- ACTUALITÉ CONVENTION HEADER -->
-                    <div style="background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%); padding: 15px; border-radius: 8px; border-left: 4px solid #ff6b6b; text-align: center;">
-                        <h3 style="font-size: 16px; font-weight: 700; color: #c92a2a; margin: 0; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                            <span style="font-size: 20px;">🔥</span>
-                            ACTUALITÉ CONVENTION
-                            <span style="font-size: 20px;">🔥</span>
-                        </h3>
-                        <p style="margin-top: 6px; color: #6d4e0d; font-size: 11px; margin-bottom: 0;">Conventions en cours - Événements importants</p>
-                    </div>
-                    
-                    <!-- ACTUALITÉ IMAGES -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.15); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border: 2px solid #6db038;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.15)';">
-                            <div style="position: relative; overflow: hidden;">
-                                <img src="./src/assets/Image Directeur et Responsable SIG.jpeg" alt="Directeur et Responsable SIG" style="width: 100%; height: 140px; object-fit: cover;">
-                                <div style="position: absolute; top: 6px; right: 6px; background: #6db038; color: white; padding: 3px 8px; border-radius: 20px; font-size: 10px; font-weight: 700;">🔥 ACTUALITÉ</div>
-                            </div>
-                            <p style="padding: 12px; text-align: center; font-weight: 600; color: #2d5016; font-size: 12px; margin: 0;">Directeur & SIG</p>
-                        </div>
-                        <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.15); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border: 2px solid #6db038;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.15)';">
-                            <div style="position: relative; overflow: hidden;">
-                                <img src="./src/assets/Image du DG pour la Convention avec COJOJ.jpeg" alt="DG Convention COJOJ" style="width: 100%; height: 140px; object-fit: cover;">
-                                <div style="position: absolute; top: 6px; right: 6px; background: #6db038; color: white; padding: 3px 8px; border-radius: 20px; font-size: 10px; font-weight: 700;">🔥 ACTUALITÉ</div>
-                            </div>
-                            <p style="padding: 12px; text-align: center; font-weight: 600; color: #2d5016; font-size: 12px; margin: 0;">DG - Convention COJOJ</p>
-                        </div>
-                    </div>
-                    
-                    <!-- ACTEURS SECTION -->
-                    <div style="background: linear-gradient(135deg, #e8f5df 0%, #f0f8e6 100%); padding: 15px; border-radius: 8px; border-left: 4px solid #6db038;">
-                        <h3 style="font-size: 16px; font-weight: 700; color: #2d5016; margin: 0; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px;">
-                            <span style="font-size: 20px;">👥</span>
-                            ACTEURS
-                        </h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-                            <!-- Délégué Régionale de Ziguinchor -->
-                            <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.12)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                                <img src="./src/assets/Délégué Régionale de Ziguinchor.jpeg" alt="Délégué Régionale" style="width: 100%; height: 100px; object-fit: cover;">
-                                <p style="padding: 10px; text-align: center; font-weight: 600; color: #2d5016; font-size: 11px; margin: 0;">Délégué Régionale</p>
-                            </div>
-                            
-                            <!-- Délégué Départemental de Ziguinchor -->
-                            <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.12)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                                <img src="./src/assets/Délegué Départemental de Ziguinchor .jpeg" alt="Délégué Départemental" style="width: 100%; height: 100px; object-fit: cover;">
-                                <p style="padding: 10px; text-align: center; font-weight: 600; color: #2d5016; font-size: 11px; margin: 0;">Délégué Départemental</p>
-                            </div>
-                            
-                            <!-- Chef de Projet Convention Ziguinchor -->
-                            <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.12)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                                <img src="./src/assets/Chef de Projet Convention Ziguinchor.jpeg" alt="Chef de Projet" style="width: 100%; height: 100px; object-fit: cover;">
-                                <p style="padding: 10px; text-align: center; font-weight: 600; color: #2d5016; font-size: 11px; margin: 0;">Chef de Projet</p>
-                            </div>
-                        </div>
-                    </div>
+                <div style="display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap;">
+                    <button onclick="allerAuFormulaire()" class="cta-button-primary" style="background: linear-gradient(135deg, #6db038 0%, #4a7c27 100%); color: white; padding: 16px 40px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(109, 176, 56, 0.3); transition: all 0.3s; pointer-events: auto;">
+                        📱 Accéder à la Collecte
+                    </button>
                 </div>
             </div>
             
@@ -2420,182 +2358,6 @@
                         <strong>💡 Astuce :</strong> Utilisez les contrôles en haut à droite de la carte pour afficher/masquer les couches. Cliquez sur les éléments pour voir les détails.
                     </p>
                 </div>
-            </div>
-            
-            <!-- FEATURES SECTION -->
-            <div id="features-section" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-top: 40px;">
-                <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left: 4px solid #6db038; animation: fadeIn 0.8s ease-out;" class="feature-card">
-                    <h3 style="font-size: 20px; font-weight: 700; color: #2d5016; margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 28px;">🗺️</span> Géolocalisation Précise
-                    </h3>
-                    <p style="color: #4a5568; font-size: 14px; line-height: 1.6;">Capture automatique des coordonnées GPS avec précision en mètres de tous les points d'intérêt et sites de gestion des déchets.</p>
-                </div>
-                
-                <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left: 4px solid #3b82f6; animation: fadeIn 0.8s ease-out 0.1s backwards;" class="feature-card">
-                    <h3 style="font-size: 20px; font-weight: 700; color: #2d5016; margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 28px;">📷</span> Documentation Visuelle
-                    </h3>
-                    <p style="color: #4a5568; font-size: 14px; line-height: 1.6;">Capture de photos haute qualité avec compression automatique et métadonnées complètes des sites d'infrastructures.</p>
-                </div>
-                
-                <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left: 4px solid #6db038; animation: fadeIn 0.8s ease-out 0.2s backwards;" class="feature-card">
-                    <h3 style="font-size: 20px; font-weight: 700; color: #2d5016; margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 28px;">📏</span> Mesure des Superficies
-                    </h3>
-                    <p style="color: #4a5568; font-size: 14px; line-height: 1.6;">Calcul automatique des superficies en m² en marchant autour du site avec une précision géométrique fiable.</p>
-                </div>
-                
-                <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left: 4px solid #3b82f6; animation: fadeIn 0.8s ease-out 0.3s backwards;" class="feature-card">
-                    <h3 style="font-size: 20px; font-weight: 700; color: #2d5016; margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 28px;">💾</span> Synchronisation Intelligente
-                    </h3>
-                    <p style="color: #4a5568; font-size: 14px; line-height: 1.6;">Stockage local sécurisé avec synchronisation en temps réel vers la base de données PostgreSQL nationale.</p>
-                </div>
-            </div>
-            
-            <!-- SECTION PARTENAIRES & CONVENTIONS -->
-            <div style="margin-top: 60px; padding: 40px; background: linear-gradient(135deg, #f0f8e6 0%, #e8f5df 100%); border-radius: 12px; border-left: 6px solid #6db038;">
-                <h2 style="font-size: 32px; font-weight: 800; color: #2d5016; text-align: center; margin-bottom: 30px;">🤝 Nos Partenaires & Conventions</h2>
-                
-                <!-- 🔥 ACTUALITÉS CONVENTIONS -->
-                <div style="background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%); padding: 20px; border-radius: 8px; border-left: 4px solid #ff6b6b; margin-bottom: 30px; text-align: center;">
-                    <h3 style="font-size: 18px; font-weight: 700; color: #c92a2a; margin: 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                        <span style="font-size: 24px;">🔥</span>
-                        ACTUALITÉ CONVENTION
-                        <span style="font-size: 24px;">🔥</span>
-                    </h3>
-                    <p style="margin-top: 8px; color: #6d4e0d; font-size: 12px; margin-bottom: 0;">Conventions en cours - Événements importants</p>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
-                    <!-- ⭐ IMAGE DIRECTEUR ET RESPONSABLE SIG - ACTUALITÉ -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.15); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border: 2px solid #6db038;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.15)';">
-                        <div style="position: relative; overflow: hidden;">
-                            <img src="./src/assets/Image Directeur et Responsable SIG.jpeg" alt="Directeur et Responsable SIG" style="width: 100%; height: 180px; object-fit: cover;">
-                            <div style="position: absolute; top: 8px; right: 8px; background: #6db038; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;">🔥 ACTUALITÉ</div>
-                        </div>
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Directeur & SIG</p>
-                    </div>
-                    
-                    <!-- ⭐ IMAGE DG CONVENTION COJOJ - ACTUALITÉ -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.15); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border: 2px solid #6db038;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.15)';">
-                        <div style="position: relative; overflow: hidden;">
-                            <img src="./src/assets/Image du DG pour la Convention avec COJOJ.jpeg" alt="DG Convention COJOJ" style="width: 100%; height: 180px; object-fit: cover;">
-                            <div style="position: absolute; top: 8px; right: 8px; background: #6db038; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;">🔥 ACTUALITÉ</div>
-                        </div>
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">DG - Convention COJOJ</p>
-                    </div>
-                    
-                    <!-- Convention SENELEC 1 -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image Convention avec SENELEC.jpeg" alt="Convention SENELEC" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Convention SENELEC</p>
-                    </div>
-                    
-                    <!-- Convention SENELEC 2 -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image 2 Convention avec SENELEC.jpeg" alt="Convention SENELEC 2" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Convention SENELEC 2</p>
-                    </div>
-                    
-                    <!-- Convention SENELEC 3 -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image 3 Convention avec SENELEC.jpeg" alt="Convention SENELEC 3" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Convention SENELEC 3</p>
-                    </div>
-                    
-                    <!-- Convention Mairie Ziguinchor -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image Convention avec Mairie de ZIGUINCHIR.jpeg" alt="Mairie Ziguinchor" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Mairie Ziguinchor</p>
-                    </div>
-                    
-                    <!-- Convention DAKAR DEM DIK -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image Convention DAKAR DEM DIK.jpeg" alt="Convention Dakar Dem Dik" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Convention Dakar Dem Dik</p>
-                    </div>
-                    
-                    <!-- Convention Mairie MLOMP -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image Convention en Partenariat avec Le Maire de MLOMP.jpeg" alt="Mairie MLOMP" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Mairie MLOMP</p>
-                    </div>
-                    
-                    <!-- Base Navale MLOMP -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image en Partenanriat avec La Base Naval de MLOMP.jpeg" alt="Base Navale MLOMP" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Base Navale MLOMP</p>
-                    </div>
-                    
-                    <!-- Camp Militaire BIGNOA -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image en Partenariat avec le Camp Militaire de BIGNOA.jpeg" alt="Camp Militaire BIGNOA" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Camp Militaire BIGNOA</p>
-                    </div>
-                    
-                    <!-- Délégué Régionale de Ziguinchor -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Délégué Régionale de Ziguinchor.jpeg" alt="Délégué Régionale de Ziguinchor" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Délégué Régionale Ziguinchor</p>
-                    </div>
-                    
-                    <!-- Délégué Départemental de Ziguinchor -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Délegué Départemental de Ziguinchor .jpeg" alt="Délégué Départemental de Ziguinchor" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Délégué Départemental Ziguinchor</p>
-                    </div>
-                    
-                    <!-- Chef de Projet Convention Ziguinchor -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Chef de Projet Convention Ziguinchor.jpeg" alt="Chef de Projet Convention Ziguinchor" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Chef de Projet Convention</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- COVERAGE STATS -->
-            <div style="background: linear-gradient(135deg, #2d5016 0%, #4a7c27 100%); padding: 50px; border-radius: 12px; color: white; text-align: center; animation: fadeIn 0.8s ease-out 0.4s backwards; margin-top: 60px;">
-                <h3 style="font-size: 32px; font-weight: 700; margin-bottom: 40px;">🌍 Couverture Nationale du Sénégal</h3>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;">
-                    <div>
-                        <div style="font-size: 56px; font-weight: 800; color: #6db038; margin-bottom: 8px;">14</div>
-                        <p style="font-size: 16px; opacity: 0.95; font-weight: 600;">Régions Couverts</p>
-                        <p style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Collecte complète</p>
-                    </div>
-                    <div>
-                        <div style="font-size: 56px; font-weight: 800; color: #6db038; margin-bottom: 8px;">45+</div>
-                        <p style="font-size: 16px; opacity: 0.95; font-weight: 600;">Départements</p>
-                        <p style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Couverture étendue</p>
-                    </div>
-                    <div>
-                        <div style="font-size: 56px; font-weight: 800; color: #6db038; margin-bottom: 8px;">500+</div>
-                        <p style="font-size: 16px; opacity: 0.95; font-weight: 600;">Communes</p>
-                        <p style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Données précises</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- ÉQUIPE MISSIONS & RESPONSABLES -->
-            <div style="margin-top: 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center;">
-                <div>
-                    <img src="./src/assets/Images 1 equipes Missions SONAGED.jpeg" alt="Équipes en Mission" style="width: 100%; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
-                    <p style="text-align: center; font-size: 14px; font-weight: 600; color: #2d5016; margin-top: 15px;">✅ Équipes en Mission de Terrain</p>
-                </div>
-                <div>
-                    <img src="./src/assets/Resposables des OPERATIONS.jpeg" alt="Responsables Opérations" style="width: 100%; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
-                    <p style="text-align: center; font-size: 14px; font-weight: 600; color: #2d5016; margin-top: 15px;">✅ Responsables des Opérations</p>
-                </div>
-            </div>
-            
-            <!-- CTA BUTTON FINALE -->
-            <div style="text-align: center; padding: 60px 0; margin-top: 40px;">
-                <h2 style="font-size: 32px; font-weight: 700; color: #2d5016; margin-bottom: 20px;">Prêt à Commencer?</h2>
-                <p style="font-size: 16px; color: #718096; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">Accédez à la plateforme de collecte de données géospatiales et commencez à documenter les sites d'infrastructures de gestion des déchets du Sénégal</p>
-                <button onclick="allerAuFormulaire()" style="background: linear-gradient(135deg, #6db038 0%, #4a7c27 100%); color: white; padding: 20px 60px; border: none; border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 25px rgba(109, 176, 56, 0.4); transition: all 0.3s; pointer-events: auto;letter-spacing: 0.5px;">
-                    🚀 ACCÉDER À LA COLLECTE DE DONNÉES
-                </button>
-                <p style="margin-top: 25px; color: #a0aec0; font-size: 12px;">Application mobile progressive | Fonctionnement hors ligne | Synchronisation automatique</p>
             </div>
         </div>
         <!-- FIN SECTION ACCUEIL -->
