@@ -1564,11 +1564,41 @@
             }
 
             #circuit-info-float {
-                display: none;
+                display: block !important;
             }
 
             #circuit-basemap-float {
-                display: none;
+                display: block !important;
+            }
+        }
+
+        /* ===== DESKTOP - Interface standard ===== */
+        @media (min-width: 769px) {
+            #circuit-mobile-fullscreen {
+                display: none !important;
+            }
+
+            #circuit-desktop-modal {
+                display: block !important;
+            }
+
+            #circuit-map-fullscreen {
+                display: none !important;
+            }
+        }
+
+        /* ===== MOBILE - Interface fullscreen ===== */
+        @media (max-width: 768px) {
+            #circuit-mobile-fullscreen {
+                display: flex !important;
+            }
+
+            #circuit-desktop-modal {
+                display: none !important;
+            }
+
+            #circuit-map {
+                display: none !important;
             }
         }
 
@@ -2722,70 +2752,180 @@
         
         <!-- 🗺️ MODAL TRACEUR DE CIRCUIT DE COLLECTE/BALAYAGE (caché par défaut) -->
         <div id="circuit-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 10000; overflow: hidden;">
-            <!-- Carte Fullscreen -->
-            <div id="circuit-map-fullscreen" style="width: 100%; height: 100%; border-radius: 0; z-index: 100; position: relative;"></div>
-            
-            <!-- En-tête Flottant -->
-            <div id="circuit-header-float" style="position: absolute; top: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.95); padding: 15px 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 101; max-width: 600px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px;">
-                    <div>
-                        <h2 style="margin: 0; font-size: 18px; font-weight: 700; color: #2d5016;">🗺️ <span id="circuit-type-label">Collecte</span></h2>
-                        <p style="margin: 4px 0 0 0; font-size: 12px; color: #666;"><span id="circuit-status-header">Prêt</span></p>
-                    </div>
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        <div style="text-align: right; font-size: 13px; color: #2d5016;">
-                            <div><strong><span id="circuit-distance">0</span> km</strong></div>
-                            <div style="color: #999;"><span id="circuit-time">00:00</span></div>
+            <!-- VERSION MOBILE FULLSCREEN -->
+            <div id="circuit-mobile-fullscreen" style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+                <!-- Carte Fullscreen -->
+                <div id="circuit-map-fullscreen" style="width: 100%; height: 100%; border-radius: 0; z-index: 100; position: relative;"></div>
+                
+                <!-- En-tête Flottant -->
+                <div id="circuit-header-float" style="position: absolute; top: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.95); padding: 15px 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 101; max-width: 600px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px;">
+                        <div>
+                            <h2 style="margin: 0; font-size: 18px; font-weight: 700; color: #2d5016;">🗺️ <span id="circuit-type-label">Collecte</span></h2>
+                            <p style="margin: 4px 0 0 0; font-size: 12px; color: #666;"><span id="circuit-status-header">Prêt</span></p>
                         </div>
-                        <button onclick="fermerModalCircuit()" style="background: #c92a2a; color: white; padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; min-width: auto;">✕</button>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <div style="text-align: right; font-size: 13px; color: #2d5016;">
+                                <div><strong><span id="circuit-distance">0</span> km</strong></div>
+                                <div style="color: #999;"><span id="circuit-time">00:00</span></div>
+                            </div>
+                            <button onclick="fermerModalCircuit()" style="background: #c92a2a; color: white; padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; min-width: auto;">✕</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Contrôles Flottants -->
-            <div id="circuit-controls-float" style="position: absolute; bottom: 20px; left: 20px; display: flex; gap: 12px; z-index: 101; flex-wrap: wrap;">
-                <button id="btn-demarrer-circuit" onclick="demarrerTracking()" title="Démarrer le tracage" style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #6db038 0%, #5ba837 100%); color: white; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(109, 176, 56, 0.4); transition: all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">▶️</button>
-                <button id="btn-pause-circuit" onclick="pauseTracking()" title="Mettre en pause" style="width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; cursor: pointer; font-size: 24px; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">⏸️</button>
-                <button id="btn-ajouter-marker" onclick="ajouterMarqueurCircuit()" title="Ajouter un repère" style="width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; cursor: pointer; font-size: 24px; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">📌</button>
-                <button id="btn-terminer-circuit" onclick="terminerTracking()" title="Terminer le circuit" style="width: 50px; height: 50px; border-radius: 50%; background: #c92a2a; color: white; border: none; cursor: pointer; font-size: 24px; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(201, 42, 42, 0.4); transition: all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">✓</button>
-            </div>
-            
-            <!-- Panneau Basemap Flottant -->
-            <div id="circuit-basemap-float" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.95); padding: 12px 15px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 101;">
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
-                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; white-space: nowrap;"><input type="radio" name="basemap" value="osm" onchange="changerBasemap('osm')" checked> 🗺️</label>
-                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; white-space: nowrap;"><input type="radio" name="basemap" value="satellite" onchange="changerBasemap('satellite')"> 🛰️</label>
-                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; white-space: nowrap;"><input type="radio" name="basemap" value="topo" onchange="changerBasemap('topo')"> ⛰️</label>
+                
+                <!-- Contrôles Flottants -->
+                <div id="circuit-controls-float" style="position: absolute; bottom: 20px; left: 20px; display: flex; gap: 12px; z-index: 101; flex-wrap: wrap;">
+                    <button id="btn-demarrer-circuit" onclick="demarrerTracking()" title="Démarrer le tracage" style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #6db038 0%, #5ba837 100%); color: white; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(109, 176, 56, 0.4); transition: all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">▶️</button>
+                    <button id="btn-pause-circuit" onclick="pauseTracking()" title="Mettre en pause" style="width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; cursor: pointer; font-size: 24px; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">⏸️</button>
+                    <button id="btn-ajouter-marker" onclick="ajouterMarqueurCircuit()" title="Ajouter un repère" style="width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; cursor: pointer; font-size: 24px; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">📌</button>
+                    <button id="btn-terminer-circuit" onclick="terminerTracking()" title="Terminer le circuit" style="width: 50px; height: 50px; border-radius: 50%; background: #c92a2a; color: white; border: none; cursor: pointer; font-size: 24px; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(201, 42, 42, 0.4); transition: all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">✓</button>
                 </div>
+                
+                <!-- Panneau Basemap Flottant -->
+                <div id="circuit-basemap-float" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.95); padding: 12px 15px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 101;">
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; white-space: nowrap;"><input type="radio" name="basemap" value="osm" onchange="changerBasemap('osm')" checked> 🗺️</label>
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; white-space: nowrap;"><input type="radio" name="basemap" value="satellite" onchange="changerBasemap('satellite')"> 🛰️</label>
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; white-space: nowrap;"><input type="radio" name="basemap" value="topo" onchange="changerBasemap('topo')"> ⛰️</label>
+                    </div>
+                </div>
+                
+                <!-- Info Position Flottant (bas droit) -->
+                <div id="circuit-info-float" style="position: absolute; bottom: 20px; right: 20px; background: rgba(255,255,255,0.95); padding: 12px 15px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 101; font-size: 11px; color: #2d5016; max-width: 200px;">
+                    <div><strong>Lat:</strong> <span id="circuit-lat">--</span></div>
+                    <div><strong>Lon:</strong> <span id="circuit-lon">--</span></div>
+                    <div style="margin-top: 6px;"><strong>Précision:</strong> <span id="circuit-accuracy" class="gps-quality good">-- m</span></div>
+                    <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid #e5e7eb;"><strong>Points GPS:</strong> <span id="circuit-points">0</span></div>
+                </div>
+                
+                <!-- Modal Export (caché par défaut) -->
+                <div id="circuit-export-modal" style="display: none; position: absolute; bottom: 100px; left: 20px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 102; max-width: 350px;">
+                    <h3 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: #2d5016;">💾 Export du Circuit</h3>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div>
+                            <label style="font-size: 12px; font-weight: 600; color: #666; display: block; margin-bottom: 4px;">Nom du circuit</label>
+                            <input type="text" id="circuit-name" placeholder="Circuit 1" style="width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px; font-size: 12px;">
+                        </div>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px;">
+                            <input type="checkbox" id="circuit-buffer" checked>
+                            <span>+ Buffer 200m (100m de chaque côté)</span>
+                        </label>
+                        <button onclick="exporterCircuitShapefile()" style="width: 100%; background: #6db038; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 12px;">📦 Shapefile</button>
+                        <button onclick="exporterCircuitGeoJSON()" style="width: 100%; background: #667eea; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 12px;">📄 GeoJSON</button>
+                    </div>
+                </div>
+                
+                <!-- Bouton Export Flottant (coin gauche bas) -->
+                <button id="btn-toggle-export" onclick="document.getElementById('circuit-export-modal').style.display = document.getElementById('circuit-export-modal').style.display === 'none' ? 'block' : 'none'" title="Export du circuit" style="position: absolute; bottom: 20px; left: 20px; margin-top: 60px; width: 50px; height: 50px; border-radius: 50%; background: #2d5016; color: white; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(45, 80, 22, 0.4); transition: all 0.2s; z-index: 102;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">💾</button>
             </div>
-            
-            <!-- Info Position Flottant (bas droit) -->
-            <div id="circuit-info-float" style="position: absolute; bottom: 20px; right: 20px; background: rgba(255,255,255,0.95); padding: 12px 15px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 101; font-size: 11px; color: #2d5016; max-width: 200px;">
-                <div><strong>Lat:</strong> <span id="circuit-lat">--</span></div>
-                <div><strong>Lon:</strong> <span id="circuit-lon">--</span></div>
-                <div style="margin-top: 6px;"><strong>Précision:</strong> <span id="circuit-accuracy" class="gps-quality good">-- m</span></div>
-                <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid #e5e7eb;"><strong>Points GPS:</strong> <span id="circuit-points">0</span></div>
-            </div>
-            
-            <!-- Modal Export (caché par défaut) -->
-            <div id="circuit-export-modal" style="display: none; position: absolute; bottom: 100px; left: 20px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 102; max-width: 350px;">
-                <h3 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: #2d5016;">💾 Export du Circuit</h3>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
+
+            <!-- VERSION DESKTOP - Interface standard -->
+            <div id="circuit-desktop-modal" style="background: white; margin: 15px auto; width: 95%; max-width: 1200px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); overflow: hidden; display: none;">
+                
+                <!-- En-tête Modal -->
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <label style="font-size: 12px; font-weight: 600; color: #666; display: block; margin-bottom: 4px;">Nom du circuit</label>
-                        <input type="text" id="circuit-name" placeholder="Circuit 1" style="width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px; font-size: 12px;">
+                        <h2 style="margin: 0; font-size: 22px; font-weight: 700;">🗺️ Traceur de Circuit - <span id="circuit-type-label-desktop">Collecte</span></h2>
+                        <p style="margin: 5px 0 0 0; font-size: 13px; opacity: 0.9;">Tracez votre itinéraire de collecte en temps réel</p>
                     </div>
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px;">
-                        <input type="checkbox" id="circuit-buffer" checked>
-                        <span>+ Buffer 200m (100m de chaque côté)</span>
-                    </label>
-                    <button onclick="exporterCircuitShapefile()" style="width: 100%; background: #6db038; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 12px;">📦 Shapefile</button>
-                    <button onclick="exporterCircuitGeoJSON()" style="width: 100%; background: #667eea; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 12px;">📄 GeoJSON</button>
+                    <button onclick="fermerModalCircuit()" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border: 1px solid white; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s;">✕ Fermer</button>
+                </div>
+                
+                <!-- Contenu Modal -->
+                <div style="display: grid; grid-template-columns: 280px 1fr 350px; gap: 15px; padding: 20px; min-height: 600px;">
+                    
+                    <!-- 📋 LISTE CIRCUITS (GAUCHE) -->
+                    <div style="display: flex; flex-direction: column; gap: 10px; background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; overflow-y: auto;">
+                        <h3 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 700; color: #2d5016; display: flex; align-items: center; gap: 8px;">
+                            <span>📍 Circuits</span>
+                            <span id="circuits-count" style="background: #6db038; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">0</span>
+                        </h3>
+                        <div id="circuits-list" style="display: flex; flex-direction: column; gap: 8px;">
+                            <div style="text-align: center; color: #999; padding: 20px 10px; font-size: 12px;">Aucun circuit sauvegardé</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Carte -->
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <!-- Basemap Selector -->
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; padding: 10px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="radio" name="basemap" value="osm" onchange="changerBasemap('osm')" checked> 🗺️ OSM Standard</label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="radio" name="basemap" value="satellite" onchange="changerBasemap('satellite')"> 🛰️ Satellite</label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="radio" name="basemap" value="topo" onchange="changerBasemap('topo')"> ⛰️ Relief</label>
+                        </div>
+                        
+                        <!-- Carte -->
+                        <div id="circuit-map" style="width: 100%; height: 500px; border-radius: 8px; border: 2px solid #e5e7eb; z-index: 100;"></div>
+                        
+                        <!-- Stats -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 12px; background: #f0f8e6; border-radius: 8px; border-left: 4px solid #6db038;">
+                            <div>
+                                <div style="font-size: 12px; color: #666;">Distance</div>
+                                <div style="font-size: 18px; font-weight: 700; color: #2d5016;"><span id="circuit-distance-desktop">0</span> km</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: #666;">Durée</div>
+                                <div style="font-size: 18px; font-weight: 700; color: #2d5016;"><span id="circuit-time-desktop">00:00</span></div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: #666;">Points GPS</div>
+                                <div style="font-size: 18px; font-weight: 700; color: #2d5016;"><span id="circuit-points-desktop">0</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Panneau Contrôle -->
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        
+                        <!-- Contrôles GPS -->
+                        <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                            <h3 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: #2d5016;">📡 Contrôles</h3>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <button id="btn-demarrer-circuit-desktop" onclick="demarrerTracking()" style="width: 100%; background: linear-gradient(135deg, #6db038 0%, #5ba837 100%); color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s;">▶️ Démarrer</button>
+                                <button id="btn-pause-circuit-desktop" onclick="pauseTracking()" style="width: 100%; background: #667eea; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: none; transition: all 0.2s;">⏸️ Pause</button>
+                                <button id="btn-ajouter-marker-desktop" onclick="ajouterMarqueurCircuit()" style="width: 100%; background: #667eea; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: none; transition: all 0.2s;">📌 +Repère</button>
+                                <button id="btn-terminer-circuit-desktop" onclick="terminerTracking()" style="width: 100%; background: #c92a2a; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: none; transition: all 0.2s;">✓ Terminer</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Info Position -->
+                        <div style="background: #f0f8e6; padding: 12px; border-radius: 8px; border-left: 4px solid #6db038; font-size: 12px; color: #2d5016;">
+                            <div><strong>Lat:</strong> <span id="circuit-lat-desktop">--</span></div>
+                            <div><strong>Lon:</strong> <span id="circuit-lon-desktop">--</span></div>
+                            <div style="margin-top: 8px;"><strong>Précision:</strong> <span id="circuit-accuracy-desktop" class="gps-quality good">-- m</span></div>
+                            <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #6db038;"><strong>Status:</strong> <span id="circuit-status-desktop" style="color: #c92a2a; font-weight: 600;">Arrêté</span></div>
+                        </div>
+                        
+                        <!-- Zone Résumé -->
+                        <div style="background: #fff3cd; padding: 12px; border-radius: 8px; border-left: 4px solid #ffc107; font-size: 12px; color: #333;">
+                            <strong style="display: block; margin-bottom: 8px;">ℹ️ Instructions</strong>
+                            <ul style="margin: 0; padding-left: 18px;">
+                                <li>Cliquez "Démarrage"</li>
+                                <li>Le GPS enregistre</li>
+                                <li>Terminez quand fini</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Export & Buffer -->
+                        <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                            <h3 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: #2d5016;">💾 Export</h3>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div>
+                                    <label style="font-size: 12px; font-weight: 600; color: #666; display: block; margin-bottom: 4px;">Nom du circuit</label>
+                                    <input type="text" id="circuit-name" placeholder="Circuit 1" style="width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px; font-size: 12px;">
+                                </div>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px;">
+                                    <input type="checkbox" id="circuit-buffer" checked>
+                                    <span>+ Buffer 200m (100m de chaque côté)</span>
+                                </label>
+                                <button onclick="exporterCircuitShapefile()" style="width: 100%; background: #6db038; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s;">📦 Shapefile</button>
+                                <button onclick="exporterCircuitGeoJSON()" style="width: 100%; background: #667eea; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s;">📄 GeoJSON</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <!-- Bouton Export Flottant (coin gauche bas) -->
-            <button id="btn-toggle-export" onclick="document.getElementById('circuit-export-modal').style.display = document.getElementById('circuit-export-modal').style.display === 'none' ? 'block' : 'none'" title="Export du circuit" style="position: absolute; bottom: 20px; left: 20px; margin-top: 60px; width: 50px; height: 50px; border-radius: 50%; background: #2d5016; color: white; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(45, 80, 22, 0.4); transition: all 0.2s; z-index: 102;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">💾</button>
         </div>
         
         <!-- HEADER AVEC BOUTON RETOUR À L'ACCUEIL -->
@@ -5108,6 +5248,20 @@ Consultez les logs du serveur pour les détails complets.
         
         // ============ FONCTIONS DE NAVIGATION LANDING PAGE ============
         
+        // Synchroniser les données entre mobile et desktop
+        function syncCircuitData(field, value, isMobile = true) {
+            if (isMobile) {
+                // Depuis mobile vers desktop
+                const desktopField = field.replace('-desktop', '') === field ? field + '-desktop' : field;
+                const elem = document.getElementById(desktopField);
+                if (elem) elem.textContent = value;
+            } else {
+                // Depuis desktop vers mobile
+                const mobileField = field.replace('-desktop', '');
+                const elem = document.getElementById(mobileField);
+                if (elem) elem.textContent = value;
+            }
+        }
         function allerAuFormulaire(scroll = true) {
             const landingSection = document.getElementById('landing-section');
             const formulaireSection = document.getElementById('formulaire-section');
@@ -5172,10 +5326,19 @@ Consultez les logs du serveur pour les détails complets.
         function ouvrirModalCircuit(type) {
             document.getElementById('circuit-modal').style.display = 'block';
             document.getElementById('circuit-type-label').textContent = type;
+            // Synchroniser le label pour desktop
+            document.getElementById('circuit-type-label-desktop').textContent = type;
             document.body.style.overflow = 'hidden';
             
             // Initialiser la carte avec délai
-            setTimeout(initCircuitMap, 500);
+            setTimeout(() => {
+                const isMobile = window.innerWidth <= 768;
+                if (isMobile) {
+                    initCircuitMap('fullscreen');
+                } else {
+                    initCircuitMap('desktop');
+                }
+            }, 500);
         }
         
         function fermerModalCircuit() {
@@ -5185,10 +5348,11 @@ Consultez les logs du serveur pour les détails complets.
             circuitTracking = false;
         }
         
-        function initCircuitMap() {
+        function initCircuitMap(mode = 'auto') {
             if (circuitMap) return;
             
-            circuitMap = L.map('circuit-map-fullscreen').setView([13.1939, -15.5277], 13);
+            const mapContainer = mode === 'fullscreen' ? 'circuit-map-fullscreen' : 'circuit-map';
+            circuitMap = L.map(mapContainer).setView([13.1939, -15.5277], 13);
             
             // Basemap OSM Standard
             basemapLayers.osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -5638,6 +5802,9 @@ Consultez les logs du serveur pour les détails complets.
                 };
                 const distance = turf.length(feature, { units: 'kilometers' });
                 document.getElementById('circuit-distance').textContent = distance.toFixed(2);
+                // Synchroniser avec desktop
+                const desktopDist = document.getElementById('circuit-distance-desktop');
+                if (desktopDist) desktopDist.textContent = distance.toFixed(2);
             }
             
             const now = new Date();
@@ -5645,9 +5812,15 @@ Consultez les logs du serveur pour les détails complets.
             const hours = Math.floor(elapsed / 3600);
             const minutes = Math.floor((elapsed % 3600) / 60);
             const seconds = Math.floor(elapsed % 60);
-            document.getElementById('circuit-time').textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            const timeStr = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            
+            document.getElementById('circuit-time').textContent = timeStr;
+            const desktopTime = document.getElementById('circuit-time-desktop');
+            if (desktopTime) desktopTime.textContent = timeStr;
             
             document.getElementById('circuit-points').textContent = circuitPoints.length;
+            const desktopPoints = document.getElementById('circuit-points-desktop');
+            if (desktopPoints) desktopPoints.textContent = circuitPoints.length;
         }
         
         function exporterCircuitGeoJSON() {
