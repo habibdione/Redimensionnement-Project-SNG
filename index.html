@@ -1883,7 +1883,8 @@
             box-shadow: 0 2px 12px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
-            height: 100%;
+            max-height: 700px;  /* ✅ LIMITE HAUTEUR */
+            height: auto;       /* ✅ S'adapte au contenu mais limité */
         }
 
         .galerie-header {
@@ -1891,6 +1892,7 @@
             color: white;
             padding: 20px;
             text-align: center;
+            flex-shrink: 0;  /* ✅ Ne pas compresser le header */
         }
 
         .galerie-header h3 {
@@ -1910,10 +1912,15 @@
             background: #f9fafb;
             border-bottom: 1px solid #e5e7eb;
             font-size: 12px;
+            flex-shrink: 0;  /* ✅ Ne pas compresser les stats */
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .galerie-stat-item {
             text-align: center;
+            flex: 1;
+            min-width: 80px;
         }
 
         .galerie-stat-number {
@@ -1928,13 +1935,34 @@
         }
 
         .galerie-scroll {
-            flex: 1;
+            flex: 1;                   /* ✅ Prend l'espace restant */
             padding: 20px;
-            overflow-y: auto;
+            overflow-y: auto;          /* ✅ Scroll vertical si nécessaire */
+            overflow-x: hidden;        /* ✅ Pas de scroll horizontal */
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 15px;
             align-content: start;
+            min-height: 0;             /* ✅ Permet au flex de calculer la hauteur */
+        }
+
+        /* 🖐️ SMOOTHSCROLL - Barre de scroll stylisée */
+        .galerie-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .galerie-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .galerie-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #6db038 0%, #5ba837 100%);
+            border-radius: 10px;
+        }
+
+        .galerie-scroll::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5ba837 0%, #4a7c27 100%);
         }
 
         .galerie-item {
@@ -1990,10 +2018,27 @@
         }
 
         @media (max-width: 600px) {
+            .galerie-container {
+                max-height: 500px;  /* ✅ Hauteur réduite sur mobile */
+            }
+
             .galerie-scroll {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
                 padding: 10px;
+            }
+
+            .galerie-item-image {
+                height: 120px;  /* ✅ Images plus petites sur mobile */
+            }
+
+            .galerie-header {
+                padding: 15px;  /* ✅ Padding réduit */
+            }
+
+            .galerie-stats {
+                padding: 8px;
+                font-size: 11px;
             }
         }
 
