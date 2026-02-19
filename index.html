@@ -13,6 +13,7 @@
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23667eea' width='192' height='192'/><text x='50%' y='50%' font-size='100' font-weight='bold' fill='white' text-anchor='middle' dy='.3em'>S</text></svg>">
     <title>Dimensionnement SONAGED - Collecte de Données</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    <link rel="stylesheet" href="./css/map-styles.css">
     <style>
         * {
             margin: 0;
@@ -2171,6 +2172,43 @@
             position: relative;
         }
         
+        /* Styles des contrôles personnalisés */
+        .legend-control {
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        
+        .help-control {
+            background: rgba(109, 176, 56, 0.95);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            z-index: 10;
+        }
+        
+        /* Améliorations des popups Leaflet */
+        .leaflet-popup-content {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.5;
+        }
+        
+        .leaflet-popup-content strong {
+            color: #2d5016;
+        }
+        
+        .leaflet-control-layers {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .leaflet-control-layers-toggle {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%232d5016"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>');
+        }
+        
         @media (max-width: 768px) {
             #dimensionnement-map {
                 height: 400px;
@@ -2187,8 +2225,8 @@
     <!-- 🗺️ TURF.JS pour géométries & buffer -->
     <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
     
-    <!-- 📝 SHPWRITE pour export Shapefile client-side -->
-    <script src="https://cdn.jsdelivr.net/npm/shpwrite@0.3.2/dist/shpwrite.js"></script>
+    <!-- � Script de pré-chargement des données GeoJSON -->
+    <script src="./js/geojson-preloader.js"></script>
 
 </head>
 <body>
@@ -6804,48 +6842,62 @@ Consultez les logs du serveur pour les détails complets.
         
         // Initialiser la carte
         function initLandingMap() {
-            if (landingMap) return;
+            if (landingMap) {
+                console.log('ℹ️ Carte déjà initialisée');
+                return;
+            }
             
             const mapContainer = document.getElementById('dimensionnement-map');
             if (!mapContainer) {
-                console.error('❌ Conteneur dimensionnement-map non trouvé');
+                console.error('❌ Conteneur dimensionnement-map NON TROUVÉ');
                 return;
             }
             
             // Créer la carte centrée sur le Sénégal (14.5N, -14.5E)
-            landingMap = L.map('dimensionnement-map').setView([14.5, -14.5], 6);
+            try {
+                landingMap = L.map('dimensionnement-map').setView([14.5, -14.5], 6);
+                console.log('✅ L.map créée avec succès');
+            } catch (error) {
+                console.error('❌ Erreur lors de la création de L.map:', error);
+                return;
+            }
             
             // Ajouter TileLayer OpenStreetMap
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors',
-                maxZoom: 19,
-                minZoom: 4
-            }).addTo(landingMap);
+            try {
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors',
+                    maxZoom: 19,
+                    minZoom: 4
+                }).addTo(landingMap);
+                console.log('✅ TileLayer OSM ajoutée');
+            } catch (error) {
+                console.error('❌ Erreur lors du chargement de TileLayer:', error);
+            }
             
-            console.log('✅ Carte Leaflet initialisée');
+            console.log('✅ Carte Leaflet initialisée - Début du chargement des couches GeoJSON');
             loadGeoJSONLayers();
         }
         
-        // Charger les couches GeoJSON
+        // Charger les couches GeoJSON avec styles enrichis
         function loadGeoJSONLayers() {
             const overlayMaps = {};
             const urls = [
-                { name: 'Region_3', url: './data/Region_3.js' },
-                { name: 'Departement_4', url: './data/Departement_4.js' },
-                { name: 'Arrondissement_5', url: './data/Arrondissement_5.js' },
-                { name: 'CollecteNational_6', url: './data/CollecteNational_6.js' },
-                { name: 'BalayageNational_7', url: './data/BalayageNational_7.js' },
-                { name: 'MobilierUrbain_8', url: './data/MobilierUrbain_8.js' }
+                { name: 'Region_3', url: './data/Region_3.js', jsonVar: 'json_Region_3' },
+                { name: 'Departement_4', url: './data/Departement_4.js', jsonVar: 'json_Departement_4' },
+                { name: 'Arrondissement_5', url: './data/Arrondissement_5.js', jsonVar: 'json_Arrondissement_5' },
+                { name: 'CollecteNational_6', url: './data/CollecteNational_6.js', jsonVar: 'json_CollecteNational_6' },
+                { name: 'BalayageNational_7', url: './data/BalayageNational_7.js', jsonVar: 'json_BalayageNational_7' },
+                { name: 'MobilierUrbain_8', url: './data/MobilierUrbain_8.js', jsonVar: 'json_MobilierUrbain_8' }
             ];
             
-            urls.forEach(({ name, url }) => {
+            urls.forEach(({ name, url, jsonVar }) => {
                 const script = document.createElement('script');
                 script.src = url;
                 script.onload = function() {
-                    const geoJsonData = window[name];
+                    const geoJsonData = window[jsonVar];
                     
                     if (!geoJsonData) {
-                        console.warn(`⚠️ GeoJSON ${name} non trouvé`);
+                        console.warn(`⚠️ GeoJSON ${name} non trouvé (cherchait: ${jsonVar})`);
                         loadedLayersCount++;
                         return;
                     }
@@ -6854,59 +6906,125 @@ Consultez les logs du serveur pour les détails complets.
                     let layer;
                     
                     if (name.includes('CollecteNational') || name.includes('BalayageNational')) {
-                        // Lignes
+                        // Lignes - Circuits Collecte/Balayage
                         layer = L.geoJSON(geoJsonData, {
                             style: style,
                             onEachFeature: function(feature, l) {
                                 const props = feature.properties || {};
-                                let html = `<div style="font-size: 12px; max-width: 250px;"><strong>${name.replace(/_\\d+$/, '')}</strong><br>`;
+                                let html = `<div style="font-size: 13px; max-width: 280px; font-family: Arial;">
+                                    <strong style="color: #2d5016; border-bottom: 2px solid #6db038; padding-bottom: 5px; display: block; margin-bottom: 8px;">
+                                        ${name.includes('Collecte') ? '🔴 Circuit Collecte' : '🟪 Circuit Balayage'}
+                                    </strong>`;
+                                
+                                const maxFields = 8;
                                 let count = 0;
                                 for (let key in props) {
-                                    if (count++ < 5) html += `${key}: ${props[key]}<br>`;
+                                    if (count++ < maxFields) {
+                                        html += `<div style="margin: 5px 0;"><strong>${key}:</strong> ${props[key]}</div>`;
+                                    }
                                 }
                                 html += '</div>';
-                                l.bindPopup(html);
+                                l.bindPopup(html, {maxWidth: 300});
+                                
+                                // Effets au survol
+                                l.on('mouseover', () => {
+                                    l.setStyle({ weight: 4, opacity: 1, dashArray: '' });
+                                    l.openPopup();
+                                });
+                                l.on('mouseout', () => {
+                                    l.setStyle(style);
+                                    l.closePopup();
+                                });
                             }
                         });
                     } else if (name.includes('Mobilier')) {
-                        // Points
+                        // Points - Mobilier Urbain
                         layer = L.geoJSON(geoJsonData, {
-                            pointToLayer: (feature, latlng) => L.circleMarker(latlng, style),
+                            pointToLayer: (feature, latlng) => {
+                                const props = feature.properties || {};
+                                let color = '#48cb51'; // Par défaut vert
+                                let size = 5;
+                                
+                                if (props['Type_de_Mo']) {
+                                    if (props['Type_de_Mo'].includes('Bac')) color = '#d56a8c';
+                                    else if (props['Type_de_Mo'].includes('Polyb')) color = '#8c34e9';
+                                    else if (props['Type_de_Mo'] === 'PP') color = '#48cb51';
+                                    else if (props['Type_de_Mo'] === 'PRN') color = '#6cb1ca';
+                                }
+                                
+                                return L.circleMarker(latlng, {
+                                    ...style,
+                                    fillColor: color,
+                                    fillOpacity: 0.8,
+                                    weight: 1
+                                });
+                            },
                             onEachFeature: function(feature, l) {
                                 const props = feature.properties || {};
-                                let html = `<div style="font-size: 12px; max-width: 250px;"><strong>🟢 Mobilier Urbain</strong><br>`;
-                                let count = 0;
-                                for (let key in props) {
-                                    if (count++ < 6) html += `${key}: ${props[key]}<br>`;
+                                let html = `<div style="font-size: 13px; max-width: 280px; font-family: Arial;">
+                                    <strong style="color: #2d5016; border-bottom: 2px solid #6db038; padding-bottom: 5px; display: block; margin-bottom: 8px;">
+                                        🟢 ${props['Type_de_Mo'] || 'Mobilier Urbain'}
+                                    </strong>`;
+                                
+                                const mainFields = ['REGION', 'DEPARTEMEN', 'Communes_d', 'Type_de_PR', 'Etat_du_Mo'];
+                                for (let key of mainFields) {
+                                    if (props[key]) {
+                                        html += `<div style="margin: 5px 0;"><strong>${key}:</strong> ${props[key]}</div>`;
+                                    }
                                 }
                                 html += '</div>';
-                                l.bindPopup(html);
+                                l.bindPopup(html, {maxWidth: 300});
+                                
+                                // Effets au survol
+                                l.on('mouseover', () => {
+                                    l.setStyle({ weight: 3, fillOpacity: 1 });
+                                    l.openPopup();
+                                });
+                                l.on('mouseout', () => {
+                                    l.setStyle({ weight: 1, fillOpacity: 0.8 });
+                                    l.closePopup();
+                                });
                             }
                         });
                     } else {
-                        // Polygones
+                        // Polygones - Zones administratives
                         layer = L.geoJSON(geoJsonData, {
                             style: style,
                             onEachFeature: function(feature, l) {
                                 const props = feature.properties || {};
-                                let html = `<div style="font-size: 12px; max-width: 250px;"><strong>${layerDisplayNames[name]}</strong><br>`;
+                                let html = `<div style="font-size: 13px; max-width: 280px; font-family: Arial;">
+                                    <strong style="color: #2d5016; border-bottom: 2px solid #6db038; padding-bottom: 5px; display: block; margin-bottom: 8px;">
+                                        ${layerDisplayNames[name]}
+                                    </strong>`;
+                                    
                                 for (let key in props) {
-                                    html += `<strong>${key}:</strong> ${props[key]}<br>`;
+                                    html += `<div style="margin: 5px 0;"><strong>${key}:</strong> ${props[key]}</div>`;
                                 }
                                 html += '</div>';
-                                l.bindPopup(html);
+                                l.bindPopup(html, {maxWidth: 300});
                                 
-                                // Hover effects
-                                l.on('mouseover', () => l.setStyle({ weight: 3, opacity: 0.9 }));
-                                l.on('mouseout', () => l.setStyle(style));
+                                // Effets au survol
+                                l.on('mouseover', () => {
+                                    l.setStyle({ weight: 3, opacity: 0.95, fillOpacity: 0.9 });
+                                    l.openPopup();
+                                });
+                                l.on('mouseout', () => {
+                                    l.setStyle(style);
+                                    l.closePopup();
+                                });
                             }
                         });
                     }
                     
                     // Ajouter à la carte
-                    layer.addTo(landingMap);
-                    geojsonLayers[name] = layer;
-                    overlayMaps[layerDisplayNames[name]] = layer;
+                    try {
+                        layer.addTo(landingMap);
+                        geojsonLayers[name] = layer;
+                        overlayMaps[layerDisplayNames[name]] = layer;
+                        console.log(`✅ ${layerDisplayNames[name]} chargée et affichée (${loadedLayersCount + 1}/${totalLayers})`);
+                    } catch (error) {
+                        console.error(`❌ Erreur lors de l'ajout de la couche ${name}:`, error);
+                    }
                     
                     loadedLayersCount++;
                     
@@ -6917,30 +7035,90 @@ Consultez les logs du serveur pour les détails complets.
                         
                         landingLayersControl = L.control.layers({}, overlayMaps, {
                             position: 'topright',
-                            collapsed: false
+                            collapsed: true
                         }).addTo(landingMap);
                         
-                        console.log(`✅ ${loadedLayersCount} couches GeoJSON chargées`);
+                        console.log(`✅ SUCCÈS: ${loadedLayersCount} couches GeoJSON complètement chargées et affichées`);
                     }
                 };
                 
                 script.onerror = () => {
-                    console.error(`❌ Erreur: ${url}`);
+                    console.error(`❌ ERREUR: Impossible de charger ${url}`);
                     loadedLayersCount++;
                 };
                 
+                console.log(`📥 Chargement en cours: ${url}`);
                 document.head.appendChild(script);
             });
         }
         
         // Initialiser quand le DOM est prêt
         document.addEventListener('DOMContentLoaded', () => {
+            // Attendre que le conteneur existe
+            const mapContainer = document.getElementById('dimensionnement-map');
+            if (!mapContainer) {
+                console.error('❌ Conteneur dimensionnement-map NON TROUVÉ');
+                return;
+            }
+            
+            // Attendre 500ms pour que tout soit chargé
             setTimeout(() => {
+                console.log('🚀 Initialisation de la carte...');
                 if (!landingMap) {
                     initLandingMap();
+                    setTimeout(() => {
+                        addMapControls();
+                    }, 200);
                 }
-            }, 300);
+            }, 500);
         });
+        
+        // Ajouter les contrôles et fonctionnalités avancées
+        function addMapControls() {
+            if (!landingMap) return;
+            
+            // Ajouter le zoom control personnalisé
+            const zoomControl = L.control.zoom({
+                position: 'topleft'
+            }).addTo(landingMap);
+            
+            // Ajouter un contrôle de légende personnalisé
+            const legend = L.control({ position: 'bottomright' });
+            
+            legend.onAdd = function(map) {
+                const div = L.DomUtil.create('div', 'legend-control');
+                div.innerHTML = `
+                    <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.2); font-size: 12px;">
+                        <h3 style="margin-top: 0; color: #2d5016; border-bottom: 2px solid #6db038; padding-bottom: 8px;">🗺️ Légende</h3>
+                        <div style="margin: 8px 0;"><span style="display: inline-block; width: 20px; height: 20px; background: rgba(164,113,88,0.6); border: 1px solid #a47158; border-radius: 3px; margin-right: 8px; vertical-align: middle;"></span><strong>Régions</strong></div>
+                        <div style="margin: 8px 0;"><span style="display: inline-block; width: 20px; height: 20px; background: rgba(221,51,206,0.6); border: 1px solid #dd33ce; border-radius: 3px; margin-right: 8px; vertical-align: middle;"></span><strong>Départements</strong></div>
+                        <div style="margin: 8px 0;"><span style="display: inline-block; width: 20px; height: 20px; background: rgba(141,90,153,0.6); border: 1px solid #8d5a99; border-radius: 3px; margin-right: 8px; vertical-align: middle;"></span><strong>Arrondissements</strong></div>
+                        <div style="margin: 8px 0;"><span style="display: inline-block; width: 20px; height: 4px; background: rgba(196,60,57,0.8); margin-right: 8px; vertical-align: middle;"></span><strong>Collecte</strong></div>
+                        <div style="margin: 8px 0;"><span style="display: inline-block; width: 20px; height: 4px; background: rgba(152,125,183,0.8); margin-right: 8px; vertical-align: middle;"></span><strong>Balayage</strong></div>
+                        <div style="margin: 8px 0;"><span style="display: inline-block; width: 12px; height: 12px; background: rgba(72,203,81,0.8); border: 2px solid #48cb51; border-radius: 50%; margin-right: 8px; vertical-align: middle;"></span><strong>Mobilier</strong></div>
+                    </div>
+                `;
+                return div;
+            };
+            
+            legend.addTo(landingMap);
+            
+            // Ajouter une notification d'aide
+            const helpControl = L.control({ position: 'topleft' });
+            helpControl.onAdd = function(map) {
+                const div = L.DomUtil.create('div', 'help-control');
+                div.innerHTML = `
+                    <div style="background: rgba(109, 176, 56, 0.95); color: white; padding: 12px; border-radius: 8px; font-size: 11px; margin-top: 50px; max-width: 200px;">
+                        <strong>💡 Astuce:</strong> Cliquez sur les éléments pour voir les détails. Utilisez la molette pour zoomer.
+                    </div>
+                `;
+                return div;
+            };
+            
+            helpControl.addTo(landingMap);
+            
+            console.log('✅ Contrôles de carte ajoutés');
+        }
 
         // 📸 CHARGE AUTOMATIQUE DU DERNIER EXPORT DANS LA GALERIE
         async function chargerDernierExportEnGalerie() {
@@ -7088,6 +7266,9 @@ Consultez les logs du serveur pour les détails complets.
             chargerDernierExportEnGalerie();
         });
     </script>
+    
+    <!-- 🗺️ Script d'amélioration de la carte Leaflet -->
+    <script src="./js/map-enhancements.js"></script>
 
 </body>
 </html>

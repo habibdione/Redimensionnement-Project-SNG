@@ -1,0 +1,217 @@
+/* 🗺️ Styles avancés pour la carte Leaflet */
+
+/* Conteneur principal de la carte */
+#dimensionnement-map {
+    position: relative;
+    background: linear-gradient(135deg, #f0f8e6 0%, #e8f5df 100%);
+}
+
+/* Améliorations des marqueurs */
+.leaflet-marker-icon {
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.leaflet-marker-icon:hover {
+    transform: scale(1.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Styles des cercles pour le mobilier urbain */
+.leaflet-interactive {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.leaflet-interactive:hover {
+    filter: brightness(1.1);
+}
+
+/* Styles des popups enrichis */
+.leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+    border: 2px solid #6db038;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.leaflet-popup-tip {
+    background: white;
+    border-color: #6db038;
+}
+
+.leaflet-popup-content {
+    margin: 0;
+    padding: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.leaflet-popup-content strong {
+    color: #2d5016;
+    font-weight: 700;
+}
+
+/* Contrôles d'interface */
+.leaflet-control-zoom,
+.leaflet-control-attribution {
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 2px solid #e5e7eb;
+}
+
+.leaflet-control-zoom a,
+.leaflet-control-attribution a {
+    color: #2d5016 !important;
+    font-weight: 700;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.leaflet-control-zoom a:hover,
+.leaflet-control-attribution a:hover {
+    background: #f0f8e6 !important;
+    color: #4a7c27 !important;
+}
+
+/* Contrôle des couches */
+.leaflet-control-layers {
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.98) !important;
+    border: 2px solid #e5e7eb;
+    max-height: 400px;
+}
+
+.leaflet-control-layers-toggle {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #6db038 0%, #4a7c27 100%) !important;
+}
+
+.leaflet-control-layers-list {
+    font-size: 13px;
+}
+
+.leaflet-control-layers input[type="checkbox"],
+.leaflet-control-layers input[type="radio"] {
+    accent-color: #6db038;
+    cursor: pointer;
+}
+
+label {
+    cursor: pointer;
+    color: #2d5016;
+    font-weight: 500;
+}
+
+/* Animation des couches en cours de chargement */
+@keyframes loadingPulse {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+.layer-loading {
+    animation: loadingPulse 1.5s ease-in-out infinite;
+}
+
+/* Légende personnalisée */
+.legend-control {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 12px;
+    border: 2px solid #e5e7eb;
+}
+
+.legend-control h3 {
+    margin: 0 0 12px 0;
+    color: #2d5016;
+    font-size: 14px;
+    border-bottom: 2px solid #6db038;
+    padding-bottom: 8px;
+}
+
+.legend-control div {
+    margin: 8px 0;
+    font-size: 12px;
+    color: #4a5568;
+}
+
+.legend-control strong {
+    color: #2d5016;
+}
+
+/* Contrôle d'aide */
+.help-control {
+    background: rgba(109, 176, 56, 0.95);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 11px;
+    max-width: 200px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 2px solid #6db038;
+}
+
+/* Responsivité mobile */
+@media (max-width: 768px) {
+    .leaflet-control-layers {
+        max-height: 300px;
+    }
+    
+    .legend-control {
+        max-width: 90vw;
+        font-size: 11px;
+    }
+    
+    .help-control {
+        font-size: 10px;
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .leaflet-popup-content {
+        font-size: 11px;
+    }
+    
+    .leaflet-control-zoom a {
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        font-size: 14px;
+    }
+}
+
+/* Animations de transition */
+.leaflet-pane,
+.leaflet-tile {
+    transition: opacity 0.3s ease;
+}
+
+/* Curseur personnalisé pour les éléments interactifs */
+.leaflet-interactive {
+    cursor: pointer;
+}
+
+/* Amélioration de la visibilité des lignes */
+.leaflet-path {
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+/* Style de sélection */
+.leaflet-highlighted {
+    filter: brightness(1.2) contrast(1.1);
+    z-index: 999;
+}
