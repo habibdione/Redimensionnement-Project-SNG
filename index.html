@@ -863,28 +863,7 @@
 
     <!-- Styles de la carte -->
     <script>
-        let landingMap;
-        let geojsonLayers = {};
-        let landingLayersControl;
-        let loadedLayersCount = 0;
-
-        const layerStyles = {
-            'Region_3': { color: '#a47158', weight: 2, opacity: 0.8, fillOpacity: 0.6 },
-            'Departement_4': { color: '#dd33ce', weight: 2, opacity: 0.8, fillOpacity: 0.6 },
-            'Arrondissement_5': { color: '#8d5a99', weight: 2, opacity: 0.8, fillOpacity: 0.6 },
-            'CollecteNational_6': { color: '#c43c39', weight: 3, opacity: 0.8, dashArray: '5, 5' },
-            'BalayageNational_7': { color: '#987db7', weight: 3, opacity: 0.8, dashArray: '5, 5' },
-            'MobilierUrbain_8': { color: '#48cb51', weight: 2, opacity: 0.8, fillOpacity: 0.7, radius: 5 }
-        };
-
-        const layerDisplayNames = {
-            'Region_3': '🟤 Régions',
-            'Departement_4': '🟣 Départements',
-            'Arrondissement_5': '🟪 Arrondissements',
-            'CollecteNational_6': '🔴 Circuits Collecte',
-            'BalayageNational_7': '🟪 Circuits Balayage',
-            'MobilierUrbain_8': '🟢 Mobilier Urbain'
-        };
+        // Configuration utilisée plus bas - voir section "INITIALISATION CARTE LEAFLET LANDING PAGE"
 
         function initLandingMap() {
             if (landingMap) return;
@@ -7760,16 +7739,6 @@ Consultez les logs du serveur pour les détails complets.
             'MobilierUrbain_8': { radius: 6, fillColor: '#22C55E', color: '#16A34A', weight: 2, opacity: 0.8, fillOpacity: 0.8 }
         };
         
-        // Noms affichables des couches
-        const layerDisplayNames = {
-            'Region_3': '🟤 Régions',
-            'Departement_4': '🟣 Départements',
-            'Arrondissement_5': '🟪 Arrondissements',
-            'CollecteNational_6': '🔴 Circuits Collecte',
-            'BalayageNational_7': '🟪 Circuits Balayage',
-            'MobilierUrbain_8': '🟢 Mobilier Urbain'
-        };
-        
         // Initialiser la carte
         function initLandingMap() {
             if (landingMap) {
@@ -8237,10 +8206,11 @@ Consultez les logs du serveur pour les détails complets.
         document.addEventListener('DOMContentLoaded', function() {
             chargerDernierExportEnGalerie();
         });
+        }
     </script>
     
     <!-- 🗺️ Script d'amélioration de la carte Leaflet -->
     <script src="./js/map-enhancements.js"></script>
 
 </body>
-</html> 
+</html>
