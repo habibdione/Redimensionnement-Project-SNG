@@ -349,6 +349,44 @@ function createSonagedMap(geojsonData) {
             height: 20px;
             border-radius: 3px;
             border: 1px solid #999;
+            flex-shrink: 0;
+        }
+
+        /* Styles pour les différentes formes */
+        .legend-polygon {
+            width: 24px;
+            height: 24px;
+            background: currentColor;
+            opacity: 0.3;
+            border: 2px solid currentColor;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .legend-line {
+            width: 24px;
+            height: 24px;
+            position: relative;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .legend-line::after {
+            content: '';
+            width: 100%;
+            height: 3px;
+            background: currentColor;
+            border-radius: 2px;
+        }
+
+        .legend-point {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            flex-shrink: 0;
         }
 
         .legend-label {
@@ -454,7 +492,39 @@ function createSonagedMap(geojsonData) {
         </div>
 
         <div class="legend">
-            <h3>📍 Informations</h3>
+            <h3>📍 Légende - Couches</h3>
+            
+            <div class="legend-item">
+                <div class="legend-polygon" style="color: #1f77b4;"></div>
+                <div class="legend-label">Régions</div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="legend-polygon" style="color: #ff7f0e;"></div>
+                <div class="legend-label">Départements</div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="legend-polygon" style="color: #2ca02c;"></div>
+                <div class="legend-label">Arrondissements</div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="legend-line" style="color: #d62728;"></div>
+                <div class="legend-label">Circuits de Collecte</div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="legend-line" style="color: #9467bd;"></div>
+                <div class="legend-label">Zones de Balayage</div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="legend-point" style="background: #8c564b;"></div>
+                <div class="legend-label">Mobilier Urbain</div>
+            </div>
+            
+            <h3 style="margin-top: 15px;">ℹ️ Informations</h3>
             <p><strong>Source:</strong> Réseau National SONAGED</p>
             <p><strong>Date:</strong> Février 2026</p>
             <p><strong>Projection:</strong> WGS-84 (EPSG:4326)</p>
