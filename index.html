@@ -7099,7 +7099,33 @@ Consultez les logs du serveur pour les détails complets.
                     // ✅ Ajouter la couche à la carte et au contrôle
                     layer.addTo(landingMap);
                     geojsonLayers[name] = layer;
-                    overlayMaps[layerDisplayNames[name]] = layer;
+                    
+                    // 🖼️ Améliorer le label avec image de légende si disponible
+                    let displayLabel = layerDisplayNames[name];
+                    const legendImagePath = `./legend/${name}.png`;
+                    
+                    // Créer un label avec légende (HTML)
+                    const labelWithLegend = document.createElement('div');
+                    labelWithLegend.style.display = 'flex';
+                    labelWithLegend.style.alignItems = 'center';
+                    labelWithLegend.style.gap = '8px';
+                    
+                    const legendImg = document.createElement('img');
+                    legendImg.src = legendImagePath;
+                    legendImg.style.height = '16px';
+                    legendImg.style.width = 'auto';
+                    legendImg.onerror = () => {
+                        legendImg.style.display = 'none';
+                    };
+                    
+                    const labelText = document.createElement('span');
+                    labelText.textContent = displayLabel;
+                    
+                    labelWithLegend.appendChild(legendImg);
+                    labelWithLegend.appendChild(labelText);
+                    
+                    // Ajouter avec le label enrichi
+                    overlayMaps[displayLabel] = layer;
                     
                     loadedLayersCount++;
                     
@@ -7116,6 +7142,7 @@ Consultez les logs du serveur pour les détails complets.
                         }).addTo(landingMap);
                         
                         console.log(`✅ ${loadedLayersCount} couches GeoJSON chargées avec succès`);
+                        console.log(`🖼️ Légendes intégrées depuis ./legend/`);
                     }
                 };
                 
