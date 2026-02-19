@@ -1015,93 +1015,6 @@
     </script>
 </body>
 </html>
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <meta name="theme-color" content="#667eea">
-    <meta name="description" content="Application mobile de collecte de données géographiques pour le dimensionnement des sites SONAGED">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SONAGED Map">
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="./manifest.json">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23667eea' width='192' height='192'/><text x='50%' y='50%' font-size='100' font-weight='bold' fill='white' text-anchor='middle' dy='.3em'>S</text></svg>">
-    <title>Dimensionnement SONAGED - Collecte de Données</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-    <link rel="stylesheet" href="./css/map-styles.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            padding: 15px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #2d5016 0%, #4a7c27 50%, #6db038 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-        
-        .header > * {
-            position: relative;
-            z-index: 1;
-        }
-        
-        .header-logo-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 25px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .header-logo-container img {
-            height: 100px;
-            width: auto;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        .sonaged-logo {
-            height: 120px;
-            width: 120px;
-            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3)) drop-shadow(0 2px 4px rgba(45, 80, 22, 0.5));
-            animation: float 3s ease-in-out infinite, spin 6s ease-in-out infinite;
-        }
         
         @keyframes spin {
             0%, 100% { transform: rotate(0deg); }
@@ -3746,7 +3659,6 @@
                     <div id="resume-contenu" style="font-size: 14px; line-height: 2; color: #333;"></div>
                 </div>
             </div>
-            </form>
             
             <!-- LOCALISATION & IMAGES -->
             <div class="section">
@@ -8331,4 +8243,4 @@ Consultez les logs du serveur pour les détails complets.
     <script src="./js/map-enhancements.js"></script>
 
 </body>
-</html>
+</html> 
