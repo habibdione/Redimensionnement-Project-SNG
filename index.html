@@ -2379,7 +2379,7 @@
                 </div>
                 
                 <!-- Carte Leaflet -->
-                <div id="dimensionnement-map"></div>
+                <div id="dimensionnement-map" style="width: 100%; height: 600px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px solid #e5e7eb; margin-bottom: 20px;"></div>
                 
                 <!-- Légende -->
                 <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -6832,27 +6832,78 @@ Consultez les logs du serveur pour les détails complets.
         let loadedLayersCount = 0;
         const totalLayers = 6;
         
-        // Styles pour chaque couche
+        // 🗺️ STYLES DETAILLES POUR CHAQUE COUCHE
         const layerStyles = {
-            'Region_3': { color: '#8B4513', weight: 2, opacity: 0.7, fillOpacity: 0.4, fillColor: 'rgba(139, 69, 19, 0.4)' },
-            'Departement_4': { color: '#C71585', weight: 1.5, opacity: 0.7, fillOpacity: 0.3, fillColor: 'rgba(199, 21, 133, 0.3)' },
-            'Arrondissement_5': { color: '#AD3397', weight: 1, opacity: 0.6, fillOpacity: 0.2, fillColor: 'rgba(173, 51, 151, 0.2)' },
-            'CollecteNational_6': { color: '#DC143C', weight: 3, opacity: 0.8, lineCap: 'round', lineJoin: 'round' },
-            'BalayageNational_7': { color: '#9333EA', weight: 2.5, opacity: 0.7, dashArray: '5, 5', lineCap: 'round', lineJoin: 'round' },
-            'MobilierUrbain_8': { radius: 6, fillColor: '#22C55E', color: '#16A34A', weight: 2, opacity: 0.8, fillOpacity: 0.8 }
+            'Region_3': { 
+                color: 'rgba(35,35,35,1.0)', 
+                weight: 1.0, 
+                opacity: 1,
+                fillOpacity: 1, 
+                fillColor: 'rgba(164,113,88,1.0)' 
+            },
+            'Departement_4': { 
+                color: 'rgba(35,35,35,1.0)', 
+                weight: 1.0, 
+                opacity: 1,
+                fillOpacity: 1, 
+                fillColor: 'rgba(221,51,206,1.0)' 
+            },
+            'Arrondissement_5': { 
+                color: 'rgba(0,0,0,1.0)', 
+                weight: 1.0, 
+                opacity: 1,
+                fillOpacity: 1, 
+                fillColor: 'rgba(141,90,153,1.0)' 
+            },
+            'CollecteNational_6': { 
+                color: 'rgba(196,60,57,1.0)', 
+                weight: 1.0, 
+                opacity: 1,
+                lineCap: 'square', 
+                lineJoin: 'bevel',
+                fillOpacity: 0
+            },
+            'BalayageNational_7': { 
+                color: 'rgba(152,125,183,1.0)', 
+                weight: 1.0, 
+                opacity: 1,
+                lineCap: 'square', 
+                lineJoin: 'bevel',
+                fillOpacity: 0
+            },
+            'MobilierUrbain_8_Bac': { radius: 4.0, color: 'rgba(35,35,35,1.0)', weight: 1, fillColor: 'rgba(213,106,140,1.0)', fillOpacity: 1 },
+            'MobilierUrbain_8_Polybenne': { radius: 4.0, color: 'rgba(35,35,35,1.0)', weight: 1, fillColor: 'rgba(140,52,233,1.0)', fillOpacity: 1 },
+            'MobilierUrbain_8_PP': { radius: 4.0, color: 'rgba(35,35,35,1.0)', weight: 1, fillColor: 'rgba(72,203,81,1.0)', fillOpacity: 1 },
+            'MobilierUrbain_8_PRN': { radius: 4.0, color: 'rgba(35,35,35,1.0)', weight: 1, fillColor: 'rgba(108,177,202,1.0)', fillOpacity: 1 }
         };
         
-        // Noms affichables des couches
+        // 🎯 BASEMAPS - Couches de fond disponibles
+        const baseMaps = {
+            'OpenStreetMap': L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 20, minZoom: 1
+            }),
+            'Google Hybrid': L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                attribution: '© Google',
+                maxZoom: 20, minZoom: 1
+            }),
+            'Dark Matter': L.tileLayer('https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+                attribution: '© CartoDB',
+                maxZoom: 20, minZoom: 1
+            })
+        };
+        
+        // Noms affichables des couches overlay
         const layerDisplayNames = {
             'Region_3': '🟤 Régions',
             'Departement_4': '🟣 Départements',
             'Arrondissement_5': '🟪 Arrondissements',
             'CollecteNational_6': '🔴 Circuits Collecte',
-            'BalayageNational_7': '🟪 Circuits Balayage',
+            'BalayageNational_7': '🟣 Circuits Balayage',
             'MobilierUrbain_8': '🟢 Mobilier Urbain'
         };
         
-        // Initialiser la carte
+        // 🗺️ INITIALISER LA CARTE GEOSPATIALE
         function initLandingMap() {
             if (landingMap) return;
             
@@ -6862,21 +6913,24 @@ Consultez les logs du serveur pour les détails complets.
                 return;
             }
             
-            // Créer la carte centrée sur le Sénégal (14.5N, -14.5E)
-            landingMap = L.map('dimensionnement-map').setView([14.5, -14.5], 6);
+            // 🎯 Créer la carte centrée sur le Sénégal (14.5°N, 14.5°O) à zoom 6
+            landingMap = L.map('dimensionnement-map', {
+                zoomControl: true,
+                maxZoom: 20,
+                minZoom: 1
+            }).setView([14.5, -14.5], 6);
             
-            // Ajouter TileLayer OpenStreetMap
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors',
-                maxZoom: 19,
-                minZoom: 4
-            }).addTo(landingMap);
+            // 🗺️ Ajouter les basemaps disponibles et sélectionner OpenStreetMap par défaut
+            baseMaps['OpenStreetMap'].addTo(landingMap);
             
-            console.log('✅ Carte Leaflet initialisée');
+            // ⚙️ Ajouter le contrôle d'attribution
+            landingMap.attributionControl.setPrefix('<a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> • <a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> • <a href="https://qgis.org">QGIS</a>');
+            
+            console.log('✅ Carte Leaflet initialisée avec basemaps');
             loadGeoJSONLayers();
         }
         
-        // Charger les couches GeoJSON
+        // 📥 CHARGER LES COUCHES GeoJSON DEPUIS data/
         function loadGeoJSONLayers() {
             const overlayMaps = {};
             const urls = [
@@ -6891,8 +6945,10 @@ Consultez les logs du serveur pour les détails complets.
             urls.forEach(({ name, url }) => {
                 const script = document.createElement('script');
                 script.src = url;
+                script.async = true;
+                
                 script.onload = function() {
-                    const geoJsonData = window[name];
+                    const geoJsonData = window['json_' + name];
                     
                     if (!geoJsonData) {
                         console.warn(`⚠️ GeoJSON ${name} non trouvé`);
@@ -6900,60 +6956,108 @@ Consultez les logs du serveur pour les détails complets.
                         return;
                     }
                     
-                    const style = layerStyles[name];
                     let layer;
                     
-                    if (name.includes('CollecteNational') || name.includes('BalayageNational')) {
-                        // Lignes
+                    // 📍 MOBILIER URBAIN - Points avec styles colors par type
+                    if (name === 'MobilierUrbain_8') {
                         layer = L.geoJSON(geoJsonData, {
-                            style: style,
-                            onEachFeature: function(feature, l) {
-                                const props = feature.properties || {};
-                                let html = `<div style="font-size: 12px; max-width: 250px;"><strong>${name.replace(/_\\d+$/, '')}</strong><br>`;
-                                let count = 0;
-                                for (let key in props) {
-                                    if (count++ < 5) html += `${key}: ${props[key]}<br>`;
-                                }
-                                html += '</div>';
-                                l.bindPopup(html);
-                            }
-                        });
-                    } else if (name.includes('Mobilier')) {
-                        // Points
-                        layer = L.geoJSON(geoJsonData, {
-                            pointToLayer: (feature, latlng) => L.circleMarker(latlng, style),
-                            onEachFeature: function(feature, l) {
-                                const props = feature.properties || {};
-                                let html = `<div style="font-size: 12px; max-width: 250px;"><strong>🟢 Mobilier Urbain</strong><br>`;
-                                let count = 0;
-                                for (let key in props) {
-                                    if (count++ < 6) html += `${key}: ${props[key]}<br>`;
-                                }
-                                html += '</div>';
-                                l.bindPopup(html);
-                            }
-                        });
-                    } else {
-                        // Polygones
-                        layer = L.geoJSON(geoJsonData, {
-                            style: style,
-                            onEachFeature: function(feature, l) {
-                                const props = feature.properties || {};
-                                let html = `<div style="font-size: 12px; max-width: 250px;"><strong>${layerDisplayNames[name]}</strong><br>`;
-                                for (let key in props) {
-                                    html += `<strong>${key}:</strong> ${props[key]}<br>`;
-                                }
-                                html += '</div>';
-                                l.bindPopup(html);
+                            pointToLayer: (feature, latlng) => {
+                                const typeDeMotorMo = feature.properties['Type_de_Mo'] || '';
+                                let style;
                                 
-                                // Hover effects
-                                l.on('mouseover', () => l.setStyle({ weight: 3, opacity: 0.9 }));
+                                // 🎨 Couleurs spécifiques par type de mobilier
+                                switch(typeDeMotorMo) {
+                                    case 'Bac de rue':
+                                        style = layerStyles['MobilierUrbain_8_Bac'];
+                                        break;
+                                    case 'Caisse Polybenne':
+                                        style = layerStyles['MobilierUrbain_8_Polybenne'];
+                                        break;
+                                    case 'PP':
+                                        style = layerStyles['MobilierUrbain_8_PP'];
+                                        break;
+                                    case 'PRN':
+                                        style = layerStyles['MobilierUrbain_8_PRN'];
+                                        break;
+                                    default:
+                                        style = layerStyles['MobilierUrbain_8_Bac'];
+                                }
+                                
+                                return L.circleMarker(latlng, style);
+                            },
+                            onEachFeature: function(feature, l) {
+                                const props = feature.properties || {};
+                                let html = `<table style="font-size: 11px; width: 100%;">`;
+                                html += `<tr><td colspan="2"><strong>🟢 Mobilier Urbain</strong></td></tr>`;
+                                
+                                const keysToShow = ['Type_de_Mo', 'REGION', 'DEPARTEMEN', 'Commune_de', 'Statut_du_', 'Etat_du_Mo'];
+                                keysToShow.forEach(key => {
+                                    if (props[key] != null) {
+                                        html += `<tr><td><strong>${key}:</strong></td><td>${props[key]}</td></tr>`;
+                                    }
+                                });
+                                
+                                html += `</table>`;
+                                l.bindPopup(html, { maxHeight: 300 });
+                            }
+                        });
+                    }
+                    // 📌 CIRCUITS (Collecte et Balayage) - Lignes
+                    else if (name.includes('CollecteNational') || name.includes('BalayageNational')) {
+                        const style = layerStyles[name];
+                        layer = L.geoJSON(geoJsonData, {
+                            style: style,
+                            onEachFeature: function(feature, l) {
+                                const props = feature.properties || {};
+                                let html = `<table style="font-size: 11px; width: 100%;">`;
+                                html += `<tr><td colspan="2"><strong>${name.includes('Collecte') ? '🔴 Collecte' : '🟣 Balayage'} National</strong></td></tr>`;
+                                
+                                const keysToShow = ['region', 'dept', 'commune', 'frequence', 'rotation', 'longueur'];
+                                keysToShow.forEach(key => {
+                                    if (props[key] != null) {
+                                        html += `<tr><td><strong>${key}:</strong></td><td>${props[key]}</td></tr>`;
+                                    }
+                                });
+                                
+                                html += `</table>`;
+                                l.bindPopup(html, { maxHeight: 300 });
+                                
+                                // Effets au survol pour les lignes
+                                l.on('mouseover', () => l.setStyle({ weight: style.weight + 1.5, opacity: 1 }));
+                                l.on('mouseout', () => l.setStyle(style));
+                            }
+                        });
+                    }
+                    // 🏛️ ADMINISTRATIF (Régions, Départements, Arrondissements) - Polygones
+                    else {
+                        const style = layerStyles[name];
+                        layer = L.geoJSON(geoJsonData, {
+                            style: style,
+                            onEachFeature: function(feature, l) {
+                                const props = feature.properties || {};
+                                let html = `<table style="font-size: 11px; width: 100%;">`;
+                                html += `<tr><td colspan="2"><strong>${layerDisplayNames[name]}</strong></td></tr>`;
+                                
+                                for (let key in props) {
+                                    if (props[key] != null) {
+                                        html += `<tr><td><strong>${key}:</strong></td><td>${props[key]}</td></tr>`;
+                                    }
+                                }
+                                
+                                html += `</table>`;
+                                l.bindPopup(html, { maxHeight: 400 });
+                                
+                                // Effets au survol pour les polygones
+                                l.on('mouseover', () => {
+                                    l.setStyle({ weight: 3, opacity: 1 });
+                                    l.bringToFront();
+                                });
                                 l.on('mouseout', () => l.setStyle(style));
                             }
                         });
                     }
                     
-                    // Ajouter à la carte
+                    // ✅ Ajouter la couche à la carte et au contrôle
                     layer.addTo(landingMap);
                     geojsonLayers[name] = layer;
                     overlayMaps[layerDisplayNames[name]] = layer;
@@ -6962,20 +7066,22 @@ Consultez les logs du serveur pour les détails complets.
                     
                     // Quand toutes les couches sont chargées
                     if (loadedLayersCount === totalLayers) {
-                        // Recréer le contrôle
+                        // Recréer le contrôle des couches
                         if (landingLayersControl) landingMap.removeControl(landingLayersControl);
                         
-                        landingLayersControl = L.control.layers({}, overlayMaps, {
+                        landingLayersControl = L.control.layers(baseMaps, overlayMaps, {
                             position: 'topright',
-                            collapsed: false
+                            collapsed: true,
+                            expandControlLabel: '☰',
+                            collapseControlLabel: '✕'
                         }).addTo(landingMap);
                         
-                        console.log(`✅ ${loadedLayersCount} couches GeoJSON chargées`);
+                        console.log(`✅ ${loadedLayersCount} couches GeoJSON chargées avec succès`);
                     }
                 };
                 
                 script.onerror = () => {
-                    console.error(`❌ Erreur: ${url}`);
+                    console.error(`❌ Erreur: Impossible de charger ${url}`);
                     loadedLayersCount++;
                 };
                 
