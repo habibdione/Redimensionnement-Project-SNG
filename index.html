@@ -2,9 +2,16 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Application de collecte de données géographiques SONAGED">
-    <title>SONAGED - Dimensionnement et Collecte de Données</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="Application mobile de collecte de données géographiques pour le dimensionnement des sites SONAGED">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SONAGED Map">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23667eea' width='192' height='192'/><text x='50%' y='50%' font-size='100' font-weight='bold' fill='white' text-anchor='middle' dy='.3em'>S</text></svg>">
+    <title>Dimensionnement SONAGED - Collecte de Données</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
     <link rel="stylesheet" href="./css/map-styles.css">
     <style>
@@ -18,127 +25,116 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
+            padding: 15px;
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
-            box-shadow: 0 0 40px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
         }
         
-        /* ===== BARRE DE NAVIGATION ===== */
-        .navbar {
+        .header {
             background: linear-gradient(135deg, #2d5016 0%, #4a7c27 50%, #6db038 100%);
             color: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
         
-        .navbar-content {
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .header > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header-logo-container {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 15px 30px;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-        }
-        
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 18px;
-            font-weight: 700;
-            text-decoration: none;
-            color: white;
-            cursor: pointer;
-        }
-        
-        .navbar-brand:hover {
-            opacity: 0.9;
-        }
-        
-        .navbar-brand-icon {
-            font-size: 28px;
-        }
-        
-        .navbar-menu {
-            display: flex;
-            gap: 5px;
-            list-style: none;
-            flex-wrap: wrap;
             justify-content: center;
+            gap: 25px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         
-        .navbar-item {
-            margin: 0;
+        .header-logo-container img {
+            height: 100px;
+            width: auto;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            animation: float 3s ease-in-out infinite;
         }
         
-        .navbar-link {
-            display: block;
-            padding: 12px 20px;
-            color: white;
-            text-decoration: none;
+        .sonaged-logo {
+            height: 120px;
+            width: 120px;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3)) drop-shadow(0 2px 4px rgba(45, 80, 22, 0.5));
+            animation: float 3s ease-in-out infinite, spin 6s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(2deg); }
+            75% { transform: rotate(-2deg); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: 0.5px;
+        }
+        
+        .header p {
+            opacity: 0.95;
+            font-size: 15px;
+            margin-bottom: 12px;
             font-weight: 500;
-            font-size: 14px;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-            background: transparent;
-            border: 2px solid transparent;
         }
         
-        .navbar-link:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
+        .header-features {
+            font-size: 12px;
+            opacity: 0.88;
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
-        .navbar-link.active {
-            background: rgba(255, 255, 255, 0.25);
-            border: 2px solid white;
-            font-weight: 600;
+        .header-features span {
+            background: rgba(255,255,255,0.15);
+            padding: 6px 12px;
+            border-radius: 20px;
         }
         
-        .mobile-hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 6px;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-        
-        .mobile-hamburger span {
-            width: 25px;
-            height: 3px;
-            background: white;
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-        
-        /* ===== CONTENU PRINCIPAL ===== */
-        .content-wrapper {
-            flex: 1;
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
             padding: 30px;
         }
         
-        .page-section {
-            display: none;
-            animation: fadeIn 0.6s ease-out;
-        }
-        
-        .page-section.active {
-            display: block;
-        }
-        
+        /* ===== ANIMATIONS FLUIDES ===== */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -149,855 +145,6 @@
                 transform: translateY(0);
             }
         }
-        
-        /* ===== PAGE ACCUEIL ===== */
-        .accueil-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: start;
-        }
-        
-        .welcome-section {
-            background: linear-gradient(135deg, rgba(45, 80, 22, 0.05) 0%, rgba(109, 176, 56, 0.05) 100%);
-            padding: 40px;
-            border-radius: 15px;
-            border-left: 5px solid #6db038;
-        }
-        
-        .welcome-section h2 {
-            color: #2d5016;
-            font-size: 26px;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        
-        .welcome-section p {
-            color: #4a4a4a;
-            line-height: 1.8;
-            font-size: 15px;
-            text-align: justify;
-        }
-        
-        .map-section {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            background: white;
-            padding: 15px;
-        }
-        
-        /* ===== PAGE À PROPOS ===== */
-        .about-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-        }
-        
-        .about-content {
-            background: #f8f9fa;
-            padding: 40px;
-            border-radius: 15px;
-            border-left: 5px solid #6db038;
-        }
-        
-        .about-content h2 {
-            color: #2d5016;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        
-        .about-content p {
-            color: #555;
-            line-height: 1.8;
-            margin-bottom: 15px;
-            text-align: justify;
-        }
-        
-        .about-features {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 25px;
-        }
-        
-        .feature-item {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 4px solid #6db038;
-            display: flex;
-            gap: 12px;
-        }
-        
-        .feature-icon {
-            font-size: 24px;
-            min-width: 30px;
-        }
-        
-        .feature-text h3 {
-            color: #2d5016;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-        
-        .feature-text p {
-            color: #777;
-            font-size: 13px;
-            margin: 0;
-        }
-        
-        .about-image {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, rgba(45, 80, 22, 0.1) 0%, rgba(109, 176, 56, 0.1) 100%);
-            border-radius: 15px;
-            min-height: 450px;
-            font-size: 64px;
-        }
-        
-        /* ===== PAGE ACTUALITÉ CONVENTION ===== */
-        .convention-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
-        }
-        
-        .convention-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .convention-header h2 {
-            color: #2d5016;
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        
-        .convention-header p {
-            color: #666;
-            font-size: 15px;
-        }
-        
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-        
-        .gallery-item {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .gallery-item:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-        }
-        
-        .gallery-image-placeholder {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, rgba(45, 80, 22, 0.1) 0%, rgba(109, 176, 56, 0.1) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 64px;
-        }
-        
-        .gallery-content {
-            padding: 20px;
-        }
-        
-        .gallery-title {
-            color: #2d5016;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        
-        .gallery-description {
-            color: #777;
-            font-size: 13px;
-            line-height: 1.6;
-        }
-        
-        .partners-section {
-            background: #f8f9fa;
-            padding: 40px;
-            border-radius: 15px;
-            margin-top: 40px;
-        }
-        
-        .partners-section h3 {
-            color: #2d5016;
-            font-size: 22px;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-        
-        .partners-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-        }
-        
-        .partner-item {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            border: 2px solid #e0e0e0;
-            transition: all 0.3s ease;
-        }
-        
-        .partner-item:hover {
-            border-color: #6db038;
-            box-shadow: 0 8px 20px rgba(109, 176, 56, 0.1);
-        }
-        
-        .partner-logo {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-        
-        .partner-name {
-            color: #2d5016;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        
-        /* ===== PAGE COLLECTE DE DONNÉES ===== */
-        .collecte-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
-        }
-        
-        .collecte-header {
-            background: linear-gradient(135deg, rgba(45, 80, 22, 0.1) 0%, rgba(109, 176, 56, 0.1) 100%);
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            border-left: 5px solid #6db038;
-        }
-        
-        .collecte-header h2 {
-            color: #2d5016;
-            font-size: 26px;
-            margin-bottom: 12px;
-        }
-        
-        .collecte-header p {
-            color: #555;
-            font-size: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .collecte-btn-group {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .btn-collecte {
-            background: linear-gradient(135deg, #6db038 0%, #5aa332 100%);
-            color: white;
-            border: none;
-            padding: 14px 32px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(109, 176, 56, 0.3);
-        }
-        
-        .btn-collecte:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(109, 176, 56, 0.4);
-        }
-        
-        .collecte-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        
-        .option-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            border: 2px solid #e0e0e0;
-            transition: all 0.3s ease;
-        }
-        
-        .option-card:hover {
-            border-color: #6db038;
-            box-shadow: 0 10px 25px rgba(109, 176, 56, 0.1);
-        }
-        
-        .option-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-        
-        .option-title {
-            color: #2d5016;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        
-        .option-description {
-            color: #777;
-            font-size: 13px;
-            line-height: 1.6;
-        }
-        
-        .map-container {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            margin-top: 30px;
-        }
-        
-        #dimensionnement-map {
-            height: 600px;
-            border-radius: 10px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-        }
-        
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .accueil-container,
-            .about-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .navbar-menu {
-                display: none;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                right: 0;
-                background: linear-gradient(135deg, #2d5016 0%, #4a7c27 50%, #6db038 100%);
-                flex-direction: column;
-                padding: 15px;
-                gap: 0;
-            }
-            
-            .navbar-menu.active {
-                display: flex;
-            }
-            
-            .mobile-hamburger {
-                display: flex;
-            }
-            
-            .content-wrapper {
-                padding: 15px;
-            }
-            
-            #dimensionnement-map {
-                height: 400px;
-            }
-            
-            .gallery-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .navbar-content {
-                padding: 12px 15px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Navigation -->
-        <nav class="navbar">
-            <div class="navbar-content">
-                <div class="navbar-brand" onclick="showPage('accueil')">
-                    <span class="navbar-brand-icon">🌍</span>
-                    <span>SONAGED</span>
-                </div>
-                <ul class="navbar-menu" id="navbarMenu">
-                    <li class="navbar-item">
-                        <a class="navbar-link active" onclick="showPage('accueil')">🏠 Accueil</a>
-                    </li>
-                    <li class="navbar-item">
-                        <a class="navbar-link" onclick="showPage('apropos')">ℹ️ À propos</a>
-                    </li>
-                    <li class="navbar-item">
-                        <a class="navbar-link" onclick="showPage('convention')">📰 Actualité & Convention</a>
-                    </li>
-                    <li class="navbar-item">
-                        <a class="navbar-link" onclick="showPage('collecte')">📊 Collecte de Données</a>
-                    </li>
-                </ul>
-                <button class="mobile-hamburger" onclick="toggleMenu()">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-        </nav>
-
-        <!-- Contenu principalv -->
-        <div class="content-wrapper">
-            
-            <!-- PAGE ACCUEIL -->
-            <section id="accueil" class="page-section active">
-                <div class="accueil-container">
-                    <div class="welcome-section">
-                        <h2>🌍 Bienvenue à l'application de Dimensionnement SONAGED</h2>
-                        <p><strong>Société Nationale de Gestion de Déchets</strong></p>
-                        <p style="margin-top: 20px;">
-                            Application mobile intelligente pour la collecte de données géospatiales au niveau national au Sénégal permettant aux agents SONAGED de collecter des informations détaillées sur les sites d'infrastructures de gestion des déchets.
-                        </p>
-                    </div>
-                    <div class="map-section">
-                        <h3 style="color: #2d5016; margin-bottom: 15px; text-align: center;">🗺️ Carte Géospatiale Sénégal</h3>
-                        <div id="dimensionnement-map" style="height: 400px; border-radius: 10px;"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- PAGE À PROPOS -->
-            <section id="apropos" class="page-section">
-                <div class="about-container">
-                    <div class="about-content">
-                        <h2>À propos de SONAGED</h2>
-                        <p>
-                            La Société Nationale de Gestion de Déchets (SONAGED) est l'entreprise responsable de la gestion intégrée des déchets solides urbains au Sénégal. Fondée avec l'objectif de fournir des services de collecte, de transport et d'élimination des déchets solides efficaces et respectueux de l'environnement.
-                        </p>
-                        <p>
-                            Notre application de dimensionnement facilitate la collecte de données géoréférencées précises pour une meilleure planification et gestion des infrastructures de gestion des déchets.
-                        </p>
-                        
-                        <div class="about-features">
-                            <div class="feature-item">
-                                <div class="feature-icon">📱</div>
-                                <div class="feature-text">
-                                    <h3>Technologie Mobile</h3>
-                                    <p>Application responsive pour tous les appareils</p>
-                                </div>
-                            </div>
-                            <div class="feature-item">
-                                <div class="feature-icon">📍</div>
-                                <div class="feature-text">
-                                    <h3>Géolocalisation</h3>
-                                    <p>Données géospatiales précises et en temps réel</p>
-                                </div>
-                            </div>
-                            <div class="feature-item">
-                                <div class="feature-icon">📊</div>
-                                <div class="feature-text">
-                                    <h3>Analyse Intelligente</h3>
-                                    <p>Visualisation et analyse des données collectées</p>
-                                </div>
-                            </div>
-                            <div class="feature-item">
-                                <div class="feature-icon">🔐</div>
-                                <div class="feature-text">
-                                    <h3>Sécurité des Données</h3>
-                                    <p>Chiffrement et sauvegarde sécurisée</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="about-image">
-                        🏭
-                    </div>
-                </div>
-            </section>
-
-            <!-- PAGE ACTUALITÉ ET CONVENTION -->
-            <section id="convention" class="page-section">
-                <div class="convention-container">
-                    <div class="convention-header">
-                        <h2>📰 Actualités & Conventions</h2>
-                        <p>Découvrez nos derniers événements, conventions et partenariats</p>
-                    </div>
-
-                    <!-- Galerie d'images -->
-                    <div class="gallery-grid">
-                        <div class="gallery-item">
-                            <div class="gallery-image-placeholder">
-                                🏢
-                            </div>
-                            <div class="gallery-content">
-                                <div class="gallery-title">Convention SONAGED - Collectivités</div>
-                                <div class="gallery-description">
-                                    Accord-cadre pour la gestion optimale des déchets aux niveaux régionaux.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="gallery-item">
-                            <div class="gallery-image-placeholder">
-                                🤝
-                            </div>
-                            <div class="gallery-content">
-                                <div class="gallery-title">Partenariat International</div>
-                                <div class="gallery-description">
-                                    Collaboration avec des organisations internationales pour améliorer les pratiques.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="gallery-item">
-                            <div class="gallery-image-placeholder">
-                                ♻️
-                            </div>
-                            <div class="gallery-content">
-                                <div class="gallery-title">Initiative Environnementale</div>
-                                <div class="gallery-description">
-                                    Programme de sensibilisation à l'importance du tri et du recyclage.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="gallery-item">
-                            <div class="gallery-image-placeholder">
-                                📈
-                            </div>
-                            <div class="gallery-content">
-                                <div class="gallery-title">Actualité 2024</div>
-                                <div class="gallery-description">
-                                   Expansion des services et modernisation des infrastructures.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="gallery-item">
-                            <div class="gallery-image-placeholder">
-                                🌱
-                            </div>
-                            <div class="gallery-content">
-                                <div class="gallery-title">Développement Durable</div>
-                                <div class="gallery-description">
-                                    Engagement envers les ODD et pratiques écologiques responsables.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="gallery-item">
-                            <div class="gallery-image-placeholder">
-                                🎓
-                            </div>
-                            <div class="gallery-content">
-                                <div class="gallery-title">Formation & Renforcement</div>
-                                <div class="gallery-description">
-                                    Programmes de formation pour les agents et partenaires.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Section Partenaires -->
-                    <div class="partners-section">
-                        <h3>🤝 Nos Partenaires Stratégiques</h3>
-                        <div class="partners-grid">
-                            <div class="partner-item">
-                                <div class="partner-logo">🇸🇳</div>
-                                <div class="partner-name">Gouvernement du Sénégal</div>
-                            </div>
-                            <div class="partner-item">
-                                <div class="partner-logo">🏛️</div>
-                                <div class="partner-name">Collectivités Locales</div>
-                            </div>
-                            <div class="partner-item">
-                                <div class="partner-logo">🌍</div>
-                                <div class="partner-name">ONG Internationales</div>
-                            </div>
-                            <div class="partner-item">
-                                <div class="partner-logo">🏭</div>
-                                <div class="partner-name">Entreprises Privées</div>
-                            </div>
-                            <div class="partner-item">
-                                <div class="partner-logo">🎓</div>
-                                <div class="partner-name">Institutions Académiques</div>
-                            </div>
-                            <div class="partner-item">
-                                <div class="partner-logo">💼</div>
-                                <div class="partner-name">Organisations Professionnelles</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- PAGE COLLECTE DE DONNÉES -->
-            <section id="collecte" class="page-section">
-                <div class="collecte-container">
-                    <div class="collecte-header">
-                        <h2>📊 Collecte de Données Géospatiales</h2>
-                        <p>Accédez aux outils et formulaires pour la collecte de données précises et géoréférencées</p>
-                        <div class="collecte-btn-group">
-                            <button class="btn-collecte">➕ Nouvelle Collecte</button>
-                            <button class="btn-collecte">📋 Consulter les Données</button>
-                            <button class="btn-collecte">📥 Télécharger Rapport</button>
-                        </div>
-                    </div>
-
-                    <div class="collecte-options">
-                        <div class="option-card">
-                            <div class="option-icon">🗺️</div>
-                            <div class="option-title">Géolocalisation</div>
-                            <div class="option-description">
-                                Collectez les coordonnées GPS précises des sites d'infrastructure.
-                            </div>
-                        </div>
-                        <div class="option-card">
-                            <div class="option-icon">📸</div>
-                            <div class="option-title">Documentation Visuelle</div>
-                            <div class="option-description">
-                                Capture de photos et vidéos pour la documentation du terrain.
-                            </div>
-                        </div>
-                        <div class="option-card">
-                            <div class="option-icon">📝</div>
-                            <div class="option-title">Formulaires Détaillés</div>
-                            <div class="option-description">
-                                Remplissage de formulaires spécifiques pour chaque type de site.
-                            </div>
-                        </div>
-                        <div class="option-card">
-                            <div class="option-icon">💾</div>
-                            <div class="option-title">Synchronisation</div>
-                            <div class="option-description">
-                                Synchronisation automatique des données vers le serveur.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="map-container">
-                        <h3 style="color: #2d5016; margin-bottom: 15px;">Visualisation des Points de Collecte</h3>
-                        <div id="dimensionnement-map-collecte" style="height: 500px; border-radius: 10px;"></div>
-                    </div>
-                </div>
-            </section>
-
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-    <script src="./js/geojson-preloader.js"></script>
-
-    <script>
-        // Gestion de la navigation
-        function showPage(pageName) {
-            // Masquer toutes les pages
-            const sections = document.querySelectorAll('.page-section');
-            sections.forEach(section => {
-                section.classList.remove('active');
-            });
-
-            // Mettre à jour les liens du navbar
-            const navLinks = document.querySelectorAll('.navbar-link');
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-            });
-
-            // Afficher la page sélectionnée
-            const activeSection = document.getElementById(pageName);
-            if (activeSection) {
-                activeSection.classList.add('active');
-            }
-
-            // Mettre à jour le lien actif du navbar
-            event.target.classList.add('active');
-
-            // Fermer le menu mobile
-            const navbarMenu = document.getElementById('navbarMenu');
-            navbarMenu.classList.remove('active');
-
-            // Initialiser la carte si la page contient une
-            if (pageName === 'accueil' || pageName === 'collecte') {
-                setTimeout(() => {
-                    if (!window.landingMap && pageName === 'accueil') {
-                        initLandingMap();
-                    }
-                }, 300);
-            }
-
-            // Scroll en haut
-            window.scrollTo(0, 0);
-        }
-
-        // Menu mobile
-        function toggleMenu() {
-            const navbarMenu = document.getElementById('navbarMenu');
-            navbarMenu.classList.toggle('active');
-        }
-
-        // Initialiser la carte au chargement
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                initLandingMap();
-                addMapControls();
-            }, 500);
-        });
-
-        // Fermer le menu quand on clique ailleurs
-        document.addEventListener('click', (e) => {
-            const navbar = document.querySelector('.navbar');
-            if (!navbar.contains(e.target)) {
-                document.getElementById('navbarMenu').classList.remove('active');
-            }
-        });
-    </script>
-
-    <!-- Styles de la carte -->
-    <script>
-        // Configuration utilisée plus bas - voir section "INITIALISATION CARTE LEAFLET LANDING PAGE"
-
-        function initLandingMap() {
-            if (landingMap) return;
-            
-            const mapContainer = document.getElementById('dimensionnement-map');
-            if (!mapContainer) {
-                console.error('❌ Conteneur map non trouvé');
-                return;
-            }
-
-            try {
-                landingMap = L.map('dimensionnement-map').setView([14.5, -14.5], 6);
-                console.log('✅ L.map créée');
-
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap',
-                    maxZoom: 19
-                }).addTo(landingMap);
-                console.log('✅ TileLayer OSM ajoutée');
-
-                loadGeoJSONLayers();
-            } catch (error) {
-                console.error('❌ Erreur init map:', error);
-            }
-        }
-
-        function loadGeoJSONLayers() {
-            const layerConfigs = [
-                { name: 'Region_3', jsonVar: 'json_Region_3' },
-                { name: 'Departement_4', jsonVar: 'json_Departement_4' },
-                { name: 'Arrondissement_5', jsonVar: 'json_Arrondissement_5' },
-                { name: 'CollecteNational_6', jsonVar: 'json_CollecteNational_6' },
-                { name: 'BalayageNational_7', jsonVar: 'json_BalayageNational_7' },
-                { name: 'MobilierUrbain_8', jsonVar: 'json_MobilierUrbain_8' }
-            ];
-
-            const overlayMaps = {};
-            loadedLayersCount = 0;
-
-            layerConfigs.forEach(({ name, jsonVar }) => {
-                const geoJsonData = window[jsonVar];
-                if (!geoJsonData) {
-                    console.warn(`⚠️ ${name} non trouvé`);
-                    loadedLayersCount++;
-                    return;
-                }
-
-                const style = layerStyles[name];
-                let layer = L.geoJSON(geoJsonData, {
-                    style: style,
-                    pointToLayer: (feature, latlng) => {
-                        return L.circleMarker(latlng, {
-                            radius: 6,
-                            fillColor: style.color || style.fillColor,
-                            color: style.color,
-                            weight: 2,
-                            opacity: 0.8,
-                            fillOpacity: 0.6
-                        });
-                    },
-                    onEachFeature: (feature, l) => {
-                        const props = feature.properties || {};
-                        let html = `<div style="font-size: 13px;"><strong>${layerDisplayNames[name]}</strong><br>`;
-                        for (let key in props) {
-                            html += `${key}: ${props[key]}<br>`;
-                        }
-                        html += '</div>';
-                        l.bindPopup(html);
-                    }
-                });
-
-                try {
-                    layer.addTo(landingMap);
-                    geojsonLayers[name] = layer;
-                    overlayMaps[layerDisplayNames[name]] = layer;
-                    console.log(`✅ ${layerDisplayNames[name]} affichée`);
-                } catch (error) {
-                    console.error(`❌ Erreur ajout ${name}:`, error);
-                }
-                
-                loadedLayersCount++;
-            });
-
-            if (landingLayersControl) {
-                try {
-                    landingMap.removeControl(landingLayersControl);
-                } catch (e) {}
-            }
-
-            landingLayersControl = L.control.layers({}, overlayMaps, {
-                position: 'topright',
-                collapsed: true
-            }).addTo(landingMap);
-
-            console.log('🎛️ Contrôle des couches créé');
-        }
-
-        function addMapControls() {
-            if (!landingMap) return;
-
-            const zoomControl = L.control.zoom({ position: 'topleft' }).addTo(landingMap);
-
-            const legend = L.control({ position: 'bottomright' });
-            legend.onAdd = function(map) {
-                const div = L.DomUtil.create('div', 'legend-control');
-                div.innerHTML = `
-                    <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.2); font-size: 12px;">
-                        <h3 style="margin-top: 0; color: #2d5016; border-bottom: 2px solid #6db038; padding-bottom: 8px;">🗺️ Légende</h3>
-                        <div>🟤 Régions | 🟣 Département | 🟪 Arrondissement</div>
-                    </div>
-                `;
-                return div;
-            };
-            legend.addTo(landingMap);
-
-            const helpBox = L.control({ position: 'topleft' });
-            helpBox.onAdd = function(map) {
-                const div = L.DomUtil.create('div');
-                div.innerHTML = `
-                    <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.2); font-size: 11px; margin-top: 10px;">
-                        💡 Cliquez sur les points pour plus d'informations
-                    </div>
-                `;
-                return div;
-            };
-            helpBox.addTo(landingMap);
-        }
-    </script>
-
-    <!-- 🗺️ Script d'amélioration de la carte Leaflet -->
-    <script src="./js/map-enhancements.js"></script>
-
-</body>
-</html>
         
         @keyframes slideInLeft {
             from {
@@ -3581,6 +2728,7 @@
                     <div id="resume-contenu" style="font-size: 14px; line-height: 2; color: #333;"></div>
                 </div>
             </div>
+            </form>
             
             <!-- LOCALISATION & IMAGES -->
             <div class="section">
@@ -7682,6 +6830,16 @@ Consultez les logs du serveur pour les détails complets.
             'MobilierUrbain_8': { radius: 6, fillColor: '#22C55E', color: '#16A34A', weight: 2, opacity: 0.8, fillOpacity: 0.8 }
         };
         
+        // Noms affichables des couches
+        const layerDisplayNames = {
+            'Region_3': '🟤 Régions',
+            'Departement_4': '🟣 Départements',
+            'Arrondissement_5': '🟪 Arrondissements',
+            'CollecteNational_6': '🔴 Circuits Collecte',
+            'BalayageNational_7': '🟪 Circuits Balayage',
+            'MobilierUrbain_8': '🟢 Mobilier Urbain'
+        };
+        
         // Initialiser la carte
         function initLandingMap() {
             if (landingMap) {
@@ -7721,201 +6879,181 @@ Consultez les logs du serveur pour les détails complets.
         }
         
         // Charger les couches GeoJSON avec styles enrichis
-        // Les données sont déjà chargées par le preloader (geojson-preloader.js)
         function loadGeoJSONLayers() {
             const overlayMaps = {};
-            const layerConfigs = [
-                { name: 'Region_3', jsonVar: 'json_Region_3' },
-                { name: 'Departement_4', jsonVar: 'json_Departement_4' },
-                { name: 'Arrondissement_5', jsonVar: 'json_Arrondissement_5' },
-                { name: 'CollecteNational_6', jsonVar: 'json_CollecteNational_6' },
-                { name: 'BalayageNational_7', jsonVar: 'json_BalayageNational_7' },
-                { name: 'MobilierUrbain_8', jsonVar: 'json_MobilierUrbain_8' }
+            const urls = [
+                { name: 'Region_3', url: './data/Region_3.js', jsonVar: 'json_Region_3' },
+                { name: 'Departement_4', url: './data/Departement_4.js', jsonVar: 'json_Departement_4' },
+                { name: 'Arrondissement_5', url: './data/Arrondissement_5.js', jsonVar: 'json_Arrondissement_5' },
+                { name: 'CollecteNational_6', url: './data/CollecteNational_6.js', jsonVar: 'json_CollecteNational_6' },
+                { name: 'BalayageNational_7', url: './data/BalayageNational_7.js', jsonVar: 'json_BalayageNational_7' },
+                { name: 'MobilierUrbain_8', url: './data/MobilierUrbain_8.js', jsonVar: 'json_MobilierUrbain_8' }
             ];
             
-            console.log('🔄 Traitement des couches GeoJSON...');
-            
-        layerConfigs.forEach(({ name, jsonVar }) => {
-            // Récupérer les données déjà chargées par le preloader
-            const geoJsonData = window[jsonVar];
-            
-            if (!geoJsonData) {
-                console.warn(`⚠️ GeoJSON ${name} non trouvé (cherchait: ${jsonVar})`);
-                loadedLayersCount++;
-                return;
-            }
-            
-            if (geoJsonData.features && geoJsonData.features.length === 0) {
-                console.log(`ℹ️ ${name} chargée mais vide (0 features)`);
-            }
-            
-            const style = layerStyles[name];
-            let layer;
-            
-            try {
-                if (name.includes('CollecteNational') || name.includes('BalayageNational')) {
-                    // Lignes - Circuits Collecte/Balayage
-                    layer = L.geoJSON(geoJsonData, {
-                        style: style,
-                        onEachFeature: function(feature, l) {
-                            const props = feature.properties || {};
-                            let html = `<div style="font-size: 13px; max-width: 280px; font-family: Arial;">
-                                <strong style="color: #2d5016; border-bottom: 2px solid #6db038; padding-bottom: 5px; display: block; margin-bottom: 8px;">
-                                    ${name.includes('Collecte') ? '🔴 Circuit Collecte' : '🟪 Circuit Balayage'}
-                                </strong>`;
-                            
-                            const maxFields = 8;
-                            let count = 0;
-                            for (let key in props) {
-                                if (count++ < maxFields) {
-                                    html += `<div style="margin: 5px 0;"><strong>${key}:</strong> ${props[key]}</div>`;
-                                }
-                            }
-                            html += '</div>';
-                            l.bindPopup(html, {maxWidth: 300});
-                            
-                            // Effets au survol
-                            l.on('mouseover', () => {
-                                l.setStyle({ weight: 4, opacity: 1, dashArray: '' });
-                                l.openPopup();
-                            });
-                            l.on('mouseout', () => {
-                                l.setStyle(style);
-                                l.closePopup();
-                            });
-                        }
-                    });
-                } else if (name.includes('Mobilier')) {
-                    // Points - Mobilier Urbain
-                    layer = L.geoJSON(geoJsonData, {
-                        pointToLayer: (feature, latlng) => {
-                            const props = feature.properties || {};
-                            let color = '#48cb51'; // Par défaut vert
-                            let size = 5;
-                            
-                            if (props['Type_de_Mo']) {
-                                if (props['Type_de_Mo'].includes('Bac')) color = '#d56a8c';
-                                else if (props['Type_de_Mo'].includes('Polyb')) color = '#8c34e9';
-                                else if (props['Type_de_Mo'] === 'PP') color = '#48cb51';
-                                else if (props['Type_de_Mo'] === 'PRN') color = '#6cb1ca';
-                            }
-                            
-                            return L.circleMarker(latlng, {
-                                ...style,
-                                fillColor: color,
-                                fillOpacity: 0.8,
-                                weight: 1
-                            });
-                        },
-                        onEachFeature: function(feature, l) {
-                            const props = feature.properties || {};
-                            let html = `<div style="font-size: 13px; max-width: 280px; font-family: Arial;">
-                                <strong style="color: #2d5016; border-bottom: 2px solid #6db038; padding-bottom: 5px; display: block; margin-bottom: 8px;">
-                                    🟢 ${props['Type_de_Mo'] || 'Mobilier Urbain'}
-                                </strong>`;
-                            
-                            const mainFields = ['REGION', 'DEPARTEMEN', 'Communes_d', 'Type_de_PR', 'Etat_du_Mo'];
-                            for (let key of mainFields) {
-                                if (props[key]) {
-                                    html += `<div style="margin: 5px 0;"><strong>${key}:</strong> ${props[key]}</div>`;
-                                }
-                            }
-                            html += '</div>';
-                            l.bindPopup(html, {maxWidth: 300});
-                            
-                            // Effets au survol
-                            l.on('mouseover', () => {
-                                l.setStyle({ weight: 3, fillOpacity: 1 });
-                                l.openPopup();
-                            });
-                            l.on('mouseout', () => {
-                                l.setStyle({ weight: 1, fillOpacity: 0.8 });
-                                l.closePopup();
-                            });
-                        }
-                    });
-                } else {
-                    // Polygones/Points - Zones administratives
-                    layer = L.geoJSON(geoJsonData, {
-                        style: style,
-                        pointToLayer: (feature, latlng) => {
-                            return L.circleMarker(latlng, {
-                                radius: 6,
-                                fillColor: style.fillColor,
-                                color: style.color,
-                                weight: 2,
-                                opacity: 0.8,
-                                fillOpacity: 0.6
-                            });
-                        },
-                        onEachFeature: function(feature, l) {
-                            const props = feature.properties || {};
-                            let html = `<div style="font-size: 13px; max-width: 280px; font-family: Arial;">
-                                <strong style="color: #2d5016; border-bottom: 2px solid #6db038; padding-bottom: 5px; display: block; margin-bottom: 8px;">
-                                    ${layerDisplayNames[name]}
-                                </strong>`;
+            urls.forEach(({ name, url, jsonVar }) => {
+                const script = document.createElement('script');
+                script.src = url;
+                script.onload = function() {
+                    const geoJsonData = window[jsonVar];
+                    
+                    if (!geoJsonData) {
+                        console.warn(`⚠️ GeoJSON ${name} non trouvé (cherchait: ${jsonVar})`);
+                        loadedLayersCount++;
+                        return;
+                    }
+                    
+                    const style = layerStyles[name];
+                    let layer;
+                    
+                    if (name.includes('CollecteNational') || name.includes('BalayageNational')) {
+                        // Lignes - Circuits Collecte/Balayage
+                        layer = L.geoJSON(geoJsonData, {
+                            style: style,
+                            onEachFeature: function(feature, l) {
+                                const props = feature.properties || {};
+                                let html = `<div style="font-size: 13px; max-width: 280px; font-family: Arial;">
+                                    <strong style="color: #2d5016; border-bottom: 2px solid #6db038; padding-bottom: 5px; display: block; margin-bottom: 8px;">
+                                        ${name.includes('Collecte') ? '🔴 Circuit Collecte' : '🟪 Circuit Balayage'}
+                                    </strong>`;
                                 
-                            for (let key in props) {
-                                html += `<div style="margin: 5px 0;"><strong>${key}:</strong> ${props[key]}</div>`;
-                            }
-                            html += '</div>';
-                            l.bindPopup(html, {maxWidth: 300});
-                            
-                            // Effets au survol
-                            l.on('mouseover', () => {
-                                if (l.setStyle) {
-                                    l.setStyle({ weight: 3, opacity: 0.95, fillOpacity: 0.9 });
+                                const maxFields = 8;
+                                let count = 0;
+                                for (let key in props) {
+                                    if (count++ < maxFields) {
+                                        html += `<div style="margin: 5px 0;"><strong>${key}:</strong> ${props[key]}</div>`;
+                                    }
                                 }
-                                l.openPopup();
-                            });
-                            l.on('mouseout', () => {
-                                if (l.setStyle) {
+                                html += '</div>';
+                                l.bindPopup(html, {maxWidth: 300});
+                                
+                                // Effets au survol
+                                l.on('mouseover', () => {
+                                    l.setStyle({ weight: 4, opacity: 1, dashArray: '' });
+                                    l.openPopup();
+                                });
+                                l.on('mouseout', () => {
                                     l.setStyle(style);
+                                    l.closePopup();
+                                });
+                            }
+                        });
+                    } else if (name.includes('Mobilier')) {
+                        // Points - Mobilier Urbain
+                        layer = L.geoJSON(geoJsonData, {
+                            pointToLayer: (feature, latlng) => {
+                                const props = feature.properties || {};
+                                let color = '#48cb51'; // Par défaut vert
+                                let size = 5;
+                                
+                                if (props['Type_de_Mo']) {
+                                    if (props['Type_de_Mo'].includes('Bac')) color = '#d56a8c';
+                                    else if (props['Type_de_Mo'].includes('Polyb')) color = '#8c34e9';
+                                    else if (props['Type_de_Mo'] === 'PP') color = '#48cb51';
+                                    else if (props['Type_de_Mo'] === 'PRN') color = '#6cb1ca';
                                 }
-                                l.closePopup();
-                            });
-                        }
-                    });
-                }
+                                
+                                return L.circleMarker(latlng, {
+                                    ...style,
+                                    fillColor: color,
+                                    fillOpacity: 0.8,
+                                    weight: 1
+                                });
+                            },
+                            onEachFeature: function(feature, l) {
+                                const props = feature.properties || {};
+                                let html = `<div style="font-size: 13px; max-width: 280px; font-family: Arial;">
+                                    <strong style="color: #2d5016; border-bottom: 2px solid #6db038; padding-bottom: 5px; display: block; margin-bottom: 8px;">
+                                        🟢 ${props['Type_de_Mo'] || 'Mobilier Urbain'}
+                                    </strong>`;
+                                
+                                const mainFields = ['REGION', 'DEPARTEMEN', 'Communes_d', 'Type_de_PR', 'Etat_du_Mo'];
+                                for (let key of mainFields) {
+                                    if (props[key]) {
+                                        html += `<div style="margin: 5px 0;"><strong>${key}:</strong> ${props[key]}</div>`;
+                                    }
+                                }
+                                html += '</div>';
+                                l.bindPopup(html, {maxWidth: 300});
+                                
+                                // Effets au survol
+                                l.on('mouseover', () => {
+                                    l.setStyle({ weight: 3, fillOpacity: 1 });
+                                    l.openPopup();
+                                });
+                                l.on('mouseout', () => {
+                                    l.setStyle({ weight: 1, fillOpacity: 0.8 });
+                                    l.closePopup();
+                                });
+                            }
+                        });
+                    } else {
+                        // Polygones - Zones administratives
+                        layer = L.geoJSON(geoJsonData, {
+                            style: style,
+                            onEachFeature: function(feature, l) {
+                                const props = feature.properties || {};
+                                let html = `<div style="font-size: 13px; max-width: 280px; font-family: Arial;">
+                                    <strong style="color: #2d5016; border-bottom: 2px solid #6db038; padding-bottom: 5px; display: block; margin-bottom: 8px;">
+                                        ${layerDisplayNames[name]}
+                                    </strong>`;
+                                    
+                                for (let key in props) {
+                                    html += `<div style="margin: 5px 0;"><strong>${key}:</strong> ${props[key]}</div>`;
+                                }
+                                html += '</div>';
+                                l.bindPopup(html, {maxWidth: 300});
+                                
+                                // Effets au survol
+                                l.on('mouseover', () => {
+                                    l.setStyle({ weight: 3, opacity: 0.95, fillOpacity: 0.9 });
+                                    l.openPopup();
+                                });
+                                l.on('mouseout', () => {
+                                    l.setStyle(style);
+                                    l.closePopup();
+                                });
+                            }
+                        });
+                    }
+                    
+                    // Ajouter à la carte
+                    try {
+                        layer.addTo(landingMap);
+                        geojsonLayers[name] = layer;
+                        overlayMaps[layerDisplayNames[name]] = layer;
+                        console.log(`✅ ${layerDisplayNames[name]} chargée et affichée (${loadedLayersCount + 1}/${totalLayers})`);
+                    } catch (error) {
+                        console.error(`❌ Erreur lors de l'ajout de la couche ${name}:`, error);
+                    }
+                    
+                    loadedLayersCount++;
+                    
+                    // Quand toutes les couches sont chargées
+                    if (loadedLayersCount === totalLayers) {
+                        // Recréer le contrôle
+                        if (landingLayersControl) landingMap.removeControl(landingLayersControl);
+                        
+                        landingLayersControl = L.control.layers({}, overlayMaps, {
+                            position: 'topright',
+                            collapsed: true
+                        }).addTo(landingMap);
+                        
+                        console.log(`✅ SUCCÈS: ${loadedLayersCount} couches GeoJSON complètement chargées et affichées`);
+                    }
+                };
                 
-                // Ajouter à la carte
-                try {
-                    layer.addTo(landingMap);
-                    geojsonLayers[name] = layer;
-                    overlayMaps[layerDisplayNames[name]] = layer;
-                    console.log(`✅ ${layerDisplayNames[name]} affichée`);
-                } catch (error) {
-                    console.error(`❌ Erreur lors de l'ajout de la couche ${name}:`, error);
-                }
+                script.onerror = () => {
+                    console.error(`❌ ERREUR: Impossible de charger ${url}`);
+                    loadedLayersCount++;
+                };
                 
-                loadedLayersCount++;
-            } catch (err) {
-                console.error(`❌ Erreur lors du traitement de ${name}:`, err);
-            }
-        });
-        
-        // Après traitement de toutes les couches
-        console.log(`\n✅ SUCCÈS: ${loadedLayersCount}/${layerConfigs.length} couches traitées`);
-        console.log(`   Couches affichées: ${Object.keys(overlayMaps).join(', ')}`);
-        
-        // Créer le contrôle des couches
-        if (landingLayersControl) {
-            try {
-                landingMap.removeControl(landingLayersControl);
-            } catch (e) {}
+                console.log(`📥 Chargement en cours: ${url}`);
+                document.head.appendChild(script);
+            });
         }
-        
-        landingLayersControl = L.control.layers({}, overlayMaps, {
-            position: 'topright',
-            collapsed: true
-        }).addTo(landingMap);
-        
-        console.log(`🎛️  Contrôle des couches créé`);
         
         // Initialiser quand le DOM est prêt
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('📄 DOMContentLoaded - Démarrage initialisation');
-            
             // Attendre que le conteneur existe
             const mapContainer = document.getElementById('dimensionnement-map');
             if (!mapContainer) {
@@ -7923,30 +7061,16 @@ Consultez les logs du serveur pour les détails complets.
                 return;
             }
             
-            // Attendre que les GeoJSON soient prêts
-            async function initializeMap() {
-                // Attendre le preloader (max 10 secondes)
-                const ready = await window.waitForGeoJson(10000);
-                
-                if (ready) {
-                    console.log('✅ GeoJSON prêts, initialisation de la carte');
-                } else {
-                    console.warn('⚠️ GeoJSON pas tous chargés, initialisation quand même');
-                }
-                
-                // Initialiser la carte
+            // Attendre 500ms pour que tout soit chargé
+            setTimeout(() => {
+                console.log('🚀 Initialisation de la carte...');
                 if (!landingMap) {
                     initLandingMap();
-                    
-                    // Ajouter les contrôles après un délai
                     setTimeout(() => {
                         addMapControls();
-                    }, 300);
+                    }, 200);
                 }
-            }
-            
-            // Démarrer avec un petit délai
-            setTimeout(initializeMap, 100);
+            }, 500);
         });
         
         // Ajouter les contrôles et fonctionnalités avancées
@@ -8118,6 +7242,8 @@ Consultez les logs du serveur pour les détails complets.
                     const fallbackSVG = `data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23e8f5e9%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2245%25%22 font-size=%2216%22 fill=%22%236db038%22 text-anchor=%22middle%22 font-weight=%22bold%22%3E${row.commune}%3C/text%3E%3Ctext x=%2250%25%22 y=%2260%25%22 font-size=%2212%22 fill=%22%23999%22 text-anchor=%22middle%22%3EImage indisponible%3C/text%3E%3C/svg%3E`;
                     
                     item.innerHTML = `
+                        <img class="galerie-item-image" src="${imagePath}" alt="${row.commune}" 
+                             onerror="this.src='${fallbackSVG}'; console.warn('❌ Image non trouvée: ${imagePath}');">
                         <div class="galerie-item-info">
                             <div class="galerie-item-detail"><strong>Partenaire:</strong> ${row.partenaire || 'N/A'}</div>
                             <div class="galerie-item-commune">📍 ${row.commune || 'N/A'}</div>
@@ -8125,16 +7251,6 @@ Consultez les logs du serveur pour les détails complets.
                             ${row.date ? `<div class="galerie-item-date">📅 ${row.date}</div>` : ''}
                         </div>
                     `;
-                    
-                    const img = document.createElement('img');
-                    img.className = 'galerie-item-image';
-                    img.src = imagePath;
-                    img.alt = row.commune;
-                    img.onerror = function() {
-                        this.src = fallbackSVG;
-                        console.warn(`❌ Image non trouvée: ${imagePath}`);
-                    };
-                    item.insertBefore(img, item.firstChild);
                     galerieScroll.appendChild(item);
                 });
                 
@@ -8144,12 +7260,11 @@ Consultez les logs du serveur pour les détails complets.
                 console.warn('⚠️ Erreur lors du chargement de la galerie:', error.message);
             }
         }
-        {}
+        
         // Charger la galerie au démarrage
         document.addEventListener('DOMContentLoaded', function() {
             chargerDernierExportEnGalerie();
         });
-        }
     </script>
     
     <!-- 🗺️ Script d'amélioration de la carte Leaflet -->
