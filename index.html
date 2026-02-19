@@ -1524,6 +1524,16 @@
             }
         }
 
+        /* ===== BUTTON STYLES ===== */
+        #btn-demarrer-circuit,
+        #btn-pause-circuit,
+        #btn-ajouter-marker,
+        #btn-terminer-circuit,
+        #btn-toggle-export {
+            transition: all 0.2s ease !important;
+            touch-action: manipulation;
+        }
+
         /* Responsive - Mobile Fullscreen */
         @media (max-width: 768px) {
             #circuit-controls-float {
@@ -1591,6 +1601,8 @@
         @media (max-width: 768px) {
             #circuit-mobile-fullscreen {
                 display: flex !important;
+                width: 100% !important;
+                height: 100% !important;
             }
 
             #circuit-desktop-modal {
@@ -1599,6 +1611,57 @@
 
             #circuit-map {
                 display: none !important;
+            }
+
+            #circuit-map-fullscreen {
+                display: block !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+            /* Ajuster les boutons pour petit écran */
+            #btn-demarrer-circuit,
+            #btn-pause-circuit,
+            #btn-ajouter-marker,
+            #btn-terminer-circuit,
+            #btn-toggle-export {
+                width: 45px !important;
+                height: 45px !important;
+                font-size: 20px !important;
+            }
+
+            /* Réorganiser les boutons sur très petit écran */
+            @media (max-width: 480px) {
+                #btn-pause-circuit {
+                    left: 60px !important;
+                }
+
+                #btn-ajouter-marker {
+                    left: 110px !important;
+                }
+
+                #btn-terminer-circuit {
+                    left: 160px !important;
+                }
+
+                #btn-toggle-export {
+                    left: 210px !important;
+                }
+
+                #circuit-header-float {
+                    font-size: 11px !important;
+                    padding: 10px 12px !important;
+                }
+
+                #circuit-basemap-float {
+                    padding: 8px 10px !important;
+                    font-size: 10px !important;
+                }
+
+                #circuit-info-float {
+                    font-size: 9px !important;
+                    max-width: 150px !important;
+                }
             }
         }
 
@@ -2751,11 +2814,11 @@
         </div>
         
         <!-- 🗺️ MODAL TRACEUR DE CIRCUIT DE COLLECTE/BALAYAGE (caché par défaut) -->
-        <div id="circuit-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 10000; overflow: hidden;">
+        <div id="circuit-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 10000; overflow: hidden;">
             <!-- VERSION MOBILE FULLSCREEN -->
-            <div id="circuit-mobile-fullscreen" style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+            <div id="circuit-mobile-fullscreen" style="width: 100%; height: 100%; display: flex; flex-direction: column; position: relative;">
                 <!-- Carte Fullscreen -->
-                <div id="circuit-map-fullscreen" style="width: 100%; height: 100%; border-radius: 0; z-index: 100; position: relative;"></div>
+                <div id="circuit-map-fullscreen" style="width: 100%; height: 100%; border-radius: 0; z-index: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
                 
                 <!-- En-tête Flottant -->
                 <div id="circuit-header-float" style="position: absolute; top: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.95); padding: 15px 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 101; max-width: 600px;">
@@ -2774,13 +2837,17 @@
                     </div>
                 </div>
                 
-                <!-- Contrôles Flottants -->
-                <div id="circuit-controls-float" style="position: absolute; bottom: 20px; left: 20px; display: flex; gap: 12px; z-index: 101; flex-wrap: wrap;">
-                    <button id="btn-demarrer-circuit" onclick="demarrerTracking()" title="Démarrer le tracage" style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #6db038 0%, #5ba837 100%); color: white; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(109, 176, 56, 0.4); transition: all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">▶️</button>
-                    <button id="btn-pause-circuit" onclick="pauseTracking()" title="Mettre en pause" style="width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; cursor: pointer; font-size: 24px; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">⏸️</button>
-                    <button id="btn-ajouter-marker" onclick="ajouterMarqueurCircuit()" title="Ajouter un repère" style="width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; cursor: pointer; font-size: 24px; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">📌</button>
-                    <button id="btn-terminer-circuit" onclick="terminerTracking()" title="Terminer le circuit" style="width: 50px; height: 50px; border-radius: 50%; background: #c92a2a; color: white; border: none; cursor: pointer; font-size: 24px; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(201, 42, 42, 0.4); transition: all 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">✓</button>
-                </div>
+                <!-- Bouton Démarrer -->
+                <button id="btn-demarrer-circuit" onclick="demarrerTracking()" title="Démarrer le tracage" style="position: absolute; bottom: 20px; left: 20px; width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #6db038 0%, #5ba837 100%); color: white; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(109, 176, 56, 0.4); transition: all 0.2s; z-index: 102;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">▶️</button>
+                
+                <!-- Bouton Pause -->
+                <button id="btn-pause-circuit" onclick="pauseTracking()" title="Mettre en pause" style="position: absolute; bottom: 20px; left: 80px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; cursor: pointer; font-size: 24px; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.2s; z-index: 102;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">⏸️</button>
+                
+                <!-- Bouton Repère/Marqueur -->
+                <button id="btn-ajouter-marker" onclick="ajouterMarqueurCircuit()" title="Ajouter un repère" style="position: absolute; bottom: 20px; left: 140px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; cursor: pointer; font-size: 24px; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.2s; z-index: 102;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">📌</button>
+                
+                <!-- Bouton Terminer -->
+                <button id="btn-terminer-circuit" onclick="terminerTracking()" title="Terminer le circuit" style="position: absolute; bottom: 20px; left: 200px; width: 50px; height: 50px; border-radius: 50%; background: #c92a2a; color: white; border: none; cursor: pointer; font-size: 24px; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(201, 42, 42, 0.4); transition: all 0.2s; z-index: 102;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">✓</button>
                 
                 <!-- Panneau Basemap Flottant -->
                 <div id="circuit-basemap-float" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.95); padding: 12px 15px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 101;">
@@ -2817,7 +2884,7 @@
                 </div>
                 
                 <!-- Bouton Export Flottant (coin gauche bas) -->
-                <button id="btn-toggle-export" onclick="document.getElementById('circuit-export-modal').style.display = document.getElementById('circuit-export-modal').style.display === 'none' ? 'block' : 'none'" title="Export du circuit" style="position: absolute; bottom: 20px; left: 20px; margin-top: 60px; width: 50px; height: 50px; border-radius: 50%; background: #2d5016; color: white; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(45, 80, 22, 0.4); transition: all 0.2s; z-index: 102;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">💾</button>
+                <button id="btn-toggle-export" onclick="document.getElementById('circuit-export-modal').style.display = document.getElementById('circuit-export-modal').style.display === 'none' ? 'block' : 'none'" title="Export du circuit" style="position: absolute; bottom: 20px; left: 260px; width: 50px; height: 50px; border-radius: 50%; background: #2d5016; color: white; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(45, 80, 22, 0.4); transition: all 0.2s; z-index: 102;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">💾</button>
             </div>
 
             <!-- VERSION DESKTOP - Interface standard -->
@@ -5327,8 +5394,18 @@ Consultez les logs du serveur pour les détails complets.
             document.getElementById('circuit-modal').style.display = 'block';
             document.getElementById('circuit-type-label').textContent = type;
             // Synchroniser le label pour desktop
-            document.getElementById('circuit-type-label-desktop').textContent = type;
+            const desktopLabel = document.getElementById('circuit-type-label-desktop');
+            if (desktopLabel) desktopLabel.textContent = type;
             document.body.style.overflow = 'hidden';
+            
+            // Force le modal à être vraiment fullscreen sur mobile
+            const modal = document.getElementById('circuit-modal');
+            if (window.innerWidth <= 768) {
+                modal.style.width = '100vw';
+                modal.style.height = '100vh';
+                modal.style.top = '0';
+                modal.style.left = '0';
+            }
             
             // Initialiser la carte avec délai
             setTimeout(() => {
@@ -5338,7 +5415,7 @@ Consultez les logs du serveur pour les détails complets.
                 } else {
                     initCircuitMap('desktop');
                 }
-            }, 500);
+            }, 300);
         }
         
         function fermerModalCircuit() {
@@ -5349,10 +5426,16 @@ Consultez les logs du serveur pour les détails complets.
         }
         
         function initCircuitMap(mode = 'auto') {
-            if (circuitMap) return;
+            // Nettoyer l'ancienne carte si elle existe
+            if (circuitMap) {
+                circuitMap.off();
+                circuitMap.remove();
+                circuitMap = null;
+                basemapLayers = {};
+            }
             
             const mapContainer = mode === 'fullscreen' ? 'circuit-map-fullscreen' : 'circuit-map';
-            circuitMap = L.map(mapContainer).setView([13.1939, -15.5277], 13);
+            circuitMap = L.map(mapContainer, { zoomControl: true }).setView([13.1939, -15.5277], 13);
             
             // Basemap OSM Standard
             basemapLayers.osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
