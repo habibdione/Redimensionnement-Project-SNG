@@ -2575,15 +2575,38 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="typeActivite">Type d'Activité (Sélectionner plusieurs)</label>
-                    <select id="typeActivite" required multiple size="5">
+                    <label for="typeActivite">Type d'Activité <span style="color: red;">*</span></label>
+                    
+                    <!-- 🎯 BOUTONS ICONS POUR COLLECTE ET BALAYAGE -->
+                    <div style="display: flex; gap: 12px; margin-bottom: 15px; flex-wrap: wrap;">
+                        <button type="button" id="btn-collecte-activity" onclick="toggleActivityType('Collecte')" 
+                            style="flex: 1; min-width: 120px; padding: 12px 16px; border: 2px solid #ddd; border-radius: 8px; background: white; color: #2d5016; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s; font-size: 14px;"
+                            class="activity-btn">
+                            <span style="font-size: 20px;">🚛</span> Collecte
+                        </button>
+                        
+                        <button type="button" id="btn-balayage-activity" onclick="toggleActivityType('Balayage')" 
+                            style="flex: 1; min-width: 120px; padding: 12px 16px; border: 2px solid #ddd; border-radius: 8px; background: white; color: #2d5016; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s; font-size: 14px;"
+                            class="activity-btn">
+                            <span style="font-size: 20px;">🧹</span> Balayage
+                        </button>
+                    </div>
+                    
+                    <!-- SELECT CACHE POUR LES AUTRES OPTIONS -->
+                    <select id="typeActivite" required multiple size="5" style="display: none;">
                         <option value="Levé des dechets vert">Levé des dechets vert</option>
                         <option value="Desherbage">Desherbage</option>
                         <option value="Mecanisation">Mecanisation</option>
                         <option value="Collecte">Collecte</option>
                         <option value="Balayage">Balayage</option>
                     </select>
-                    <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">💡 Maintenez Ctrl (Cmd sur Mac) pour sélectionner plusieurs choix</small>
+                    
+                    <!-- AFFICHAGE DES SELECTIONS -->
+                    <div id="selected-activities" style="font-size: 12px; color: #666; margin-top: 8px; min-height: 20px;">
+                        <span style="color: #999;">Aucune activité sélectionnée</span>
+                    </div>
+                    
+                    <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">💡 Cliquez sur les boutons pour sélectionner les activités</small>
                 </div>
                 
                 <div class="form-group" style="margin-top: -8px;">
@@ -4104,6 +4127,64 @@
             previewImg.src = '';
             donnees.photo = null;
             showAlert('info', '🗑️ Photo supprimée');
+        }
+        
+        // 🎯 TOGGLE ACTIVITY TYPE - Gérer la sélection des activités
+        function toggleActivityType(activityType) {
+            const typeActiviteSelect = document.getElementById('typeActivite');
+            const btnCollecte = document.getElementById('btn-collecte-activity');
+            const btnBalayage = document.getElementById('btn-balayage-activity');
+            const selectedActivitiesDiv = document.getElementById('selected-activities');
+            
+            if (!typeActiviteSelect) return;
+            
+            // Récupérer toutes les options sélectionnées
+            const selectedOptions = Array.from(typeActiviteSelect.selectedOptions).map(opt => opt.value);
+            
+            // Chercher l'option et la toggler
+            const option = Array.from(typeActiviteSelect.options).find(opt => opt.value === activityType);
+            if (option) {
+                option.selected = !option.selected;
+            }
+            
+            // Mettre à jour les boutons
+            const updatedOptions = Array.from(typeActiviteSelect.selectedOptions).map(opt => opt.value);
+            
+            if (btnCollecte) {
+                if (updatedOptions.includes('Collecte')) {
+                    btnCollecte.style.background = 'linear-gradient(135deg, #5ba837 0%, #6db038 100%)';
+                    btnCollecte.style.color = 'white';
+                    btnCollecte.style.borderColor = '#5ba837';
+                    btnCollecte.style.boxShadow = '0 4px 12px rgba(91, 168, 55, 0.3)';
+                } else {
+                    btnCollecte.style.background = 'white';
+                    btnCollecte.style.color = '#2d5016';
+                    btnCollecte.style.borderColor = '#ddd';
+                    btnCollecte.style.boxShadow = 'none';
+                }
+            }
+            
+            if (btnBalayage) {
+                if (updatedOptions.includes('Balayage')) {
+                    btnBalayage.style.background = 'linear-gradient(135deg, #5ba837 0%, #6db038 100%)';
+                    btnBalayage.style.color = 'white';
+                    btnBalayage.style.borderColor = '#5ba837';
+                    btnBalayage.style.boxShadow = '0 4px 12px rgba(91, 168, 55, 0.3)';
+                } else {
+                    btnBalayage.style.background = 'white';
+                    btnBalayage.style.color = '#2d5016';
+                    btnBalayage.style.borderColor = '#ddd';
+                    btnBalayage.style.boxShadow = 'none';
+                }
+            }
+            
+            // Afficher les activités sélectionnées
+            if (updatedOptions.length > 0) {
+                const activitiesText = updatedOptions.join(' + ');
+                selectedActivitiesDiv.innerHTML = `<span style="color: #2d5016; font-weight: 500;"><strong>${activitiesText}</strong></span>`;
+            } else {
+                selectedActivitiesDiv.innerHTML = `<span style="color: #999;">Aucune activité sélectionnée</span>`;
+            }
         }
         
         // 📸 TOGGLE GALERIE - Afficher/Masquer la galerie
@@ -7239,8 +7320,24 @@ Consultez les logs du serveur pour les détails complets.
             }
         }
         
+        // 🎯 INITIALISER LES BOUTONS D'ACTIVITE
+        function initializeActivityButtons() {
+            const btnCollecte = document.getElementById('btn-collecte-activity');
+            const btnBalayage = document.getElementById('btn-balayage-activity');
+            
+            if (btnCollecte || btnBalayage) {
+                // Au premier chargement, tous les boutons sont désélectionnés
+                // Mettre à jour l'affichage
+                const selectedActivitiesDiv = document.getElementById('selected-activities');
+                if (selectedActivitiesDiv) {
+                    selectedActivitiesDiv.innerHTML = `<span style="color: #999;">Aucune activité sélectionnée</span>`;
+                }
+            }
+        }
+        
         // Charger la galerie au démarrage
         document.addEventListener('DOMContentLoaded', function() {
+            initializeActivityButtons();
             chargerDernierExportEnGalerie();
         });
     </script>
