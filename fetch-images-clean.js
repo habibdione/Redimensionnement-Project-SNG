@@ -21,7 +21,7 @@ async function fetchLatestImages() {
             SELECT id, partenaire, region, commune, sites_concernes as site,
                    photo, date_collecte, date_modification, latitude, longitude
             FROM collectes_donnees 
-            WHERE photo IS NOT NULL AND photo != ''
+            WHERE photo IS NOT NULL
             ORDER BY date_modification DESC 
             LIMIT 20
         `;
@@ -29,16 +29,24 @@ async function fetchLatestImages() {
         const result = await pool.query(query);
         
         const images = result.rows.map((row, index) => {
-            const photo = String(row.photo || '');
-            const photoPath = photo.startsWith('./') || photo.startsWith('/') ? 
-                            photo : 
-                            `./exports/${photo}`;
+            // Convertir les données bytea en base64 pour créer une data URI
+            let photoDataUri = './assets/placeholder.jpg';
+            
+            if (row.photo) {
+                try {
+                    // Convertir les données binaires en base64
+                    const buffer = Buffer.isBuffer(row.photo) ? row.photo : Buffer.from(row.photo, 'binary');
+                    photoDataUri = `data:image/jpeg;base64,${buffer.toString('base64')}`;
+                } catch (e) {
+                    console.warn(`⚠️ Erreur conversion image ${row.id}:`, e.message);
+                }
+            }
             
             return {
                 id: row.id,
                 index: index,
-                photo: photoPath,
-                thumbnail: photoPath.replace(/\.(jpg|jpeg|png)$/i, '_thumb.jpg'),
+                photo: photoDataUri,
+                thumbnail: photoDataUri, // Même URI, sera ré-dimensionnée par CSS
                 partenaire: row.partenaire,
                 commune: row.commune,
                 site: row.site,

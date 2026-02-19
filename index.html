@@ -6392,14 +6392,14 @@ Consultez les logs du serveur pour les détails complets.
                 let gallerieData = [];
                 let gallerieSource = 'export-local';
                 
-                // 1️⃣ PRIORITÉ: Charger depuis la base de données (latest-images.json)
+                // 1️⃣ PRIORITÉ: Charger depuis l'API PostgreSQL
                 try {
-                    const dbResponse = await fetch('./latest-images.json');
-                    if (dbResponse.ok) {
-                        const dbData = await dbResponse.json();
-                        if (dbData.images && dbData.images.length > 0) {
-                            gallerieData = dbData.images.map((img, idx) => ({
-                                id: img.id || idx,
+                    const apiResponse = await fetch('http://localhost:3003/api/images');
+                    if (apiResponse.ok) {
+                        const apiData = await apiResponse.json();
+                        if (apiData.images && apiData.images.length > 0) {
+                            gallerieData = apiData.images.map((img, idx) => ({
+                                id: img.id,
                                 commune: img.commune,
                                 partenaire: img.partenaire,
                                 site: img.site,
@@ -6409,15 +6409,15 @@ Consultez les logs du serveur pour les détails complets.
                                 date: img.date,
                                 lat: img.latitude ? `${img.latitude}°N` : 'N/A',
                                 lng: img.longitude ? `${img.longitude}°O` : 'N/A',
-                                src: img.photo,
-                                thumbnail: img.thumbnail
+                                src: `http://localhost:3003/api/image/${img.id}`,
+                                thumbnail: `http://localhost:3003/api/image/${img.id}`
                             }));
-                            gallerieSource = 'database';
-                            console.log(`✅ ${gallerieData.length} images chargées depuis la base de données`);
+                            gallerieSource = 'database-api';
+                            console.log(`✅ ${gallerieData.length} images chargées depuis l'API PostgreSQL`);
                         }
                     }
                 } catch (err) {
-                    console.log('⚠️ Base de données indisponible, fallback sur export local');
+                    console.log('⚠️ API PostgreSQL indisponible (http://localhost:3003), fallback sur export local');
                 }
                 
                 // 2️⃣ FALLBACK: Charger depuis le CSV du dernier export si pas de données DB
