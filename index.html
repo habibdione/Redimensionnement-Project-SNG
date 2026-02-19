@@ -4149,6 +4149,7 @@
             
             // Mettre à jour les boutons
             const updatedOptions = Array.from(typeActiviteSelect.selectedOptions).map(opt => opt.value);
+            const hasCollecteOrBalayage = updatedOptions.includes('Collecte') || updatedOptions.includes('Balayage');
             
             if (btnCollecte) {
                 if (updatedOptions.includes('Collecte')) {
@@ -4178,12 +4179,154 @@
                 }
             }
             
+            // 🎯 CONVERTIR LES BOUTONS EN ICONES QUAND COLLECTE/BALAYAGE EST SELECTIONNE
+            convertirBoutonsEnIcones(hasCollecteOrBalayage);
+            
             // Afficher les activités sélectionnées
             if (updatedOptions.length > 0) {
                 const activitiesText = updatedOptions.join(' + ');
                 selectedActivitiesDiv.innerHTML = `<span style="color: #2d5016; font-weight: 500;"><strong>${activitiesText}</strong></span>`;
             } else {
                 selectedActivitiesDiv.innerHTML = `<span style="color: #999;">Aucune activité sélectionnée</span>`;
+            }
+        }
+        
+        // 🎯 CONVERTIR LES BOUTONS EN ICONES PURES
+        function convertirBoutonsEnIcones(showAsIcon) {
+            // Boutons de contrôle desktop
+            const btnDemarrer = document.getElementById('btn-demarrer-circuit-desktop');
+            const btnPause = document.getElementById('btn-pause-circuit-desktop');
+            const btnAjouter = document.getElementById('btn-ajouter-marker-desktop');
+            const btnTerminer = document.getElementById('btn-terminer-circuit-desktop');
+            
+            if (showAsIcon) {
+                // 🎯 CONVERTIR EN ICONES - Style circulaire compact
+                if (btnDemarrer) {
+                    btnDemarrer.innerHTML = '▶️';
+                    btnDemarrer.style.width = '50px';
+                    btnDemarrer.style.height = '50px';
+                    btnDemarrer.style.padding = '0';
+                    btnDemarrer.style.borderRadius = '50%';
+                    btnDemarrer.style.display = 'flex';
+                    btnDemarrer.style.alignItems = 'center';
+                    btnDemarrer.style.justifyContent = 'center';
+                    btnDemarrer.style.fontSize = '24px';
+                }
+                if (btnPause) {
+                    btnPause.innerHTML = '⏸️';
+                    btnPause.style.width = '50px';
+                    btnPause.style.height = '50px';
+                    btnPause.style.padding = '0';
+                    btnPause.style.borderRadius = '50%';
+                    btnPause.style.display = 'flex';
+                    btnPause.style.alignItems = 'center';
+                    btnPause.style.justifyContent = 'center';
+                    btnPause.style.fontSize = '24px';
+                }
+                if (btnAjouter) {
+                    btnAjouter.innerHTML = '📌';
+                    btnAjouter.style.width = '50px';
+                    btnAjouter.style.height = '50px';
+                    btnAjouter.style.padding = '0';
+                    btnAjouter.style.borderRadius = '50%';
+                    btnAjouter.style.display = 'flex';
+                    btnAjouter.style.alignItems = 'center';
+                    btnAjouter.style.justifyContent = 'center';
+                    btnAjouter.style.fontSize = '24px';
+                }
+                if (btnTerminer) {
+                    btnTerminer.innerHTML = '✓';
+                    btnTerminer.style.width = '50px';
+                    btnTerminer.style.height = '50px';
+                    btnTerminer.style.padding = '0';
+                    btnTerminer.style.borderRadius = '50%';
+                    btnTerminer.style.display = 'flex';
+                    btnTerminer.style.alignItems = 'center';
+                    btnTerminer.style.justifyContent = 'center';
+                    btnTerminer.style.fontSize = '24px';
+                }
+                
+                // Boutons d'export
+                const btnExportShapefile = document.querySelector('button[onclick="exporterCircuitShapefile()"]');
+                const btnExportGeoJSON = document.querySelector('button[onclick="exporterCircuitGeoJSON()"]');
+                
+                if (btnExportShapefile) {
+                    btnExportShapefile.innerHTML = '📦';
+                    btnExportShapefile.style.fontSize = '24px';
+                    btnExportShapefile.style.width = '50px';
+                    btnExportShapefile.style.height = '50px';
+                    btnExportShapefile.style.padding = '0';
+                    btnExportShapefile.style.borderRadius = '50%';
+                    btnExportShapefile.style.display = 'flex';
+                    btnExportShapefile.style.alignItems = 'center';
+                    btnExportShapefile.style.justifyContent = 'center';
+                }
+                if (btnExportGeoJSON) {
+                    btnExportGeoJSON.innerHTML = '📄';
+                    btnExportGeoJSON.style.fontSize = '24px';
+                    btnExportGeoJSON.style.width = '50px';
+                    btnExportGeoJSON.style.height = '50px';
+                    btnExportGeoJSON.style.padding = '0';
+                    btnExportGeoJSON.style.borderRadius = '50%';
+                    btnExportGeoJSON.style.display = 'flex';
+                    btnExportGeoJSON.style.alignItems = 'center';
+                    btnExportGeoJSON.style.justifyContent = 'center';
+                }
+            } else {
+                // 🎯 REVENIR AU FORMAT TEXTE
+                if (btnDemarrer) {
+                    btnDemarrer.innerHTML = '▶️ Démarrer';
+                    btnDemarrer.style.width = '100%';
+                    btnDemarrer.style.height = 'auto';
+                    btnDemarrer.style.padding = '12px';
+                    btnDemarrer.style.borderRadius = '6px';
+                    btnDemarrer.style.fontSize = '14px';
+                }
+                if (btnPause) {
+                    btnPause.innerHTML = '⏸️ Pause';
+                    btnPause.style.width = '100%';
+                    btnPause.style.height = 'auto';
+                    btnPause.style.padding = '12px';
+                    btnPause.style.borderRadius = '6px';
+                    btnPause.style.fontSize = '14px';
+                }
+                if (btnAjouter) {
+                    btnAjouter.innerHTML = '📌 +Repère';
+                    btnAjouter.style.width = '100%';
+                    btnAjouter.style.height = 'auto';
+                    btnAjouter.style.padding = '12px';
+                    btnAjouter.style.borderRadius = '6px';
+                    btnAjouter.style.fontSize = '14px';
+                }
+                if (btnTerminer) {
+                    btnTerminer.innerHTML = '✓ Terminer';
+                    btnTerminer.style.width = '100%';
+                    btnTerminer.style.height = 'auto';
+                    btnTerminer.style.padding = '12px';
+                    btnTerminer.style.borderRadius = '6px';
+                    btnTerminer.style.fontSize = '14px';
+                }
+                
+                // Boutons d'export
+                const btnExportShapefile = document.querySelector('button[onclick="exporterCircuitShapefile()"]');
+                const btnExportGeoJSON = document.querySelector('button[onclick="exporterCircuitGeoJSON()"]');
+                
+                if (btnExportShapefile) {
+                    btnExportShapefile.innerHTML = '📦 Shapefile';
+                    btnExportShapefile.style.fontSize = '12px';
+                    btnExportShapefile.style.width = '100%';
+                    btnExportShapefile.style.height = 'auto';
+                    btnExportShapefile.style.padding = '10px';
+                    btnExportShapefile.style.borderRadius = '6px';
+                }
+                if (btnExportGeoJSON) {
+                    btnExportGeoJSON.innerHTML = '📄 GeoJSON';
+                    btnExportGeoJSON.style.fontSize = '12px';
+                    btnExportGeoJSON.style.width = '100%';
+                    btnExportGeoJSON.style.height = 'auto';
+                    btnExportGeoJSON.style.padding = '10px';
+                    btnExportGeoJSON.style.borderRadius = '6px';
+                }
             }
         }
         
