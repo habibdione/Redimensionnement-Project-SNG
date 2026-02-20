@@ -7277,9 +7277,108 @@ Consultez les logs du serveur pour les détails complets.
             }
         }
         
+        /**
+         * 🔄 Charger les données depuis le DTM.csv (OneDrive)
+         */
+        async function chargerDonneesDTM() {
+            try {
+                console.log('📥 Chargement des données DTM.csv...');
+                
+                // Appel API au serveur DTM
+                const response = await fetch('http://localhost:3002/api/dtm-data');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (!result.success || !result.data || result.data.length === 0) {
+                    throw new Error('Aucune donnée DTM reçue');
+                }
+                
+                console.log(`✅ ${result.count} enregistrements DTM chargés`);
+                
+                // Mettre à jour collectesGPS avec les données DTM
+                collectesGPS = result.data.map(item => ({
+                    id: item.id,
+                    commune: item.commune,
+                    site: item.site,
+                    partenaire: item.partenaire,
+                    lat: item.latitude,
+                    lng: item.longitude,
+                    photo: item.photo,
+                    date: item.date_collecte,
+                    type: item.type_activite,
+                    observation: item.observation
+                }));
+                
+                console.log(`🗺️ collectesGPS mise à jour avec ${collectesGPS.length} marqueurs DTM`);
+                
+                // Mettre à jour la galerie avec les données DTM
+                galleriePhotos = result.data.map(item => ({
+                    commune: item.commune,
+                    site: item.site,
+                    partenaire: item.partenaire,
+                    src: item.photo,
+                    date: item.date_collecte
+                })).filter(item => item.src && item.src.trim() !== '');
+                
+                console.log(`📷 Galerie mise à jour avec ${galleriePhotos.length} photos DTM`);
+                
+                // Rafraîchir l'affichage de la galerie
+                if (document.getElementById('galerie-scroll')) {
+                    const galerieScroll = document.getElementById('galerie-scroll');
+                    galerieScroll.innerHTML = '';
+                    
+                    galleriePhotos.forEach((photo, idx) => {
+                        const item = document.createElement('div');
+                        item.className = 'gallery-item';
+                        item.innerHTML = `
+                            <div class="gallery-item-wrapper">
+                                <img src="${photo.src}" alt="Photo de ${photo.commune}" 
+                                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22300%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2218%22 fill=%22%23999%22%3EImage non disponible%3C/text%3E%3C/svg%3E'">
+                                <div class="gallery-info">
+                                    <p class="commune"><strong>📍 ${photo.commune}</strong></p>
+                                    <p class="site">${photo.site}</p>
+                                    <p class="partenaire">🤝 ${photo.partenaire}</p>
+                                    <p class="date">📅 ${new Date(photo.date).toLocaleDateString('fr-FR')}</p>
+                                </div>
+                            </div>
+                        `;
+                        galerieScroll.appendChild(item);
+                    });
+                    
+                    console.log('✅ Galerie DTM affichée avec succès');
+                }
+                
+                // Réinitialiser la carte si elle existe
+                if (typeof initializeCollecteMap === 'function' && document.getElementById('collecte-map')) {
+                    console.log('🗺️ Réinitialisation de la carte avec données DTM...');
+                    initializeCollecteMap();
+                }
+                
+                return true;
+                
+            } catch (error) {
+                console.warn('⚠️ Erreur chargement DTM.csv:', error.message);
+                console.info('ℹ️ Utilisation des données locales...');
+                return false;
+            }
+        }
+        
         // Charger la galerie au démarrage
         document.addEventListener('DOMContentLoaded', function() {
-            chargerDernierExportEnGalerie();
+            // Essayer d'abord charger les données DTM
+            chargerDonneesDTM().then(success => {
+                if (!success) {
+                    // Sinon utiliser l'export local
+                    chargerDernierExportEnGalerie();
+                }
+            }).catch(err => {
+                console.error('Erreur lors du chargement initial:', err);
+                chargerDernierExportEnGalerie();
+            });
         });
     </script>
 
