@@ -13,6 +13,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Servir les fichiers statiques depuis le dossier assets
+const ASSETS_DIR = path.join(__dirname, 'assets');
+app.use('/assets', express.static(ASSETS_DIR));
+
 // Chemin vers le DTM.csv
 const DTM_PATH = 'c:\\Users\\30100-23-SNG\\OneDrive - sonaged\\Bureau\\DTM.csv';
 
@@ -73,7 +77,7 @@ function parseCSVLine(line) {
 /**
  * Lire et parser le DTM.csv
  */
-function readDTMData() {
+function readDTMData(includeFullUrl = true) {
     try {
         if (!fs.existsSync(DTM_PATH)) {
             console.error(`❌ Fichier DTM non trouvé: ${DTM_PATH}`);
@@ -83,20 +87,29 @@ function readDTMData() {
         const fileContent = fs.readFileSync(DTM_PATH, 'utf-8');
         const records = parseCSV(fileContent);
 
-        // Mapper les données avec extraction des photos
-        return records.map(record => ({
-            id: parseInt(record.id) || 0,
-            partenaire: record.partenaire || '',
-            region: record.region || 'Ziguinchor',
-            commune: record.commune || '',
-            site: `${record.commune} - ${record.sites_concernes || 'Site de collecte'}`,
-            latitude: parseFloat(record.latitude) || 12.9,
-            longitude: parseFloat(record.longitude) || -16.0,
-            photo: record.photo || '',
-            date_collecte: record.date_collecte || new Date().toISOString(),
-            type_activite: record.type_activite || '',
-            observation: record.observation || ''
-        })).filter(r => r.id > 0); // Filtrer les lignes vides
+        // Mapper les données avec chemins des images depuis assets/
+        return records.map(record => {
+            let photoPath = '';
+            if (record.id) {
+                const relativePath = `/assets/collecte-${record.id}.jpg`;
+                // Retourner URL complète si nécessaire (pour browser depuis autre serveur)
+                photoPath = includeFullUrl ? `http://localhost:3002${relativePath}` : relativePath;
+            }
+
+            return {
+                id: parseInt(record.id) || 0,
+                partenaire: record.partenaire || '',
+                region: record.region || 'Ziguinchor',
+                commune: record.commune || '',
+                site: `${record.commune} - ${record.sites_concernes || 'Site de collecte'}`,
+                latitude: parseFloat(record.latitude) || 12.9,
+                longitude: parseFloat(record.longitude) || -16.0,
+                photo: photoPath,
+                date_collecte: record.date_collecte || new Date().toISOString(),
+                type_activite: record.type_activite || '',
+                observation: record.observation || ''
+            };
+        }).filter(r => r.id > 0); // Filtrer les lignes vides
     } catch (error) {
         console.error('❌ Erreur lecture DTM.csv:', error.message);
         return [];
