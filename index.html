@@ -2794,70 +2794,8 @@
                 </div>
                 
                 <div class="galerie-scroll">
-                    <div class="galerie-item" onclick="openGalerieModal(0)">
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_12_1.jpg" alt="Oussouye">
-                        <div class="galerie-item-info">
-                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                            <div class="galerie-item-commune">📍 Oussouye</div>
-                            <div class="galerie-item-detail"><strong>Site:</strong> Bureau commercial</div>
-                        </div>
-                    </div>
-
-                    <div class="galerie-item" onclick="openGalerieModal(1)">
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_11_2.jpg" alt="Diembéring">
-                        <div class="galerie-item-info">
-                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                            <div class="galerie-item-commune">📍 Diembéring</div>
-                            <div class="galerie-item-detail"><strong>Site:</strong> District Cap-Skirring</div>
-                        </div>
-                    </div>
-
-                    <div class="galerie-item" onclick="openGalerieModal(2)">
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_10_3.jpg" alt="Ziguinchor">
-                        <div class="galerie-item-info">
-                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                            <div class="galerie-item-commune">📍 Ziguinchor</div>
-                            <div class="galerie-item-detail"><strong>Site:</strong> Bureau commercial</div>
-                        </div>
-                    </div>
-
-                    <div class="galerie-item" onclick="openGalerieModal(3)">
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_9_4.jpg" alt="Niaguis">
-                        <div class="galerie-item-info">
-                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                            <div class="galerie-item-commune">📍 Niaguis</div>
-                            <div class="galerie-item-detail"><strong>Site:</strong> Centrale électrique</div>
-                        </div>
-                    </div>
-
-                    <div class="galerie-item" onclick="openGalerieModal(4)">
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_8_5.jpg" alt="Ziguinchor">
-                        <div class="galerie-item-info">
-                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                            <div class="galerie-item-commune">📍 Ziguinchor</div>
-                            <div class="galerie-item-detail"><strong>Site:</strong> Chambre de passage</div>
-                        </div>
-                    </div>
-
-                    <div class="galerie-item" onclick="openGalerieModal(5)">
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_7_6.jpg" alt="Ziguinchor">
-                        <div class="galerie-item-info">
-                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                            <div class="galerie-item-commune">📍 Ziguinchor</div>
-                            <div class="galerie-item-detail"><strong>Site:</strong> Agence principale</div>
-                        </div>
-                    </div>
-
-                    <div class="galerie-item" onclick="openGalerieModal(6)">
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_6_7.jpg" alt="Ziguinchor">
-                        <div class="galerie-item-info">
-                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                            <div class="galerie-item-commune">📍 Ziguinchor</div>
-                            <div class="galerie-item-detail"><strong>Site:</strong> Sous station Kankourang</div>
-                        </div>
-                    </div>
-
-                    <div class="galerie-item" onclick="openGalerieModal(7)">
+                    <!-- Les images seront chargées dynamiquement ici -->
+                </div>
                         <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_5_8.jpg" alt="Ziguinchor">
                         <div class="galerie-item-info">
                             <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
@@ -6679,15 +6617,18 @@ Consultez les logs du serveur pour les détails complets.
                         iconAnchor: [15, 15]
                     });
                     
-                    // Créer le contenu du popup (minimal pour rapidité)
+                    // Créer le contenu du popup avec IMAGE
                     const popupContent = `
-                        <div style="font-size: 12px;">
+                        <div style="font-size: 12px; width: 250px;">
                             <strong style="color: #6db038; font-size: 13px;">📌 ${collecte.commune}</strong><br>
                             <small style="color: #666;">
                                 <strong>Site:</strong> ${collecte.site}<br>
                                 <strong>Partenaire:</strong> ${collecte.partenaire}<br>
                                 <strong>Coordonnées:</strong> ${collecte.lat.toFixed(4)}, ${collecte.lng.toFixed(4)}
                             </small>
+                            ${collecte.photo ? `<div style="margin-top: 10px; text-align: center;">
+                                <img src="${collecte.photo}" alt="${collecte.commune}" style="max-width: 100%; height: auto; border-radius: 6px; max-height: 150px;">
+                            </div>` : ''}
                         </div>
                     `;
                     
@@ -7199,13 +7140,21 @@ Consultez les logs du serveur pour les détails complets.
                                     .map(row => {
                                         // Extraire le nom du fichier d'image depuis la colonne photo
                                         let imagePath = row.photo || '';
-                                        if (imagePath.includes('photo_')) {
-                                            const match = imagePath.match(/photo_\d+_\d+\.jpg/);
-                                            if (match) {
-                                                imagePath = `${lastExport.path}/images/${match[0]}`;
-                                            }
-                                        } else if (!imagePath.startsWith('./') && !imagePath.startsWith('http')) {
-                                            imagePath = `${lastExport.path}/images/${imagePath}`;
+                                        console.log(`📸 Traitement image pour ${row.commune}: "${imagePath}"`);
+                                        
+                                        // Extraire le nom du fichier (photo_XX_Y.jpg)
+                                        let filename = '';
+                                        const match = imagePath.match(/photo_\d+_\d+\.jpg/);
+                                        if (match) {
+                                            filename = match[0];
+                                        }
+                                        
+                                        // Utiliser le chemin complet de l'export
+                                        if (filename) {
+                                            imagePath = `${lastExport.path}/images/${filename}`;
+                                            console.log(`   ✅ Chemin corrigé: ${imagePath}`);
+                                        } else {
+                                            console.warn(`   ❌ Impossible d'extraire le nom du fichier de: ${row.photo}`);
                                         }
                                         
                                         return {
@@ -7301,6 +7250,26 @@ Consultez les logs du serveur pour les détails complets.
                     galerieScroll.appendChild(item);
                 });
                 
+                // 🗺️ Mettre à jour collectesGPS avec les données de galerie pour la carte
+                if (gallerieData.length > 0) {
+                    collectesGPS = gallerieData.map(row => ({
+                        id: row.id || 0,
+                        commune: row.commune || 'N/A',
+                        partenaire: row.partenaire || 'N/A',
+                        site: row.site || 'N/A',
+                        lat: row.latitude || 0,
+                        lng: row.longitude || 0,
+                        photo: row.src || ''
+                    }));
+                    
+                    console.log(`🗺️ collectesGPS mise à jour avec ${collectesGPS.length} marqueurs`);
+                    
+                    // Réinitialiser la carte si elle existe et est visible
+                    if (collecteMapInitialized && document.getElementById('collecte-map') && document.getElementById('collecte-map').offsetHeight > 0) {
+                        collecteMapInitialized = false;
+                        initializeCollecteMap();
+                    }
+                }
                 
                 console.log(`✅ Galerie mise à jour (${gallerieData.length} images - Source: ${gallerieSource})`);
             } catch (error) {
