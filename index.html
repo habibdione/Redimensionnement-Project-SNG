@@ -2420,6 +2420,12 @@
                         <strong>💡 Astuce :</strong> Utilisez les contrôles en haut à droite de la carte pour afficher/masquer les couches. Cliquez sur les éléments pour voir les détails.
                     </p>
                 </div>
+                
+                <div style="display: flex; gap: 15px; margin-top: 30px; justify-content: center;">
+                    <button onclick="allerAuFormulaire()" class="cta-button-primary" style="background: linear-gradient(135deg, #6db038 0%, #4a7c27 100%); color: white; padding: 16px 40px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(109, 176, 56, 0.3); transition: all 0.3s; pointer-events: auto;">
+                        📱 Accéder à la Collecte
+                    </button>
+                </div>
             </div>
         </div>
         <!-- FIN SECTION ACCUEIL -->
@@ -4119,6 +4125,8 @@
                 toggleBtn.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
                 toggleBtn.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
                 galerieSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Charger les dernières images du dernier export
+                chargerDernierExportEnGalerie();
             } else {
                 galerieSection.style.display = 'none';
                 toggleBtn.textContent = '📸 Voir la Galerie des Collectes';
