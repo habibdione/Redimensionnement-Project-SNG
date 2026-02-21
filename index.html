@@ -2714,21 +2714,38 @@
                 <input type="hidden" id="coordonneeX" value="">
                 <input type="hidden" id="coordonneeY" value="">
                 
-                <button onclick="obtenirLocalisationGPS()" style="width: 100%;">📡 Obtenir Position GPS & Ajouter Marqueur</button>
+                <!-- ⭐ BOUTON UNIQUE: CAPTURE PHOTO + GPS + MARQUEUR -->
+                <button onclick="capturerPhotoAvecGPSEtMarqueur()" style="width: 100%; background: linear-gradient(135deg, #2d5016 0%, #6db038 100%); color: white; padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 16px; transition: all 0.3s; box-shadow: 0 4px 12px rgba(109, 176, 56, 0.3);" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 6px 16px rgba(109, 176, 56, 0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 12px rgba(109, 176, 56, 0.3)'">
+                    📸 Capturer Photo + GPS + Marqueur
+                </button>
                 
                 <div id="map"></div>
                 
-                <h3 style="color: #667eea; margin-top: 20px;">📷 Capture d'Image</h3>
-                
-                <div class="button-group">
-                    <button onclick="demarrerCamera()" style="flex: 1;">📹 Démarrer Caméra</button>
-                    <button id="arreter-camera-btn" class="danger" onclick="arreterCamera()" style="flex: 1; display: none;">⏹️ Arrêter</button>
+                <div id="gps-camera-capture" style="display: none; margin-top: 20px; padding: 15px; background: #f0f8e6; border-radius: 8px; border-left: 4px solid #6db038;">
+                    <h3 style="color: #2d5016; margin-top: 0;">🎬 Capture Géolocalisée</h3>
+                    
+                    <!-- Infos GPS en temps réel -->
+                    <div class="coords-display" id="coords-display-live" style="background: white; padding: 10px; border-radius: 6px; margin-bottom: 10px; font-size: 12px;">
+                        <strong>📍 Position GPS:</strong><br>
+                        Latitude: <span id="lat-live">⏳ En recherche...</span><br>
+                        Longitude: <span id="lon-live">⏳ En recherche...</span><br>
+                        Précision: <span id="accuracy-live">⏳ En recherche...</span> m
+                    </div>
+                    
+                    <!-- Caméra et vidéo -->
+                    <div class="button-group" style="margin-bottom: 10px;">
+                        <button id="demarrer-camera-live" onclick="demarrerCameraLive()" style="flex: 1;">📹 Démarrer Caméra</button>
+                        <button id="arreter-camera-live" class="danger" onclick="arreterCameraLive()" style="flex: 1; display: none;">⏹️ Arrêter Caméra</button>
+                    </div>
+                    
+                    <video id="video-live" style="width: 100%; border-radius: 8px; background: #000; margin: 10px 0; display: none;" playsinline></video>
+                    <canvas id="canvas-live" style="width: 100%; border-radius: 8px; margin: 10px 0; display: none;"></canvas>
+                    
+                    <!-- Bouton capture: activé seulement si caméra + GPS OK -->
+                    <button id="capturer-avec-gps-btn" onclick="capturerPhotoGeoloc()" style="width: 100%; background: linear-gradient(135deg, #6db038 0%, #9acd32 100%); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; opacity: 0.5; cursor: not-allowed;" disabled>
+                        ⏳ Préparez-vous... (Caméra + GPS)
+                    </button>
                 </div>
-                
-                <video id="video" style="width: 100%; border-radius: 8px; background: #000; margin: 15px 0; display: none;" playsinline></video>
-                <canvas id="canvas" style="width: 100%; border-radius: 8px; margin: 15px 0; display: none;"></canvas>
-                
-                <button onclick="capturerPhoto()" style="width: 100%;">📸 Capturer Photo</button>
                 
                 <div id="image-preview" class="hidden">
                     <div id="photo-info" style="background: #f0f8e6; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #6db038; font-size: 12px; color: #2d5016;">
@@ -3044,11 +3061,12 @@
                 console.log('%c✅ Mode GitHub Pages', 'color: #4CAF50; font-weight: bold;');
                 console.log('Serveur: ' + API_BASE_URL);
             }
-            // Si c'est le dev tunnel
+            // Si c'est le dev tunnel (NOUVEAU: même domaine racine)
             else if (hostname.includes('devtunnels.ms')) {
-                API_BASE_URL = 'https://' + hostname.replace('-8000', '-3001').replace('-8080', '-3001');
-                console.log('%c✅ Mode Dev Tunnel', 'color: #4CAF50; font-weight: bold;');
-                console.log('Serveur: ' + API_BASE_URL);
+                // Utiliser le même domaine racine (le backend sert déjà le frontend)
+                API_BASE_URL = protocol + '//' + hostname;
+                console.log('%c✅ Mode Dev Tunnel - Même domaine', 'color: #4CAF50; font-weight: bold;');
+                console.log('Frontend + Backend sur: ' + API_BASE_URL);
             }
             // Si c'est localhost
             else if (hostname === 'localhost' || hostname === '127.0.0.1') {
@@ -3058,7 +3076,7 @@
             }
             // Autre cas (production)
             else {
-                API_BASE_URL = protocol + '//' + hostname + ':3001';
+                API_BASE_URL = protocol + '//' + hostname;
                 console.log('%c✅ Mode Production', 'color: #4CAF50; font-weight: bold;');
                 console.log('Serveur: ' + API_BASE_URL);
             }
@@ -3407,6 +3425,7 @@
         let map;
         let userLocationMarker;
         let videoStream;
+        let collectesMarqueurs = []; // Stockage des marqueurs de collecte géolocalisés
         
         let donnees = {
             partenaire: '',
@@ -3645,6 +3664,328 @@
                 navigator.geolocation.clearWatch(watchPositionId);
                 watchPositionId = null;
                 showAlert('info', '⏹️ Suivi GPS arrêté');
+            }
+        }
+        
+        // ============================================================================
+        // 🎯 CAPTURE PHOTO INTÉGRÉE: GPS + CAMÉRA + MARQUEUR EN UN SEUL BOUTON
+        // ============================================================================
+        
+        let gpsLiveData = { lat: null, lon: null, accuracy: null };
+        let cameraLiveReady = false;
+        let videoStreamLive = null;
+        let watchPositionIdLive = null;
+        
+        function capturerPhotoAvecGPSEtMarqueur() {
+            const container = document.getElementById('gps-camera-capture');
+            container.style.display = 'block';
+            showAlert('info', '🎬 Initialisation capture géolocalisée...\n✅ Demande d\'accès GPS\n✅ Demande d\'accès Caméra');
+            
+            // Scroll vers le conteneur
+            container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Initialiser la carte
+            if (!mapInitialized) {
+                initMap();
+            }
+            
+            // Démarrer le suivi GPS en parallèle
+            demarrerGPSLive();
+            
+            // Attendre un peu puis démarrer la caméra
+            setTimeout(() => {
+                demarrerCameraLive();
+            }, 500);
+        }
+        
+        function demarrerGPSLive() {
+            if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+                showAlert('error', '⚠️ GPS nécessite HTTPS. Utilisez un DevTunnel ou localhost.');
+                return;
+            }
+            
+            if (!navigator.geolocation) {
+                showAlert('error', '❌ Géolocalisation non supportée');
+                return;
+            }
+            
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 0
+            };
+            
+            watchPositionIdLive = navigator.geolocation.watchPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    const accuracy = Math.round(position.coords.accuracy);
+                    
+                    gpsLiveData = { lat, lon, accuracy };
+                    donnees.latitude = lat;
+                    donnees.longitude = lon;
+                    donnees.precision = accuracy;
+                    
+                    // Afficher les coordonnées en temps réel
+                    document.getElementById('lat-live').textContent = lat.toFixed(6) + '°N';
+                    document.getElementById('lon-live').textContent = lon.toFixed(6) + '°O';
+                    document.getElementById('accuracy-live').textContent = accuracy;
+                    document.getElementById('coords-display-live').style.background = '#e8f5e9';
+                    
+                    // Activer le bouton capture si caméra aussi prête
+                    activerBoutonCaptureGPS();
+                },
+                function(error) {
+                    let msg = '❌ GPS: ';
+                    switch(error.code) {
+                        case 1: msg += 'Permission refusée. Activez le GPS.'; break;
+                        case 2: msg += 'Position indisponible. Essayez dehors.'; break;
+                        case 3: msg += 'Délai dépassé. Réessayez.'; break;
+                        default: msg += error.message;
+                    }
+                    showAlert('error', msg);
+                    document.getElementById('lat-live').textContent = '❌ Erreur';
+                    document.getElementById('lon-live').textContent = '❌ Erreur';
+                },
+                options
+            );
+        }
+        
+        function demarrerCameraLive() {
+            const video = document.getElementById('video-live');
+            
+            if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+                showAlert('error', '❌ Caméra nécessite HTTPS (ou localhost)');
+                return;
+            }
+            
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                showAlert('error', '❌ Caméra non supportée');
+                return;
+            }
+            
+            navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    facingMode: 'environment',
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
+            })
+            .then(function(stream) {
+                videoStreamLive = stream;
+                video.srcObject = stream;
+                video.style.display = 'block';
+                video.onloadedmetadata = function() {
+                    video.play();
+                };
+                cameraLiveReady = true;
+                
+                document.getElementById('demarrer-camera-live').style.display = 'none';
+                document.getElementById('arreter-camera-live').style.display = 'block';
+                
+                showAlert('success', '✅ Caméra prête! Positionnez-vous bien.');
+                activerBoutonCaptureGPS();
+            })
+            .catch(function(error) {
+                console.error('Erreur caméra:', error);
+                showAlert('error', '❌ Erreur caméra: ' + error.message);
+            });
+        }
+        
+        function arreterCameraLive() {
+            if (videoStreamLive) {
+                videoStreamLive.getTracks().forEach(track => track.stop());
+                videoStreamLive = null;
+            }
+            
+            const video = document.getElementById('video-live');
+            video.style.display = 'none';
+            cameraLiveReady = false;
+            
+            document.getElementById('demarrer-camera-live').style.display = 'block';
+            document.getElementById('arreter-camera-live').style.display = 'none';
+            
+            desactiverBoutonCaptureGPS();
+        }
+        
+        function activerBoutonCaptureGPS() {
+            const btn = document.getElementById('capturer-avec-gps-btn');
+            if (gpsLiveData.lat && cameraLiveReady) {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+                btn.textContent = `✅ CAPTURER! (${gpsLiveData.accuracy}m précision)`;
+                btn.style.background = 'linear-gradient(135deg, #6db038 0%, #4CAF50 100%)';
+            }
+        }
+        
+        function desactiverBoutonCaptureGPS() {
+            const btn = document.getElementById('capturer-avec-gps-btn');
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            btn.style.cursor = 'not-allowed';
+            btn.textContent = '⏳ Préparez-vous... (Caméra + GPS)';
+            btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        }
+        
+        function capturerPhotoGeoloc() {
+            const video = document.getElementById('video-live');
+            const canvas = document.getElementById('canvas-live');
+            
+            if (!videoStreamLive || !gpsLiveData.lat) {
+                showAlert('error', '❌ Caméra et GPS doivent être prêts');
+                return;
+            }
+            
+            showAlert('info', '📸 Capture en cours + marqueur...');
+            
+            // Redimensionner et compresser
+            const maxWidth = 800;
+            const maxHeight = 600;
+            let width = video.videoWidth;
+            let height = video.videoHeight;
+            
+            if (width > maxWidth || height > maxHeight) {
+                const ratio = Math.min(maxWidth / width, maxHeight / height);
+                width = Math.floor(width * ratio);
+                height = Math.floor(height * ratio);
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, width, height);
+            canvas.style.display = 'block';
+            
+            // Compresser en JPEG
+            const imageData = canvas.toDataURL('image/jpeg', 0.7);
+            
+            // Vérifier la taille
+            const maxSize = 5242880; // 5MB
+            if (imageData.length > maxSize) {
+                showAlert('error', '❌ Photo trop grosse (max 5MB)');
+                return;
+            }
+            
+            donnees.photo = imageData;
+            
+            // Créer nom du fichier
+            const siteElement = document.getElementById('adresse');
+            const communeElement = document.getElementById('commune');
+            let siteName = siteElement ? siteElement.value.trim().replace(/[^a-zA-Z0-9-]/g, '_').substring(0, 30) : 'site';
+            let communeName = communeElement ? communeElement.options[communeElement.selectedIndex]?.text : 'commune';
+            communeName = communeName.replace(/[^a-zA-Z0-9-]/g, '_').substring(0, 20);
+            
+            const now = new Date();
+            const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+            const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '');
+            const filename = `photo_${communeName}_${siteName}_${dateStr}_${timeStr}.jpg`;
+            window.currentPhotoFilename = filename;
+            
+            // Récupérer autres infos du formulaire
+            const regionElement = document.getElementById('region');
+            const departementElement = document.getElementById('departement');
+            const deptName = departementElement ? departementElement.options[departementElement.selectedIndex]?.text : 'dept';
+            const regionName = regionElement ? regionElement.options[regionElement.selectedIndex]?.text : 'region';
+            
+            let activites = [];
+            const activitesElement = document.getElementById('activites-group');
+            if (activitesElement) {
+                const checkboxes = activitesElement.querySelectorAll('input[type="checkbox"]:checked');
+                activites = Array.from(checkboxes).map(cb => cb.labels?.[0]?.textContent?.trim() || '').filter(a => a);
+            }
+            
+            // Convertir en UTM
+            const utm = latLonToUTM(gpsLiveData.lat, gpsLiveData.lon);
+            document.getElementById('coordonneeX').value = utm.easting.toFixed(2);
+            document.getElementById('coordonneeY').value = utm.northing.toFixed(2);
+            donnees.coordonneeX = utm.easting.toFixed(2);
+            donnees.coordonneeY = utm.northing.toFixed(2);
+            
+            // Ajouter la photo à la galerie
+            const newPhoto = {
+                id: Date.now(),
+                commune: communeName,
+                partenaire: "SONAGED",
+                site: siteName,
+                dept: deptName,
+                region: regionName,
+                activites: activites.join(", "),
+                superficie: document.getElementById('superficie')?.value || "0 m²",
+                personnel: document.getElementById('personnel')?.value || "0",
+                dispositifs: document.getElementById('dispositif')?.value || "N/A",
+                frequence: document.getElementById('frequence')?.value || "F1",
+                accessibilite: document.getElementById('accessibilite')?.value || "Facile",
+                lat: gpsLiveData.lat.toFixed(6) + "°N",
+                lng: gpsLiveData.lon.toFixed(6) + "°O",
+                src: imageData,
+                quality: 0.7,
+                size: imageData.length,
+                timestamp: now.toISOString(),
+                gps: { lat: gpsLiveData.lat, lon: gpsLiveData.lon, accuracy: gpsLiveData.accuracy }
+            };
+            
+            // Vérifier les doublons
+            const existingIndex = galleriePhotos.findIndex(p => p.site === newPhoto.site && p.commune === newPhoto.commune);
+            if (existingIndex !== -1 && galleriePhotos[existingIndex].quality < newPhoto.quality) {
+                galleriePhotos[existingIndex] = newPhoto;
+                showAlert('success', `♻️ Photo de ${communeName} remplacée (meilleure qualité)`);
+            } else if (existingIndex === -1) {
+                galleriePhotos.unshift(newPhoto);
+                showAlert('success', `✅ Photo capturée! ${communeName} - ${siteName}`);
+            } else {
+                showAlert('info', `⏭️ Photo non ajoutée (qualité inférieure)`);
+                return;
+            }
+            
+            // 🎯 AJOUTER LE MARQUEUR SUR LA CARTE
+            const popupContent = `<b>📍 ${siteName}</b><br>
+                <strong>Commune:</strong> ${communeName}<br>
+                <strong>Latitude:</strong> ${gpsLiveData.lat.toFixed(6)}°<br>
+                <strong>Longitude:</strong> ${gpsLiveData.lon.toFixed(6)}°<br>
+                <strong>Précision:</strong> ±${gpsLiveData.accuracy}m<br>
+                <strong>Date:</strong> ${now.toLocaleString('fr-FR')}<br>
+                <img src="${imageData}" style="width: 100%; border-radius: 6px; margin-top: 8px; max-width: 200px;">`;
+            
+            // Centrer et ajouter le marqueur
+            map.setView([gpsLiveData.lat, gpsLiveData.lon], 17);
+            const marker = L.marker([gpsLiveData.lat, gpsLiveData.lon], {
+                title: siteName,
+                icon: L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                })
+            }).addTo(map).bindPopup(popupContent);
+            
+            // Stocker le marqueur
+            if (!collectesMarqueurs) collectesMarqueurs = [];
+            collectesMarqueurs.push({
+                marker: marker,
+                data: {
+                    site: siteName,
+                    commune: communeName,
+                    lat: gpsLiveData.lat,
+                    lon: gpsLiveData.lon,
+                    timestamp: now.toISOString()
+                }
+            });
+            
+            // Update affichage
+            document.getElementById('lat').textContent = gpsLiveData.lat.toFixed(6);
+            document.getElementById('lon').textContent = gpsLiveData.lon.toFixed(6);
+            document.getElementById('accuracy').textContent = gpsLiveData.accuracy;
+            document.getElementById('utm-easting').textContent = utm.easting.toFixed(2);
+            document.getElementById('utm-northing').textContent = utm.northing.toFixed(2);
+            
+            // Arrêter le suivi
+            if (watchPositionIdLive) {
+                navigator.geolocation.clearWatch(watchPositionIdLive);
+                watchPositionIdLive = null;
             }
         }
         
