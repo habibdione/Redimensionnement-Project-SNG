@@ -5829,6 +5829,7 @@ Consultez les logs du serveur pour les détails complets.
             document.getElementById('btn-demarrer-circuit').style.display = 'none';
             document.getElementById('btn-pause-circuit').style.display = 'flex';
             document.getElementById('btn-ajouter-marker').style.display = 'flex';
+            document.getElementById('btn-ajouter-marker-desktop').style.display = 'flex'; // Repère sur PC
             document.getElementById('btn-terminer-circuit').style.display = 'flex';
             document.getElementById('circuit-status-header').textContent = '🔴 ENREGISTREMENT EN COURS';
             
@@ -6012,6 +6013,8 @@ Consultez les logs du serveur pour les détails complets.
             
             document.getElementById('btn-pause-circuit').style.display = 'none';
             document.getElementById('btn-demarrer-circuit').style.display = 'flex';
+            document.getElementById('btn-ajouter-marker').style.display = 'none'; // Masquer repère en pause
+            document.getElementById('btn-ajouter-marker-desktop').style.display = 'none';
             document.getElementById('circuit-status-header').textContent = '⏸️ PAUSE - Appuyez "Démarrer" pour reprendre';
             
             // Garder le marqueur de position actuelle visible mais en pause
@@ -6271,6 +6274,7 @@ Consultez les logs du serveur pour les détails complets.
             document.getElementById('btn-demarrer-circuit').style.display = 'flex';
             document.getElementById('btn-pause-circuit').style.display = 'none';
             document.getElementById('btn-ajouter-marker').style.display = 'none';
+            document.getElementById('btn-ajouter-marker-desktop').style.display = 'none'; // Masquer repère à la fin
             document.getElementById('btn-terminer-circuit').style.display = 'none';
             document.getElementById('circuit-status-header').textContent = '✓ TERMINÉ';
             
