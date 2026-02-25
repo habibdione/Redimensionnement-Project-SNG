@@ -5810,6 +5810,11 @@ Consultez les logs du serveur pour les détails complets.
             basemapLayers[type].addTo(circuitMap);
         }
         
+        // Variables globales pour le suivi
+        let circuitFollowMode = true; // Mode suivi automatique activé
+        let lastUpdateTime = 0;
+        let updateThrottle = 500; // Mise à jour toutes les 500ms maximum
+        
         function demarrerTracking() {
             circuitTracking = true;
             trackingStartTime = new Date();
@@ -5818,53 +5823,94 @@ Consultez les logs du serveur pour les détails complets.
             circuitMarkers = [];
             startMarker = null;
             currentPositionMarker = null;
+            circuitFollowMode = true; // Activer le mode suivi
             
+            // Afficher les boutons d'action
             document.getElementById('btn-demarrer-circuit').style.display = 'none';
             document.getElementById('btn-pause-circuit').style.display = 'flex';
             document.getElementById('btn-ajouter-marker').style.display = 'flex';
             document.getElementById('btn-terminer-circuit').style.display = 'flex';
-            document.getElementById('circuit-status-header').textContent = '🔴 ENREGISTREMENT...';
+            document.getElementById('circuit-status-header').textContent = '🔴 ENREGISTREMENT EN COURS';
             
-            // Démarrer le tracking GPS
+            showAlert('success', '✅ Tracage démarré! Naviguez votre terrain... 🗺️');
+            
+            // Démarrer le tracking GPS avec haute précision
             if (navigator.geolocation) {
                 trackingWatchId = navigator.geolocation.watchPosition(
                     (position) => {
+                        // Throttle les mises à jour
+                        const now = Date.now();
+                        if (now - lastUpdateTime < updateThrottle) return;
+                        lastUpdateTime = now;
+                        
                         const lat = position.coords.latitude;
                         const lon = position.coords.longitude;
                         const accuracy = position.coords.accuracy;
+                        const altitude = position.coords.altitude;
                         
-                        circuitPoints.push([lat, lon]);
+                        // Ajouter le point uniquement si distance suffisante du dernier point
+                        let shouldAddPoint = true;
+                        if (circuitPoints.length > 0) {
+                            const lastPoint = circuitPoints[circuitPoints.length - 1];
+                            const distance = calculateDistance(lat, lon, lastPoint[0], lastPoint[1]);
+                            // Ignorer les points trop proches (< 2 mètres)
+                            if (distance < 2) shouldAddPoint = false;
+                        }
+                        
+                        if (shouldAddPoint) {
+                            circuitPoints.push([lat, lon]);
+                        }
+                        
+                        // Mise à jour des affichages
                         document.getElementById('circuit-lat').textContent = lat.toFixed(6);
                         document.getElementById('circuit-lon').textContent = lon.toFixed(6);
+                        document.getElementById('circuit-lat-desktop').textContent = lat.toFixed(6);
+                        document.getElementById('circuit-lon-desktop').textContent = lon.toFixed(6);
+                        document.getElementById('circuit-points').textContent = circuitPoints.length;
+                        document.getElementById('circuit-points-desktop').textContent = circuitPoints.length;
                         
-                        // Afficher précision avec code couleur
+                        // Code couleur de précision GPS
                         const accuracySpan = document.getElementById('circuit-accuracy');
-                        accuracySpan.textContent = accuracy.toFixed(1) + ' m';
-                        
-                        // Colorier selon la précision (bonnes pratiques: < 10m = bon, < 20m = moyen)
+                        const accuracySpanDesktop = document.getElementById('circuit-accuracy-desktop');
                         accuracySpan.className = 'gps-quality';
+                        
                         if (accuracy < 10) {
                             accuracySpan.classList.add('good');
                             accuracySpan.textContent = '✓ ' + accuracy.toFixed(1) + ' m';
+                            if (accuracySpanDesktop) {
+                                accuracySpanDesktop.className = 'gps-quality good';
+                                accuracySpanDesktop.textContent = '✓ ' + accuracy.toFixed(1) + ' m';
+                            }
                         } else if (accuracy < 20) {
                             accuracySpan.classList.add('medium');
                             accuracySpan.textContent = '⚠ ' + accuracy.toFixed(1) + ' m';
+                            if (accuracySpanDesktop) {
+                                accuracySpanDesktop.className = 'gps-quality medium';
+                                accuracySpanDesktop.textContent = '⚠ ' + accuracy.toFixed(1) + ' m';
+                            }
                         } else {
                             accuracySpan.classList.add('poor');
                             accuracySpan.textContent = '✗ ' + accuracy.toFixed(1) + ' m';
+                            if (accuracySpanDesktop) {
+                                accuracySpanDesktop.className = 'gps-quality poor';
+                                accuracySpanDesktop.textContent = '✗ ' + accuracy.toFixed(1) + ' m';
+                            }
                         }
                         
                         // 🎯 SI C'EST LE PREMIER POINT - Ajouter marqueur de départ
                         if (circuitPoints.length === 1) {
                             startMarker = L.marker([lat, lon], {
                                 icon: L.icon({
-                                    iconUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%236db038"><rect width="24" height="24" fill="none"/><circle cx="12" cy="12" r="6" fill="%236db038"/><circle cx="12" cy="12" r="4" fill="white"/></svg>',
+                                    iconUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="%236db038"><circle cx="16" cy="16" r="12" fill="%236db038" stroke="white" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="white"/></svg>',
                                     iconSize: [32, 32],
-                                    iconAnchor: [16, 16]
+                                    iconAnchor: [16, 16],
+                                    className: 'circuit-start-marker'
                                 })
                             }).addTo(circuitMap);
-                            startMarker.bindPopup('🟢 Départ du circuit');
-                            circuitMap.setView([lat, lon], 16);
+                            startMarker.bindPopup('🟢 <strong>Départ du Circuit</strong><br>Position: ' + lat.toFixed(4) + ', ' + lon.toFixed(4));
+                            
+                            // ZOOM INITIAL SUR LA POSITION UTILISATEUR
+                            circuitMap.setView([lat, lon], 17);
                         }
                         
                         // 📍 METTRE À JOUR MARQUEUR DE POSITION ACTUELLE
@@ -5875,77 +5921,127 @@ Consultez les logs du serveur pour les détails complets.
                             circuitMap.removeLayer(accuracyCircle);
                         }
                         
-                        // Marqueur principal (position actuelle)
+                        // 🔵 Marqueur principal avec couleur animée
                         currentPositionMarker = L.circleMarker([lat, lon], {
-                            radius: 8,
-                            fillColor: '#667eea',
-                            color: '#667eea',
-                            weight: 2,
+                            radius: 10,
+                            fillColor: '#2196F3',
+                            color: '#1976D2',
+                            weight: 3,
                             opacity: 1,
-                            fillOpacity: 0.8
+                            fillOpacity: 0.9,
+                            className: 'circuit-current-position'
                         }).addTo(circuitMap);
-                        currentPositionMarker.bindPopup(`📍 Position actuelle<br>Lat: ${lat.toFixed(6)}<br>Lon: ${lon.toFixed(6)}<br>Précision: ±${accuracy.toFixed(1)}m`);
+                        currentPositionMarker.bindPopup(`<b>📍 Position Actuelle</b><br>Lat: ${lat.toFixed(6)}°<br>Lon: ${lon.toFixed(6)}°<br>Précision: ±${accuracy.toFixed(1)}m<br>Altitude: ${altitude ? altitude.toFixed(1) + 'm' : 'N/A'}`);
                         
-                        // 🔵 CERCLE DE PRÉCISION (accuracy circle)
-                        accuracyCircle = L.circle([lat, lon], {
-                            radius: accuracy,
-                            fillColor: '#667eea',
-                            fillOpacity: 0.1,
-                            color: '#667eea',
-                            weight: 1,
-                            opacity: 0.5,
-                            dashArray: '5, 5'
-                        }).addTo(circuitMap);
+                        // 🔵 CERCLE DE PRÉCISION (accuracy circle) - optionnel
+                        if (accuracy < 50) { // Afficher seulement si < 50m
+                            accuracyCircle = L.circle([lat, lon], {
+                                radius: accuracy,
+                                fillColor: '#2196F3',
+                                fillOpacity: 0.08,
+                                color: '#2196F3',
+                                weight: 2,
+                                opacity: 0.4,
+                                dashArray: '8, 4'
+                            }).addTo(circuitMap);
+                        }
                         
                         // Tracer la polyline en temps réel
-                        if (!circuitPolyline) {
+                        if (!circuitPolyline && circuitPoints.length > 1) {
                             circuitPolyline = L.polyline(circuitPoints, {
-                                color: '#667eea',
-                                weight: 3,
-                                opacity: 0.8,
+                                color: '#2196F3',
+                                weight: 4,
+                                opacity: 0.85,
                                 lineCap: 'round',
-                                lineJoin: 'round'
+                                lineJoin: 'round',
+                                smoothFactor: 1.0,
+                                className: 'circuit-polyline'
                             }).addTo(circuitMap);
-                        } else {
+                        } else if (circuitPolyline && circuitPoints.length > 1) {
                             circuitPolyline.setLatLngs(circuitPoints);
                         }
                         
-                        circuitMap.setView([lat, lon], 15);
+                        // 🎯 MODE SUIVI - Centrer automatiquement sur la position
+                        if (circuitFollowMode) {
+                            circuitMap.setView([lat, lon], 17, { animate: true });
+                        }
+                        
+                        // Mettre à jour les stats
                         updateCircuitStats();
                     },
                     (error) => {
-                        console.log('GPS Error:', error);
-                        document.getElementById('circuit-status').textContent = '❌ Erreur GPS: ' + error.message;
-                        document.getElementById('circuit-status').style.color = '#c92a2a';
+                        console.error('❌ Erreur GPS:', error);
+                        let errorMsg = '❌ Erreur GPS: ';
+                        switch(error.code) {
+                            case 1: errorMsg += 'Permission refusée'; break;
+                            case 2: errorMsg += 'Position indisponible'; break;
+                            case 3: errorMsg += 'Délai dépassé'; break;
+                            default: errorMsg += error.message;
+                        }
+                        document.getElementById('circuit-status-header').textContent = errorMsg;
+                        showAlert('error', errorMsg);
                     },
-                    { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
+                    { 
+                        enableHighAccuracy: true, 
+                        maximumAge: 0, 
+                        timeout: 8000 
+                    }
                 );
+            } else {
+                showAlert('error', '❌ Géolocalisation non supportée par le navigateur');
             }
+        }
+        
+        // Fonction auxiliaire pour calculer la distance entre deux coordonnées (Haversine)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Rayon de la terre en km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c * 1000; // Retourner en mètres
         }
         
         function pauseTracking() {
             circuitTracking = false;
+            circuitFollowMode = false; // Arrêter le suivi automatique
+            
             if (trackingWatchId) navigator.geolocation.clearWatch(trackingWatchId);
             
             document.getElementById('btn-pause-circuit').style.display = 'none';
             document.getElementById('btn-demarrer-circuit').style.display = 'flex';
-            document.getElementById('circuit-status-header').textContent = '⏸️ PAUSE';
+            document.getElementById('circuit-status-header').textContent = '⏸️ PAUSE - Appuyez "Démarrer" pour reprendre';
             
             // Garder le marqueur de position actuelle visible mais en pause
             if (currentPositionMarker) {
-                // Changer la couleur du marqueur en pause
+                // Changer la couleur du marqueur en pause (orange)
                 currentPositionMarker.setStyle({
-                    fillColor: '#ff9800',
-                    color: '#ff9800'
+                    fillColor: '#FF9800',
+                    color: '#F57C00',
+                    radius: 8
                 });
+                currentPositionMarker.setPopupContent('<b>⏸️ Position Pause</b><br>' + currentPositionMarker.getPopupContent());
             }
             
             // Réduire l'opacité du cercle de précision
             if (accuracyCircle) {
                 accuracyCircle.setStyle({
-                    opacity: 0.2,
-                    fillOpacity: 0.05
+                    opacity: 0.15,
+                    fillOpacity: 0.03
                 });
+            }
+            
+            showAlert('info', '⏸️ Tracage en pause. Appuyez Démarrer pour reprendre.');
+            console.log('⏸️ Tracage en pause - ' + circuitPoints.length + ' points enregistrés');
+        }
+        
+        // Reprendre le suivi depuis la pause
+        function reprendreTracking() {
+            if (!circuitTracking) {
+                demarrerTracking();
+                circuitFollowMode = true;
             }
         }
         
