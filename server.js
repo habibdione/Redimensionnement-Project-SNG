@@ -639,13 +639,24 @@ async function startServer() {
             syncService.startPeriodicSync(3600000);
         }
 
-        const server = app.listen(PORT, () => {
+        const server = app.listen(PORT, '0.0.0.0', () => {
+            const os = require('os');
+            const ifaces = os.networkInterfaces();
+            let localIPs = ['localhost:' + PORT];
+            for (const name of Object.keys(ifaces)) {
+                for (const iface of ifaces[name]) {
+                    if (iface.family === 'IPv4' && !iface.internal) {
+                        localIPs.push(iface.address + ':' + PORT);
+                    }
+                }
+            }
             console.log(`
 ╔═══════════════════════════════════════════════╗
 ║   SERVEUR DIMENSIONNEMENT SONAGED ACTIF       ║
 ╠═══════════════════════════════════════════════╣
 ║   Port: ${PORT}
-║   URL: http://localhost:${PORT}
+║   URLs Locales:
+║   ${localIPs.map(ip => `http://${ip}`).join('\n║   ')}
 ║   API: http://localhost:${PORT}/api
 ║   Health: http://localhost:${PORT}/api/health
 ╚═══════════════════════════════════════════════╝

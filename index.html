@@ -3047,10 +3047,12 @@
         function detecterURLServeur() {
             const hostname = window.location.hostname;
             const protocol = window.location.protocol;
+            const port = window.location.port;
             
             console.log('%c🌐 INITIALISATION API', 'background: #2d5016; color: white; padding: 10px; font-weight: bold; border-radius: 5px;');
             console.log('Contexte détecté:', {
                 hostname: hostname,
+                port: port,
                 protocol: protocol,
                 href: window.location.href
             });
@@ -3068,15 +3070,22 @@
                 console.log('%c✅ Mode Dev Tunnel - Même domaine', 'color: #4CAF50; font-weight: bold;');
                 console.log('Frontend + Backend sur: ' + API_BASE_URL);
             }
-            // Si c'est localhost
+            // Si c'est localhost (ou 127.0.0.1)
             else if (hostname === 'localhost' || hostname === '127.0.0.1') {
                 API_BASE_URL = 'http://localhost:3001';
                 console.log('%c✅ Mode Développement Local', 'color: #4CAF50; font-weight: bold;');
                 console.log('Serveur: ' + API_BASE_URL);
             }
+            // Si accès via une adresse IP (ex: 172.20.10.6:3001 depuis tablette)
+            else if (/^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
+                // C'est une adresse IP - utiliser port 3001
+                API_BASE_URL = protocol + '//' + hostname + ':3001';
+                console.log('%c✅ Mode Réseau Local (IP Tablette)', 'color: #FF9800; font-weight: bold;');
+                console.log('Serveur API à: ' + API_BASE_URL);
+            }
             // Autre cas (production)
             else {
-                API_BASE_URL = protocol + '//' + hostname;
+                API_BASE_URL = protocol + '//' + hostname + (port ? ':' + port : '');
                 console.log('%c✅ Mode Production', 'color: #4CAF50; font-weight: bold;');
                 console.log('Serveur: ' + API_BASE_URL);
             }
