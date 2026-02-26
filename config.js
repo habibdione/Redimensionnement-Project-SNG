@@ -6,6 +6,9 @@
  * Utilisation:
  * - Automatiquement inclus dans index.html avant api-client.js
  * - Définit la variable globale SENELEC_CONFIG
+ * 
+ * Production: GitHub Pages + Tunnel HTTPS
+ * Développement: localhost 3001 + localhost 5000
  */
 
 // Configuration par environnement
@@ -14,36 +17,55 @@ const SENELEC_CONFIG = {
     development: {
         API_URL: 'http://localhost:3001/api',
         APP_NAME: 'SENELEC Dimensionnement (DEV)',
-        DEBUG: true
+        DEBUG: true,
+        TUNNEL_ENABLED: false
     },
     
-    // Production - Railway Backend + GitHub Pages Frontend
+    // Production - GitHub Pages Frontend + Tunnel HTTPS Backend
     production: {
-        // Template: https://[votre-app-name]-production.up.railway.app/api
-        // À REMPLACER après déploiement Railway!
-        // Avant:
-        // API_URL: 'https://your-railway-app-production.up.railway.app/api',
-        // Après:
-        API_URL: 'https://[ta-vraie-url]-production.up.railway.app/api',
+        API_URL: 'https://4mkdbs2k-3001.euw.devtunnels.ms/api',
         APP_NAME: 'SENELEC Dimensionnement',
-        DEBUG: false
+        DEBUG: false,
+        TUNNEL_ENABLED: true
     },
     
     // Staging - Pour les tests
     staging: {
         API_URL: 'https://api-staging.senelec-dimensionnement.sn/api',
         APP_NAME: 'SENELEC Dimensionnement (STAGING)',
-        DEBUG: true
+        DEBUG: true,
+        TUNNEL_ENABLED: false
+    },
+    
+    // Tunnel distant (Dev Tunnels) - Alias pour production
+    tunnel: {
+        API_URL: 'https://4mkdbs2k-3001.euw.devtunnels.ms/api',
+        APP_NAME: 'SENELEC Dimensionnement (TUNNEL)',
+        DEBUG: true,
+        TUNNEL_ENABLED: true
     }
 };
 
 // Déterminer l'environnement actuel
 function getEnvironment() {
+    // Vérifier si un environnement est forcé via URL (?env=tunnel)
+    const urlParams = new URLSearchParams(window.location.search);
+    const forcedEnv = urlParams.get('env');
+    if (forcedEnv && SENELEC_CONFIG[forcedEnv]) {
+        console.log(`🔄 Environnement forcé via URL: ${forcedEnv}`);
+        return forcedEnv;
+    }
+    
     const host = window.location.hostname;
     
     // Si en localhost, c'est développement
     if (host === 'localhost' || host === '127.0.0.1') {
         return 'development';
+    }
+    
+    // Si sur tunnel Dev Tunnels
+    if (host.includes('devtunnels.ms')) {
+        return 'tunnel';
     }
     
     // Si sur GitHub Pages (habibdione.github.io), c'est production
@@ -71,6 +93,7 @@ if (CONFIG.API_URL.includes('[ta-vraie-url]')) {
 }
 
 // Logger les informations de configuration
+const tunnelActive = CURRENT_ENV === 'tunnel';
 console.log(`
 ╔════════════════════════════════════════════╗
 ║  SENELEC DIMENSIONNEMENT - CONFIGURATION   ║
@@ -79,7 +102,7 @@ console.log(`
 ║  Hôte: ${window.location.hostname.padEnd(38)}║
 ║  API URL: ${CONFIG.API_URL.substring(0, 35).padEnd(37)}║
 ║  Debug: ${(CONFIG.DEBUG ? '✅' : '❌').padEnd(40)}║
-╚════════════════════════════════════════════╝
+${tunnelActive ? '║  🌐 TUNNEL MODE ACTIF' + ''.padEnd(20) + '║\n' : ''}╚════════════════════════════════════════════╝
 `);
 
 // Exporter la configuration

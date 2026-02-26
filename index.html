@@ -5552,9 +5552,10 @@
             }
             
             console.log('🚀 Envoi des données au serveur...');
+            console.log('📍 URL d\'envoi:', API_BASE_URL + '/collecte');
             
             // Envoyer au serveur avec l'URL dynamique
-            fetch(API_BASE_URL + '/api/collecte', {
+            fetch(API_BASE_URL + '/collecte', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -7170,6 +7171,8 @@ Consultez les logs du serveur pour les détails complets.
     
     
 
+    <!-- Configuration tunnel (doit être avant config.js) -->
+    <script src="tunnel-config.js"></script>
     <!-- Configuration d'environnement (doit être avant api-client.js) -->
     <script src="config.js"></script>
     <!-- Client API pour communication avec PostgreSQL backend -->

@@ -7,20 +7,66 @@
  * 
  * Configuration:
  * - URL de l'API: définie dans config.js (CONFIG.API_URL)
- * - Support multi-environnements: Dev/Staging/Production
+ * - Support multi-environnements: Dev/Staging/Production/Tunnel
  */
 
 // Configuration de l'API (définie dans config.js ou par défaut en localhost)
-const API_BASE_URL = (typeof CONFIG !== 'undefined' && CONFIG.API_URL) 
+let API_BASE_URL = (typeof CONFIG !== 'undefined' && CONFIG.API_URL) 
     ? CONFIG.API_URL 
     : (process.env.API_URL || 'http://localhost:3001/api');
+
+// Vérifier si tunnel est activé via tunnel-config.js
+if (typeof TUNNEL_CONFIG !== 'undefined' && TUNNEL_CONFIG.TUNNEL_ENABLED) {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('env') === 'tunnel' || window.location.hostname.includes('devtunnels.ms')) {
+        API_BASE_URL = TUNNEL_CONFIG.TUNNEL_API;
+        console.log('🌐 TUNNEL MODE: API URL changée vers', API_BASE_URL);
+    }
+}
 
 console.log(`✅ API Client initialisé avec URL: ${API_BASE_URL}`);
 
 /**
- * Classe pour gérer les appels API
+ * Classe pour gérer les appels API avec support Tunnel
  */
 class APIClient {
+    
+    /**
+     * Helper pour les requêtes avec retry sur tunnel
+     */
+    static async faireRequete(url, options = {}) {
+        const isTunnel = API_BASE_URL.includes('devtunnels.ms');
+        const maxRetries = isTunnel ? 3 : 1;
+        
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                // Ajouter mode CORS pour tunnel
+                const fetchOptions = {
+                    ...options,
+                    mode: 'cors',
+                    credentials: 'omit'
+                };
+                
+                if (isTunnel) {
+                    fetchOptions.headers = {
+                        ...fetchOptions.headers,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    };
+                }
+                
+                const response = await fetch(url, fetchOptions);
+                return response;
+                
+            } catch (error) {
+                if (isTunnel && attempt < maxRetries) {
+                    console.warn(`⚠️ Tentative ${attempt}/${maxRetries} échouée, nouvelle tentative dans 2s...`);
+                    await new Promise(r => setTimeout(r, 2000));
+                } else {
+                    throw error;
+                }
+            }
+        }
+    }
     
     /**
      * Sauvegarder les données en base de données
@@ -28,8 +74,9 @@ class APIClient {
     static async sauvegarderEnBaseDonnees(donnees) {
         try {
             console.log('📝 Envoi des données vers la base de données...');
+            console.log('   API:', API_BASE_URL);
             
-            const response = await fetch(`${API_BASE_URL}/collecte`, {
+            const response = await this.faireRequete(`${API_BASE_URL}/collecte`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -84,7 +131,9 @@ class APIClient {
      */
     static async obtenirCollecte(id) {
         try {
-            const response = await fetch(`${API_BASE_URL}/collecte/${id}`);
+            const response = await this.faireRequete(`${API_BASE_URL}/collecte/${id}`, {
+                method: 'GET'
+            });
             const result = await response.json();
 
             if (!response.ok) {
@@ -103,7 +152,9 @@ class APIClient {
      */
     static async obtenirCollectes(page = 1, limit = 10) {
         try {
-            const response = await fetch(`${API_BASE_URL}/collectes?page=${page}&limit=${limit}`);
+            const response = await this.faireRequete(`${API_BASE_URL}/collectes?page=${page}&limit=${limit}`, {
+                method: 'GET'
+            });
             const result = await response.json();
 
             if (!response.ok) {
@@ -222,7 +273,9 @@ class APIClient {
      */
     static async obtenirStatistiques() {
         try {
-            const response = await fetch(`${API_BASE_URL}/statistiques`);
+            const response = await this.faireRequete(`${API_BASE_URL}/statistiques`, {
+                method: 'GET'
+            });
             const result = await response.json();
 
             if (!response.ok) {
@@ -241,7 +294,9 @@ class APIClient {
      */
     static async verifierConnexion() {
         try {
-            const response = await fetch(`${API_BASE_URL}/health`);
+            const response = await this.faireRequete(`${API_BASE_URL}/health`, {
+                method: 'GET'
+            });
             const result = await response.json();
             return result.success;
         } catch (error) {
