@@ -1,0 +1,294 @@
+<!-- TEST COMPLET PWA MOBILE -->
+<!-- Ouvrir ce fichier sur mobile pour vérifier tout -->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Test PWA Mobile</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container { max-width: 100%; margin: 0 auto; }
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-bottom: 20px; font-size: 24px; }
+        h2 { color: #666; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #667eea; padding-bottom: 10px; }
+        .test { margin-bottom: 15px; }
+        .test-label { font-weight: bold; color: #333; }
+        .test-result { padding: 10px; border-radius: 5px; margin-top: 5px; }
+        .success { background: #c6f6d5; color: #22543d; }
+        .error { background: #fed7d7; color: #742a2a; }
+        .warning { background: #feebc8; color: #7c2d12; }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:active { background: #5568d3; }
+        .status-good { color: #22543d; font-weight: bold; }
+        .status-bad { color: #742a2a; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 Test PWA Mobile</h1>
+        
+        <div class="section">
+            <h2>1️⃣ Détection Appareil</h2>
+            <div class="test">
+                <div class="test-label">Type d'appareil:</div>
+                <div class="test-result" id="device-type"></div>
+            </div>
+            <div class="test">
+                <div class="test-label">Écran:</div>
+                <div class="test-result" id="screen-info"></div>
+            </div>
+            <div class="test">
+                <div class="test-label">Orientation:</div>
+                <div class="test-result" id="orientation"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2️⃣ Service Worker</h2>
+            <div class="test">
+                <div class="test-label">Status:</div>
+                <div class="test-result" id="sw-status"></div>
+            </div>
+            <button onclick="testServiceWorker()">Tester Service Worker</button>
+        </div>
+
+        <div class="section">
+            <h2>3️⃣ GPS & Localisation</h2>
+            <div class="test">
+                <div class="test-label">Support Geolocation:</div>
+                <div class="test-result" id="geo-support"></div>
+            </div>
+            <button onclick="testGeolocation()">Tester GPS</button>
+            <div class="test-result" id="geo-result" style="display:none; margin-top: 10px;"></div>
+        </div>
+
+        <div class="section">
+            <h2>4️⃣ Camera & Caméra</h2>
+            <div class="test">
+                <div class="test-label">Support Camera:</div>
+                <div class="test-result" id="camera-support"></div>
+            </div>
+            <button onclick="testCamera()">Tester Caméra</button>
+        </div>
+
+        <div class="section">
+            <h2>5️⃣ Storage & Cache</h2>
+            <div class="test">
+                <div class="test-label">LocalStorage:</div>
+                <div class="test-result" id="storage-result"></div>
+            </div>
+            <div class="test">
+                <div class="test-label">IndexedDB:</div>
+                <div class="test-result" id="indexeddb-result"></div>
+            </div>
+            <button onclick="testStorage()">Tester Stockage</button>
+        </div>
+
+        <div class="section">
+            <h2>6️⃣ Connectivité API</h2>
+            <div class="test">
+                <div class="test-label">Serveur Backend:</div>
+                <div class="test-result" id="api-status"></div>
+            </div>
+            <button onclick="testAPI()">Tester API</button>
+        </div>
+
+        <div class="section">
+            <h2>7️⃣ Installation PWA</h2>
+            <div class="test">
+                <div class="test-label">Prompt Disponible:</div>
+                <div class="test-result" id="install-prompt"></div>
+            </div>
+            <button onclick="installPWA()" id="install-btn" style="display:none;">🚀 Installer PWA</button>
+        </div>
+
+        <div class="section">
+            <h2>📊 Résumé</h2>
+            <div class="test-result" id="summary"></div>
+        </div>
+    </div>
+
+    <script>
+        // DEVICE TYPE
+        function getDeviceType() {
+            const ua = navigator.userAgent;
+            if (/Mobile|Android|iPhone/.test(ua)) return '📱 Mobile';
+            if (/Tablet|iPad|Android/.test(ua)) return '📊 Tablette';
+            return '💻 Desktop';
+        }
+        document.getElementById('device-type').textContent = getDeviceType();
+
+        // SCREEN INFO
+        function getScreenInfo() {
+            return `${window.innerWidth}x${window.innerHeight}px (${screen.width}x${screen.height}px physical)`;
+        }
+        document.getElementById('screen-info').textContent = getScreenInfo();
+
+        // ORIENTATION
+        function updateOrientation() {
+            const orient = window.matchMedia("(orientation: portrait)").matches ? "🔒 Portrait" : "🔓 Paysage";
+            document.getElementById('orientation').textContent = orient;
+        }
+        updateOrientation();
+        window.addEventListener('orientationchange', updateOrientation);
+
+        // SERVICE WORKER
+        function testServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.controller
+                    ? showSuccess('sw-status', '✅ Service Worker ACTIF')
+                    : showWarning('sw-status', '⏳ Service Worker en cours d\'activation...');
+            } else {
+                showError('sw-status', '❌ Service Worker NON SUPPORTÉ');
+            }
+        }
+        testServiceWorker();
+
+        // GEOLOCATION
+        function testGeolocation() {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        showSuccess('geo-result', 
+                            `✅ GPS Actif: ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)} (±${pos.coords.accuracy.toFixed(0)}m)`);
+                        document.getElementById('geo-result').style.display = 'block';
+                    },
+                    (err) => {
+                        showError('geo-result', `❌ Erreur GPS: ${err.message}`);
+                        document.getElementById('geo-result').style.display = 'block';
+                    }
+                );
+                showWarning('geo-result', '📍 Localisation en cours...');
+                document.getElementById('geo-result').style.display = 'block';
+            }
+            showSuccess('geo-support', '✅ Geolocation SUPPORTÉE');
+        }
+        if ('geolocation' in navigator) {
+            showSuccess('geo-support', '✅ Geolocation SUPPORTÉE');
+        } else {
+            showError('geo-support', '❌ Geolocation NON SUPPORTÉE');
+        }
+
+        // CAMERA
+        function testCamera() {
+            const constraints = { video: { facingMode: 'environment' } };
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia(constraints)
+                    .then(() => {
+                        showSuccess('camera-support', '✅ Caméra ACCESSIBLE');
+                        alert('✅ Caméra accessible! Vous pouvez prendre des photos.');
+                    })
+                    .catch((err) => {
+                        showWarning('camera-support', `⚠️ Caméra: ${err.name}`);
+                    });
+            } else {
+                showError('camera-support', '❌ Camera API NON DISPONIBLE');
+            }
+        }
+        if (navigator.mediaDevices) {
+            showSuccess('camera-support', '✅ Camera API DISPONIBLE');
+        }
+
+        // STORAGE
+        function testStorage() {
+            try {
+                localStorage.setItem('pwa_test', 'test');
+                localStorage.removeItem('pwa_test');
+                showSuccess('storage-result', '✅ LocalStorage ACTIF (5-10MB)');
+            } catch (e) {
+                showError('storage-result', '❌ LocalStorage DÉSACTIVÉ');
+            }
+
+            try {
+                const dbRequest = indexedDB.open('pwa_test');
+                showSuccess('indexeddb-result', '✅ IndexedDB ACTIF (Illimité)');
+            } catch (e) {
+                showError('indexeddb-result', '❌ IndexedDB NON DISPONIBLE');
+            }
+        }
+        testStorage();
+
+        // API TEST
+        async function testAPI() {
+            try {
+                const response = await fetch('/api/health');
+                if (response.ok) {
+                    showSuccess('api-status', '✅ Serveur RÉPONDABLE (http)');
+                } else {
+                    showWarning('api-status', `⚠️ HTTP ${response.status}`);
+                }
+            } catch (err) {
+                try {
+                    const response = await fetch('http://localhost:3001/api/health');
+                    showSuccess('api-status', '✅ Serveur LOCAL actif');
+                } catch (e) {
+                    showError('api-status', '❌ Serveur NON ACCESSIBLE');
+                }
+            }
+        }
+
+        // INSTALL PROMPT
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showSuccess('install-prompt', '✅ PWA INSTALLABLE');
+            document.getElementById('install-btn').style.display = 'block';
+        });
+
+        async function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`Installation: ${outcome}`);
+                deferredPrompt = null;
+            }
+        }
+
+        // HELPERS
+        function showSuccess(id, msg) {
+            const el = document.getElementById(id);
+            el.textContent = msg;
+            el.className = 'test-result success';
+        }
+        function showError(id, msg) {
+            const el = document.getElementById(id);
+            el.textContent = msg;
+            el.className = 'test-result error';
+        }
+        function showWarning(id, msg) {
+            const el = document.getElementById(id);
+            el.textContent = msg;
+            el.className = 'test-result warning';
+        }
+
+        // RUN API TEST
+        testAPI();
+    </script>
+</body>
+</html>
