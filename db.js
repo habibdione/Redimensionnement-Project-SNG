@@ -35,7 +35,6 @@ async function initDatabase() {
                 departement VARCHAR(255),
                 commune VARCHAR(255),
                 type_activite TEXT,
-                site_concerne VARCHAR(500),
                 sites_concernes VARCHAR(500),
                 superficie DECIMAL(10, 2),
                 besoin_personnel INTEGER,
@@ -50,8 +49,10 @@ async function initDatabase() {
                 latitude DECIMAL(10, 8),
                 longitude DECIMAL(11, 8),
                 precision DECIMAL(10, 2),
+                coordonnee_x DECIMAL(15, 4) DEFAULT 0,
+                coordonnee_y DECIMAL(15, 4) DEFAULT 0,
                 observation TEXT,
-                image_1 BYTEA,
+                photo BYTEA,
                 date_collecte TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 date_modification TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 statut VARCHAR(20) DEFAULT 'actif',
@@ -62,6 +63,17 @@ async function initDatabase() {
 
         await client.query(createTableQuery);
         console.log('✅ Table collectes_donnees créée/existante');
+
+        // Ajouter les colonnes manquantes si la table existait déjà
+        const alterQueries = [
+            `ALTER TABLE collectes_donnees ADD COLUMN IF NOT EXISTS coordonnee_x DECIMAL(15, 4) DEFAULT 0`,
+            `ALTER TABLE collectes_donnees ADD COLUMN IF NOT EXISTS coordonnee_y DECIMAL(15, 4) DEFAULT 0`,
+            `ALTER TABLE collectes_donnees ADD COLUMN IF NOT EXISTS photo BYTEA`
+        ];
+        for (const q of alterQueries) {
+            try { await client.query(q); } catch (e) { /* colonne existe déjà */ }
+        }
+        console.log('✅ Colonnes coordonnee_x, coordonnee_y, photo vérifiées');
 
         // Créer un index sur la date de collecte pour les performances
         const createIndexQuery = `
