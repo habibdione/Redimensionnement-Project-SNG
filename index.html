@@ -2488,7 +2488,6 @@
                     <div id="resume-contenu" style="font-size: 14px; line-height: 2; color: #333;"></div>
                 </div>
             </div>
-            </form>
             
             <!-- LOCALISATION & IMAGES -->
             <div class="section">
@@ -2609,16 +2608,7 @@
                 <div class="galerie-scroll">
                     <!-- Les images seront chargées dynamiquement ici -->
                 </div>
-                        <img class="galerie-item-image" src="./exports/export-2026-02-17T20-06-21/images/photo_5_8.jpg" alt="Ziguinchor">
-                        <div class="galerie-item-info">
-                            <div class="galerie-item-detail"><strong>Partenaire:</strong> SENELEC</div>
-                            <div class="galerie-item-commune">📍 Ziguinchor</div>
-                            <div class="galerie-item-detail"><strong>Site:</strong> Parc à carburant</div>
-                        </div>
-                    </div>
-                </div>
             </div>
-        </div>
         
         <!-- RÉSUMÉ DES DONNÉES -->
         <div style="padding: 30px;">
@@ -2628,7 +2618,6 @@
             </div>
         </div>
         
-        </div>
         </div>
         
         <!-- 🗺️ MODAL TRACEUR DE CIRCUIT DE COLLECTE/BALAYAGE (caché par défaut) -->
@@ -5347,10 +5336,10 @@
             }
             
             console.log('🚀 Envoi des données au serveur...');
-            console.log('📍 URL d\'envoi:', API_BASE_URL + '/collecte');
+            console.log('📍 URL d\'envoi:', API_BASE_URL + '/api/collecte');
             
             // Envoyer au serveur avec l'URL dynamique
-            fetch(API_BASE_URL + '/collecte', {
+            fetch(API_BASE_URL + '/api/collecte', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
