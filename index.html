@@ -6634,17 +6634,8 @@ Consultez les logs du serveur pour les détails complets.
     
     <!-- FONCTIONS JAVASCRIPT POUR LA CARTE DES COLLECTES -->
     <script>
-        // Données géographiques des 8 collectes
-        let collectesGPS = [
-            { id: 12, commune: "Oussouye", partenaire: "SENELEC", site: "Bureau commercial Oussouye", lat: 12.49055100, lng: -16.54658500, photo: "./exports/export-2026-02-17T18-16-04/images/photo_12_1.jpg" },
-            { id: 11, commune: "Diembéring", partenaire: "SENELEC", site: "District Cap-Skirring", lat: 12.37629500, lng: -16.72996200, photo: "./exports/export-2026-02-17T18-16-04/images/photo_11_2.jpg" },
-            { id: 10, commune: "Ziguinchor", partenaire: "SENELEC", site: "Bureau commercial de Boutoute", lat: 12.56943000, lng: -16.27761800, photo: "./exports/export-2026-02-17T18-16-04/images/photo_10_3.jpg" },
-            { id: 9, commune: "Niaguis", partenaire: "SENELEC", site: "Centrale électrique de Boutoute", lat: 12.58711600, lng: -16.26668500, photo: "./exports/export-2026-02-17T18-16-04/images/photo_9_4.jpg" },
-            { id: 8, commune: "Ziguinchor", partenaire: "SENELEC", site: "Chambre de passage", lat: 12.58425300, lng: -16.27164800, photo: "./exports/export-2026-02-17T18-16-04/images/photo_8_5.jpg" },
-            { id: 7, commune: "Ziguinchor", partenaire: "SENELEC", site: "Agence principale", lat: 12.58413100, lng: -16.27159400, photo: "./exports/export-2026-02-17T18-16-04/images/photo_7_6.jpg" },
-            { id: 6, commune: "Ziguinchor", partenaire: "SENELEC", site: "Sous station Kankourang", lat: 12.58277100, lng: -16.26715500, photo: "./exports/export-2026-02-17T18-16-04/images/photo_6_7.jpg" },
-            { id: 5, commune: "Ziguinchor", partenaire: "SENELEC", site: "Parc à carburant", lat: 12.58679000, lng: -16.26486000, photo: "./exports/export-2026-02-17T18-16-04/images/photo_5_8.jpg" }
-        ];
+        // Données géographiques des collectes (vide - rempli dynamiquement)
+        let collectesGPS = [];
         
         // Régions du Sénégal avec leurs coordonnées centrales et noms
         const senegalRegions = [
@@ -6676,7 +6667,7 @@ Consultez les logs du serveur pour les détails complets.
             const startTime = performance.now();
             
             // Créer la carte centrée sur Ziguinchor
-            const collecteMap = L.map('collecte-map').setView([12.9, -16.0], 9);
+            const collecteMap = L.map('collecte-map').setView([14.5, -14.5], 7);
             
             // Ajouter la couche de base OpenStreetMap avec optimisation
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
