@@ -2326,220 +2326,15 @@
             </div>
         </div>
         
-        <!-- 🧭 NAVIGATION BAR 3 MENUS -->
-        <div id="menu-navigation" style="background: linear-gradient(135deg, #2d5016 0%, #4a7c27 100%); padding: 0; border-bottom: 3px solid #6db038; display: flex; justify-content: center; gap: 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-            <button onclick="mostrarMenu('accueil')" id="btn-accueil" style="background: linear-gradient(135deg, #2d5016 0%, #4a7c27 100%); color: white; border: none; padding: 18px 40px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s elastic(1, .5); display: flex; align-items: center; gap: 10px; border-bottom: 4px solid #6db038;" class="menu-btn active">
-                <span style="font-size: 20px;">🏠</span> Accueil
-            </button>
-            <button onclick="mostrarMenu('actualite')" id="btn-actualite" style="background: linear-gradient(135deg, #2d5016 0%, #4a7c27 100%); color: white; border: none; padding: 18px 40px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 10px; border-bottom: 4px solid transparent;" class="menu-btn">
-                <span style="font-size: 20px;">🔥</span> Actualité & Convention
-            </button>
-            <button onclick="mostrarMenu('collecte')" id="btn-collecte" style="background: linear-gradient(135deg, #2d5016 0%, #4a7c27 100%); color: white; border: none; padding: 18px 40px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 10px; border-bottom: 4px solid transparent;" class="menu-btn">
-                <span style="font-size: 20px;">📊</span> Accéder à la Collecte
-            </button>
-        </div>
+        <!-- Navigation supprimée - Accès direct à la Collecte -->
         
-        <!-- 🏠 MENU 1: ACCUEIL -->
-        <div id="accueil-section" class="content" style="display: flex; flex-direction: column; padding: 60px 40px; gap: 40px; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 1px solid #e5e7eb;">
-            
-            <!-- HERO SECTION - PRÉSENTATION SIMPLE -->
-            <div style="animation: slideInLeft 0.8s ease-out;">
-                <h2 style="font-size: 48px; font-weight: 800; color: #2d5016; margin-bottom: 20px; line-height: 1.2;">
-                    🌍 Bienvenue à l'application de Dimensionnement SONAGED
-                </h2>
-                <p style="font-size: 18px; color: #4a5568; margin-bottom: 20px; line-height: 1.7; font-weight: 600;">
-                    <strong>Société Nationale de Gestion de Déchets</strong>
-                </p>
-                <p style="font-size: 15px; color: #718096; margin-bottom: 15px; line-height: 1.8;">
-                    Application mobile intelligente pour la collecte de données géospatiales au niveau national au Sénégal permettant aux agents SONAGED de collecter des informations détaillées sur les sites d'infrastructures de gestion des déchets.
-                </p>
-                <div style="display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap;">
-                    <button onclick="allerAuFormulaire()" class="cta-button-primary" style="background: linear-gradient(135deg, #6db038 0%, #4a7c27 100%); color: white; padding: 16px 40px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(109, 176, 56, 0.3); transition: all 0.3s; pointer-events: auto;">
-                        📱 Accéder à la Collecte
-                    </button>
-                </div>
-            </div>
-            
-            <!-- COVERAGE STATS - COUVERTURE NATIONALE -->
-            <div style="background: linear-gradient(135deg, #2d5016 0%, #4a7c27 100%); padding: 50px; border-radius: 12px; color: white; text-align: center; animation: fadeIn 0.8s ease-out 0.4s backwards;">
-                <h3 style="font-size: 32px; font-weight: 700; margin-bottom: 40px;">🌍 Couverture Nationale du Sénégal</h3>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;">
-                    <div>
-                        <div style="font-size: 56px; font-weight: 800; color: #6db038; margin-bottom: 8px;">14</div>
-                        <p style="font-size: 16px; opacity: 0.95; font-weight: 600;">Régions Couverts</p>
-                        <p style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Collecte complète</p>
-                    </div>
-                    <div>
-                        <div style="font-size: 56px; font-weight: 800; color: #6db038; margin-bottom: 8px;">45+</div>
-                        <p style="font-size: 16px; opacity: 0.95; font-weight: 600;">Départements</p>
-                        <p style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Couverture étendue</p>
-                    </div>
-                    <div>
-                        <div style="font-size: 56px; font-weight: 800; color: #6db038; margin-bottom: 8px;">500+</div>
-                        <p style="font-size: 16px; opacity: 0.95; font-weight: 600;">Communes</p>
-                        <p style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Données précises</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 🗺️ DIMENSIONNEMENT MAP SECTION -->
-            <div id="map-section" style="margin: 50px 0; padding: 25px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); animation: slideInDown 0.8s ease-out 0.2s backwards;">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
-                    <div>
-                        <h2 style="font-size: 28px; font-weight: 800; color: #2d5016; margin: 0; display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 32px;">🗺️</span> Réseau National SONAGED - Couverture Opérationnelle
-                        </h2>
-                        <p style="font-size: 13px; color: #718096; margin-top: 8px; margin-bottom: 0; font-weight: 500;">
-                            Visualisez le maillage territorial : régions, départements, arrondissements, circuits collecte/balayage, et infrastructure mobilier urbain
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- Carte Leaflet -->
-                <div id="dimensionnement-map" style="width: 100%; height: 600px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px solid #e5e7eb; margin-bottom: 20px;"></div>
-                
-                <!-- Légende -->
-                <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 8px; padding: 15px; font-size: 12px;">
-                        <strong style="color: #2d5016; display: block; margin-bottom: 12px; font-size: 13px;">📍 Couches Administratives</strong>
-                        <div style="margin-bottom: 10px;"><span style="display: inline-block; width: 20px; height: 20px; background: rgba(139, 69, 19, 0.4); border: 1px solid #8B4513; border-radius: 4px; margin-right: 8px; vertical-align: middle;"></span>Régions</div>
-                        <div style="margin-bottom: 10px;"><span style="display: inline-block; width: 20px; height: 20px; background: rgba(199, 21, 133, 0.4); border: 1px solid #C71585; border-radius: 4px; margin-right: 8px; vertical-align: middle;"></span>Départements</div>
-                        <div><span style="display: inline-block; width: 20px; height: 20px; background: rgba(173, 51, 151, 0.4); border: 1px solid #AD3397; border-radius: 4px; margin-right: 8px; vertical-align: middle;"></span>Arrondissements</div>
-                    </div>
-                    
-                    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 8px; padding: 15px; font-size: 12px;">
-                        <strong style="color: #2d5016; display: block; margin-bottom: 12px; font-size: 13px;">🚛 Circuits & Mobilier</strong>
-                        <div style="margin-bottom: 10px;"><span style="display: inline-block; width: 20px; height: 4px; background: rgba(220, 20, 60, 0.6); border: 1px solid #DC143C; border-radius: 2px; margin-right: 8px; vertical-align: middle;"></span>Circuits Collecte</div>
-                        <div style="margin-bottom: 10px;"><span style="display: inline-block; width: 20px; height: 4px; background: rgba(147, 51, 234, 0.6); border: 1px dashed #9333EA; border-radius: 2px; margin-right: 8px; vertical-align: middle;"></span>Circuits Balayage</div>
-                        <div><span style="display: inline-block; width: 16px; height: 16px; background: rgba(34, 197, 94, 0.8); border: 2px solid #22C55E; border-radius: 50%; margin-right: 8px; vertical-align: middle;"></span>Mobilier Urbain</div>
-                    </div>
-                </div>
-                
-                <div style="background: #f0f8e6; padding: 15px; border-radius: 8px; border-left: 4px solid #6db038; margin-top: 20px;">
-                    <p style="margin: 0; font-size: 12px; color: #2d5016;">
-                        <strong>💡 Astuce :</strong> Utilisez les contrôles en haut à droite de la carte pour afficher/masquer les couches. Cliquez sur les éléments pour voir les détails.
-                    </p>
-                </div>
-                
-                <div style="display: flex; gap: 15px; margin-top: 30px; justify-content: center;">
-                    <button onclick="allerAuFormulaire()" class="cta-button-primary" style="background: linear-gradient(135deg, #6db038 0%, #4a7c27 100%); color: white; padding: 16px 40px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(109, 176, 56, 0.3); transition: all 0.3s; pointer-events: auto;">
-                        📱 Accéder à la Collecte
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- FIN SECTION ACCUEIL -->
         
-        <!-- 🔥 MENU 2: ACTUALITÉ & CONVENTION -->
-        <div id="actualite-section" class="content" style="display: none; padding: 40px; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); min-height: 100vh;">
-            <div style="margin-top: 40px; padding: 40px; background: linear-gradient(135deg, #f0f8e6 0%, #e8f5df 100%); border-radius: 12px; border-left: 6px solid #6db038;">
-                <h2 style="font-size: 32px; font-weight: 800; color: #2d5016; text-align: center; margin-bottom: 30px;">🤝 Nos Partenaires & Conventions</h2>
-                
-                <!-- 🔥 ACTUALITÉS CONVENTIONS -->
-                <div style="background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%); padding: 20px; border-radius: 8px; border-left: 4px solid #ff6b6b; margin-bottom: 30px; text-align: center;">
-                    <h3 style="font-size: 18px; font-weight: 700; color: #c92a2a; margin: 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                        <span style="font-size: 24px;">🔥</span>
-                        ACTUALITÉ CONVENTION
-                        <span style="font-size: 24px;">🔥</span>
-                    </h3>
-                    <p style="margin-top: 8px; color: #6d4e0d; font-size: 12px; margin-bottom: 0;">Conventions en cours - Événements importants</p>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
-                    <!-- ⭐ IMAGE DIRECTEUR ET RESPONSABLE SIG - ACTUALITÉ -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.15); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border: 2px solid #6db038;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.15)';">
-                        <div style="position: relative; overflow: hidden;">
-                            <img src="./src/assets/Image Directeur et Responsable SIG.jpeg" alt="Directeur et Responsable SIG" style="width: 100%; height: 180px; object-fit: cover;">
-                            <div style="position: absolute; top: 8px; right: 8px; background: #6db038; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;">🔥 ACTUALITÉ</div>
-                        </div>
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Directeur & SIG</p>
-                    </div>
-                    
-                    <!-- ⭐ IMAGE DG CONVENTION COJOJ - ACTUALITÉ -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.15); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border: 2px solid #6db038;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.15)';">
-                        <div style="position: relative; overflow: hidden;">
-                            <img src="./src/assets/Image du DG pour la Convention avec COJOJ.jpeg" alt="DG Convention COJOJ" style="width: 100%; height: 180px; object-fit: cover;">
-                            <div style="position: absolute; top: 8px; right: 8px; background: #6db038; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;">🔥 ACTUALITÉ</div>
-                        </div>
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">DG - Convention COJOJ</p>
-                    </div>
-                    
-                    <!-- Convention SENELEC 1 -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image Convention avec SENELEC.jpeg" alt="Convention SENELEC" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Convention SENELEC</p>
-                    </div>
-                    
-                    <!-- Convention SENELEC 2 -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image 2 Convention avec SENELEC.jpeg" alt="Convention SENELEC 2" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Convention SENELEC 2</p>
-                    </div>
-                    
-                    <!-- Convention SENELEC 3 -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image 3 Convention avec SENELEC.jpeg" alt="Convention SENELEC 3" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Convention SENELEC 3</p>
-                    </div>
-                    
-                    <!-- Convention Mairie Ziguinchor -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image Convention avec Mairie de ZIGUINCHIR.jpeg" alt="Mairie Ziguinchor" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Mairie Ziguinchor</p>
-                    </div>
-                    
-                    <!-- Convention DAKAR DEM DIK -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image Convention DAKAR DEM DIK.jpeg" alt="Convention Dakar Dem Dik" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Convention Dakar Dem Dik</p>
-                    </div>
-                    
-                    <!-- Convention Mairie MLOMP -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image Convention en Partenariat avec Le Maire de MLOMP.jpeg" alt="Mairie MLOMP" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Mairie MLOMP</p>
-                    </div>
-                    
-                    <!-- Base Navale MLOMP -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image en Partenanriat avec La Base Naval de MLOMP.jpeg" alt="Base Navale MLOMP" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Base Navale MLOMP</p>
-                    </div>
-                    
-                    <!-- Camp Militaire BIGNOA -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Image en Partenariat avec le Camp Militaire de BIGNOA.jpeg" alt="Camp Militaire BIGNOA" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Camp Militaire BIGNOA</p>
-                    </div>
-                    
-                    <!-- Délégué Régionale de Ziguinchor -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Délégué Régionale de Ziguinchor.jpeg" alt="Délégué Régionale de Ziguinchor" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Délégué Régionale Ziguinchor</p>
-                    </div>
-                    
-                    <!-- Délégué Départemental de Ziguinchor -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Délegué Départemental de Ziguinchor .jpeg" alt="Délégué Départemental de Ziguinchor" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Délégué Départemental Ziguinchor</p>
-                    </div>
-                    
-                    <!-- Chef de Projet Convention Ziguinchor -->
-                    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
-                        <img src="./src/assets/Chef de Projet Convention Ziguinchor.jpeg" alt="Chef de Projet Convention Ziguinchor" style="width: 100%; height: 180px; object-fit: cover;">
-                        <p style="padding: 15px; text-align: center; font-weight: 600; color: #2d5016; font-size: 13px; margin: 0;">Chef de Projet Convention</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- FIN SECTION ACTUALITÉ & CONVENTION -->
-        
-        <!-- 📊 MENU 3: COLLECTE DE DONNÉES -->
-        <div id="collecte-section" class="content" style="display: none;">
+        <!-- 📊 COLLECTE DE DONNÉES -->
+        <div id="collecte-section" class="content" style="display: block;">
         
         <div class="form-header" style="background: linear-gradient(135deg, #2d5016 0%, #4a7c27 100%); color: white; padding: 30px 30px; text-align: center; margin-bottom: 0;">
             <h1 style="color: white; font-size: 24px; font-weight: 800; margin: 0; display: flex; align-items: center; justify-content: center; gap: 12px;">
-                � Accéder à la Collecte de Données
+                📊 Accéder à la Collecte de Données
             </h1>
         </div>
         
@@ -5737,9 +5532,7 @@ Consultez les logs du serveur pour les détails complets.
             }
         }
         function allerAuFormulaire(scroll = true) {
-            mostrarMenu('collecte');
-            
-            // Initialiser les cartes quand le formulaire devient visible
+            // La collecte est affichée directement
             setTimeout(() => {
                 initMap();
                 initializeCollecteMap();
@@ -5749,10 +5542,7 @@ Consultez les logs du serveur pour les détails complets.
         }
         
         function scrollToFeatures() {
-            const featuresSection = document.getElementById('features-section');
-            if (featuresSection) {
-                featuresSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            // Section features supprimée
         }
         
         // ============= 🗺️ CIRCUIT TRACKER ===============
@@ -6508,67 +6298,39 @@ Consultez les logs du serveur pour les détails complets.
         
         // 🧭 NAVIGATION ENTRE LES 3 MENUS
         function mostrarMenu(menu) {
-            // Masquer tous les menus
-            const accueilSection = document.getElementById('accueil-section');
-            const actualiteSection = document.getElementById('actualite-section');
+            // Seule la section collecte existe désormais
             const collecteSection = document.getElementById('collecte-section');
+            if (collecteSection) collecteSection.style.display = 'block';
             
-            const btnAccueil = document.getElementById('btn-accueil');
-            const btnActualite = document.getElementById('btn-actualite');
-            const btnCollecte = document.getElementById('btn-collecte');
+            // Initialiser la carte si nécessaire
+            setTimeout(() => {
+                if (document.getElementById('collecte-map') && !collecteMapInitialized) {
+                    initializeCollecteMap();
+                    console.log('✅ Carte collecte initialisée');
+                }
+            }, 50);
             
-            // Masquer toutes les sections
-            if (accueilSection) accueilSection.style.display = 'none';
-            if (actualiteSection) actualiteSection.style.display = 'none';
-            if (collecteSection) collecteSection.style.display = 'none';
-            
-            // Retirer la classe active de tous les boutons
-            if (btnAccueil) btnAccueil.classList.remove('active');
-            if (btnActualite) btnActualite.classList.remove('active');
-            if (btnCollecte) btnCollecte.classList.remove('active');
-            
-            // Afficher le menu sélectionné
-            switch(menu) {
-                case 'accueil':
-                    if (accueilSection) {
-                        accueilSection.style.display = 'flex';
-                        accueilSection.style.flexDirection = 'column';
-                    }
-                    if (btnAccueil) btnAccueil.classList.add('active');
-                    break;
-                case 'actualite':
-                    if (actualiteSection) actualiteSection.style.display = 'block';
-                    if (btnActualite) btnActualite.classList.add('active');
-                    break;
-                case 'collecte':
-                    if (collecteSection) collecteSection.style.display = 'block';
-                    if (btnCollecte) btnCollecte.classList.add('active');
-                    // 🚀 INITIALISER LA CARTE IMMÉDIATEMENT après display:block
-                    setTimeout(() => {
-                        if (document.getElementById('collecte-map') && !collecteMapInitialized) {
-                            initializeCollecteMap();
-                            console.log('✅ Carte collecte initialisée après affichage du menu');
-                        }
-                    }, 50);
-                    break;
-            }
-            
-            // Scroller vers le top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
         function allerAuFormulaire() {
-            mostrarMenu('collecte');
+            // La collecte est déjà affichée par défaut
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
         function retournerAuFormulaire() {
-            mostrarMenu('accueil');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
-            // NE PAS initialiser les cartes immédiatement
-            // Elles seront initialisées de manière "lazy" quand nécessaire
+            // Initialiser la carte collecte directement
+            setTimeout(() => {
+                if (document.getElementById('collecte-map') && !collecteMapInitialized) {
+                    initializeCollecteMap();
+                    console.log('✅ Carte collecte initialisée au démarrage');
+                }
+            }, 200);
             
             afficherInfoCache();
             document.getElementById('date-update').textContent = new Date().toLocaleDateString('fr-FR');
@@ -6585,19 +6347,6 @@ Consultez les logs du serveur pour les détails complets.
             
             // 📱 FIXER LES ÉVÉNEMENTS TACTILES POUR BOUTONS D'ACTION (compatible mobile)
             setTimeout(function() {
-                // Boutons landing page
-                const landingButtons = document.querySelectorAll('#landing-section button, #landing-section [onclick*="allerAuFormulaire"], #landing-section [onclick*="scrollToFeatures"]');
-                landingButtons.forEach(btn => {
-                    if (btn) {
-                        btn.addEventListener('touchend', function(e) {
-                            e.preventDefault();
-                            this.click();
-                        }, { passive: false });
-                        btn.style.pointerEvents = 'auto';
-                        btn.style.touchAction = 'auto';
-                    }
-                });
-                
                 // Boutons formulaire - GESTION COMPLÈTE
                 setTimeout(() => {
                     const btnResume = document.getElementById('btn-voir-resume');
