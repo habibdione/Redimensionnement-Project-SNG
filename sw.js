@@ -2,7 +2,7 @@
 // Gère le cache des tuiles OpenStreetMap et la fonctionnalité hors ligne
 
 const CACHE_PREFIX = 'senelec-map-';
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHE_NAME = `${CACHE_PREFIX}${CACHE_VERSION}`;
 const TILE_CACHE = `${CACHE_PREFIX}tiles-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `${CACHE_PREFIX}dynamic-${CACHE_VERSION}`;

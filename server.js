@@ -90,8 +90,16 @@ if (!fs.existsSync(path.join(__dirname, 'uploads'))) {
 const { pool, initDatabase } = require('./db');
 
 // ============================================
-// FICHIERS STATIQUES
+// FICHIERS STATIQUES - No cache pour forcer les mises à jour
 // ============================================
+app.use((req, res, next) => {
+    if (req.path.endsWith('.html') || req.path === '/' || req.path.endsWith('.js')) {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+    }
+    next();
+});
 app.use(express.static(path.join(__dirname)));
 app.use(express.static(path.join(__dirname, 'uploads')));
 
